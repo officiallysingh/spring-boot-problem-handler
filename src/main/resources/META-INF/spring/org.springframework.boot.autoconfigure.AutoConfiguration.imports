@@ -1,0 +1,13 @@
+com.pchf.problem.spring.config.ProblemMessageProviderConfig
+com.pchf.problem.spring.config.ProblemBeanRegistry
+com.pchf.problem.spring.boot.autoconfigure.ProblemJacksonConfiguration
+com.pchf.problem.spring.boot.autoconfigure.ProblemDaoConfiguration
+com.pchf.problem.spring.boot.autoconfigure.web.ProblemWebAutoConfiguration
+com.pchf.problem.spring.boot.autoconfigure.web.SecurityExceptionHandler
+com.pchf.problem.spring.boot.autoconfigure.web.DaoExceptionHandler
+com.pchf.problem.spring.boot.autoconfigure.web.OpenApiValidationExceptionHandler
+com.pchf.problem.spring.boot.autoconfigure.web.ExceptionHandler
+com.pchf.problem.spring.boot.autoconfigure.webflux.ProblemWebfluxAutoConfiguration
+com.pchf.problem.spring.boot.autoconfigure.webflux.SecurityExceptionHandler
+com.pchf.problem.spring.boot.autoconfigure.webflux.DaoExceptionHandler
+com.pchf.problem.spring.boot.autoconfigure.webflux.ExceptionHandler

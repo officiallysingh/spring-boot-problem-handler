@@ -1,0 +1,65 @@
+{
+	"properties": [
+		{
+			"name": "problem.enabled",
+			"type": "java.lang.Boolean",
+			"defaultValue": "true",
+			"description": "Default: true, Whether or not to enable Problem handling"
+		},
+		{
+			"name": "problem.debug-enabled",
+			"type": "java.lang.Boolean",
+			"defaultValue": "false",
+			"description": "Default: false, Whether or not to include debug-info such as message codes etc. in error response messages"
+		},
+		{
+			"name": "problem.stacktrace-enabled",
+			"type": "java.lang.Boolean",
+			"defaultValue": "false",
+			"description": "Default: false, Whether or not to include stacktrace in error response messages"
+		},
+		{
+			"name": "problem.cause-chains-enabled",
+			"type": "java.lang.Boolean",
+			"defaultValue": "false",
+			"description": "Default: false, Whether or not to include exception cause in error response messages"
+		},
+		{
+			"name": "problem.orm-advice-enabled",
+			"type": "java.lang.Boolean",
+			"defaultValue": "true",
+			"description": "Default: true, Whether or not to Enable ORM exception handling advices"
+		},
+		{
+			"name": "problem.security-advice-enabled",
+			"type": "java.lang.Boolean",
+			"defaultValue": "true",
+			"description": "Default: true, Whether or not to Enable Security exception handling advices"
+		},
+		{
+			"name": "problem.jackson-module-enabled",
+			"type": "java.lang.Boolean",
+			"defaultValue": "true",
+			"description": "Default: true, Whether or not to Enable Jackson Problem module"
+		},
+		{
+			"name": "problem.open-api.path",
+			"type": "java.lang.String",
+			"defaultValue": "/oas/api.json",
+			"description": "Default: /oas/api.json, Path of API Specification json file"
+		},
+		{
+			"name": "problem.open-api.req-validation-enabled",
+			"type": "java.lang.Boolean",
+			"defaultValue": "true",
+			"description": "Default: true, Whether or not to enable Open API request validation.</br>While enabling make sure Problem is also enabled"
+		},
+		{
+			"name": "problem.open-api.res-validation-enabled",
+			"type": "java.lang.Boolean",
+			"defaultValue": "false",
+			"description": "Default: false, Whether or not to enable Open API response validation.</br>While enabling make sure Problem is also enabled"
+		}
+	]
+}
+
