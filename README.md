@@ -62,58 +62,58 @@ such as for Handling Security, OpenAPI and Dao related exceptions, which are ela
 
 #### General advices all Spring Rest services need to handle
 
-These advices are autoconfigured as either bean of class [**`ExceptionHandler`**](src/main/java/com/pchf/problem/spring/boot/autoconfigure/web/ExceptionHandler.java) 
-or [**`ProblemHandlingWebflux`**](src/main/java/com/pchf/problem/spring/advice/webflux/advice/ProblemHandlingWebflux.java) depending on whether application is of type **Servlet** or **Reactive** respetively
+These advices are autoconfigured as either bean of class [**`ExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/web/ExceptionHandler.java) 
+or [**`ProblemHandlingWebflux`**](src/main/java/com/ksoot/problem/spring/advice/webflux/advice/ProblemHandlingWebflux.java) depending on whether application is of type **Servlet** or **Reactive** respetively
 
 | General Advice Traits                                                                                                                                                              | Produces                                                  | Error Key                                                   |
 |------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------|-------------------------------------------------------------|
-| [**`ProblemHandlingWeb`**](src/main/java/com/pchf/problem/spring/advice/web/advice/ProblemHandlingWeb.java)                                                                 |                                                           |                                                             |
-| [**`ProblemHandlingWebflux`**](src/main/java/com/pchf/problem/spring/advice/webflux/advice/ProblemHandlingWebflux.java)                                                     |                                                           |                                                             |
-| `├──`[**`ApplicationAdviceTraits`**](src/main/java/com/pchf/problem/spring/advice/application/ApplicationAdviceTraits.java)                                                 |                                                           |                                                             |
-| `│   ├──`[`ApplicationProblemAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/application/ApplicationProblemAdviceTrait.java)                            | *depends*                                                 | Provided by application while throwing exception            |
-| `│   ├──`[`ApplicationExceptionAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/application/ApplicationExceptionAdviceTrait.java)                        | *depends*                                                 | Provided by application while throwing exception            |
-| `│   └──`[ `ApplicationMultiProblemAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/application/ApplicationMultiProblemAdviceTrait.java)                 | *depends*                                                 | Provided by application while throwing exception            |
-| `├──`[**`GeneralAdviceTraits`**](src/main/java/com/pchf/problem/spring/advice/general/GeneralAdviceTraits.java)                                                             |                                                           |                                                             |
-| `│   ├──`[`ProblemAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/general/ProblemAdviceTrait.java)                                                      | [`500 Internal Server Error`](https://httpstatus.es/500)  | internal.server.error                                       |
-| `│   ├──`[`ThrowableAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/general/ThrowableAdviceTrait.java)                                                  | [`500 Internal Server Error`](https://httpstatus.es/500)  | internal.server.error                                       |
-| `│   └──`[ `UnsupportedOperationAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/general/UnsupportedOperationAdviceTrait.java)                           | [`501 Not Implemented`](https://httpstatus.es/501)        | java.lang.UnsupportedOperationException                     |
-| `├──`[**`HttpAdviceTraits`**](src/main/java/com/pchf/problem/spring/advice/http/HttpAdviceTraits.java)                                                                      |                                                           |                                                             |
-| `│   ├──`[`HttpMediaTypeNotAcceptableAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/http/HttpMediaTypeNotAcceptableAdviceTrait.java)                   | [`415 Unsupported Media Type`](https://httpstatus.es/415) | media.type.not.acceptable                                   |
-| `│   ├──`[`HttpMediaTypeNotSupportedExceptionAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/http/HttpMediaTypeNotSupportedExceptionAdviceTrait.java)   | [`415 Unsupported Media Type`](https://httpstatus.es/415) | media.type.not.supported                                    |
-| `│   ├──`[`UnsupportedMediaTypeStatusAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/http/UnsupportedMediaTypeStatusAdviceTrait.java)                   | [`415 Unsupported Media Type`](https://httpstatus.es/415) | media.type.not.supported                                    |
-| `│   ├──`[`HttpRequestMethodNotSupportedAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/http/http/HttpRequestMethodNotSupportedAdviceTrait.java)        | [`405 Method Not Allowed`](https://httpstatus.es/405)     | request.method.not.supported                                |
-| `│   ├──`[`MethodNotAllowedAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/http/MethodNotAllowedAdviceTrait.java)                                       | [`405 Method Not Allowed`](https://httpstatus.es/405)     | method.not.allowed                                          |
-| `│   ├──`[`NotAcceptableStatusAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/http/NotAcceptableStatusAdviceTrait.java)                                 | [`406 Not Acceptable`](https://httpstatus.es/406)         | org.springframework.web.server.NotAcceptableStatusException |
-| `│   ├──`[`ResponseStatusAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/http/ResponseStatusAdviceTrait.java)                                           | *depends*                                                 |                                                             |
-| `├──`[**`IOAdviceTraits`**](src/main/java/com/pchf/problem/spring/advice/io/IOAdviceTraits.java)                                                                            |                                                           |                                                             |
-| `│   ├──`[`MessageNotReadableAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/io/MessageNotReadableAdviceTrait.java)                                     | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                    |
-| `│   └──`[`MultipartAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/io/MultipartAdviceTrait.java)                                                       | [`400 Bad Request`](https://httpstatus.es/400)            | org.springframework.web.multipart.MultipartException        |
-| `├──`[**`RoutingAdviceTraits`**](src/main/java/com/pchf/problem/spring/advice/routing/RoutingAdviceTraits.java)                                                             |                                                           |                                                             |
-| `│   ├──`[`MissingRequestHeaderAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/routing/MissingRequestHeaderAdviceTrait.java)                            | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                    |
-| `│   ├──`[`MissingServletRequestParameterAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/routing/MissingServletRequestParameterAdviceTrait.java)        | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                    |
-| `│   ├──`[`MissingServletRequestPartAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/routing/MissingServletRequestPartAdviceTrait.java)                  | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                    |
-| `│   ├──`[`NoHandlerFoundAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/routing/NoHandlerFoundAdviceTrait.java)                                        | [`404 Not Found`](https://httpstatus.es/404)              | no.handler.found                                            |
-| `│   └──`[`ServletRequestBindingAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/routing/ServletRequestBindingAdviceTrait.java)                          | [`400 Bad Request`](https://httpstatus.es/400)            | org.springframework.web.bind.ServletRequestBindingException |
-| `└──`[**`ValidationAdviceTraits`**](src/main/java/com/pchf/problem/spring/advice/validation/ValidationAdviceTraits.java)                                                    |                                                           |                                                             |
-| `    ├──`[`ConstraintViolationAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/validation/ConstraintViolationAdviceTrait.java)                        | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                    |
-| `    └──`[`BindAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/validation/BindAdviceTrait.java)                                                      | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                    |
-| `    └──`[`MethodArgumentNotValidAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/validation/MethodArgumentNotValidAdviceTrait.java)                  | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                    |
-| `    └──`[`MethodArgumentTypeMismatchAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/validation/MethodArgumentTypeMismatchAdviceTrait.java)          | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                    |
-| `    └──`[`TypeMismatchAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/validation/TypeMismatchAdviceTrait.java)                                      | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                    |
+| [**`ProblemHandlingWeb`**](src/main/java/com/ksoot/problem/spring/advice/web/advice/ProblemHandlingWeb.java)                                                                 |                                                           |                                                             |
+| [**`ProblemHandlingWebflux`**](src/main/java/com/ksoot/problem/spring/advice/webflux/advice/ProblemHandlingWebflux.java)                                                     |                                                           |                                                             |
+| `├──`[**`ApplicationAdviceTraits`**](src/main/java/com/ksoot/problem/spring/advice/application/ApplicationAdviceTraits.java)                                                 |                                                           |                                                             |
+| `│   ├──`[`ApplicationProblemAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/application/ApplicationProblemAdviceTrait.java)                            | *depends*                                                 | Provided by application while throwing exception            |
+| `│   ├──`[`ApplicationExceptionAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/application/ApplicationExceptionAdviceTrait.java)                        | *depends*                                                 | Provided by application while throwing exception            |
+| `│   └──`[ `ApplicationMultiProblemAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/application/ApplicationMultiProblemAdviceTrait.java)                 | *depends*                                                 | Provided by application while throwing exception            |
+| `├──`[**`GeneralAdviceTraits`**](src/main/java/com/ksoot/problem/spring/advice/general/GeneralAdviceTraits.java)                                                             |                                                           |                                                             |
+| `│   ├──`[`ProblemAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/general/ProblemAdviceTrait.java)                                                      | [`500 Internal Server Error`](https://httpstatus.es/500)  | internal.server.error                                       |
+| `│   ├──`[`ThrowableAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/general/ThrowableAdviceTrait.java)                                                  | [`500 Internal Server Error`](https://httpstatus.es/500)  | internal.server.error                                       |
+| `│   └──`[ `UnsupportedOperationAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/general/UnsupportedOperationAdviceTrait.java)                           | [`501 Not Implemented`](https://httpstatus.es/501)        | java.lang.UnsupportedOperationException                     |
+| `├──`[**`HttpAdviceTraits`**](src/main/java/com/ksoot/problem/spring/advice/http/HttpAdviceTraits.java)                                                                      |                                                           |                                                             |
+| `│   ├──`[`HttpMediaTypeNotAcceptableAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/http/HttpMediaTypeNotAcceptableAdviceTrait.java)                   | [`415 Unsupported Media Type`](https://httpstatus.es/415) | media.type.not.acceptable                                   |
+| `│   ├──`[`HttpMediaTypeNotSupportedExceptionAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/http/HttpMediaTypeNotSupportedExceptionAdviceTrait.java)   | [`415 Unsupported Media Type`](https://httpstatus.es/415) | media.type.not.supported                                    |
+| `│   ├──`[`UnsupportedMediaTypeStatusAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/http/UnsupportedMediaTypeStatusAdviceTrait.java)                   | [`415 Unsupported Media Type`](https://httpstatus.es/415) | media.type.not.supported                                    |
+| `│   ├──`[`HttpRequestMethodNotSupportedAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/http/http/HttpRequestMethodNotSupportedAdviceTrait.java)        | [`405 Method Not Allowed`](https://httpstatus.es/405)     | request.method.not.supported                                |
+| `│   ├──`[`MethodNotAllowedAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/http/MethodNotAllowedAdviceTrait.java)                                       | [`405 Method Not Allowed`](https://httpstatus.es/405)     | method.not.allowed                                          |
+| `│   ├──`[`NotAcceptableStatusAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/http/NotAcceptableStatusAdviceTrait.java)                                 | [`406 Not Acceptable`](https://httpstatus.es/406)         | org.springframework.web.server.NotAcceptableStatusException |
+| `│   ├──`[`ResponseStatusAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/http/ResponseStatusAdviceTrait.java)                                           | *depends*                                                 |                                                             |
+| `├──`[**`IOAdviceTraits`**](src/main/java/com/ksoot/problem/spring/advice/io/IOAdviceTraits.java)                                                                            |                                                           |                                                             |
+| `│   ├──`[`MessageNotReadableAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/io/MessageNotReadableAdviceTrait.java)                                     | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                    |
+| `│   └──`[`MultipartAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/io/MultipartAdviceTrait.java)                                                       | [`400 Bad Request`](https://httpstatus.es/400)            | org.springframework.web.multipart.MultipartException        |
+| `├──`[**`RoutingAdviceTraits`**](src/main/java/com/ksoot/problem/spring/advice/routing/RoutingAdviceTraits.java)                                                             |                                                           |                                                             |
+| `│   ├──`[`MissingRequestHeaderAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/routing/MissingRequestHeaderAdviceTrait.java)                            | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                    |
+| `│   ├──`[`MissingServletRequestParameterAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/routing/MissingServletRequestParameterAdviceTrait.java)        | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                    |
+| `│   ├──`[`MissingServletRequestPartAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/routing/MissingServletRequestPartAdviceTrait.java)                  | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                    |
+| `│   ├──`[`NoHandlerFoundAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/routing/NoHandlerFoundAdviceTrait.java)                                        | [`404 Not Found`](https://httpstatus.es/404)              | no.handler.found                                            |
+| `│   └──`[`ServletRequestBindingAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/routing/ServletRequestBindingAdviceTrait.java)                          | [`400 Bad Request`](https://httpstatus.es/400)            | org.springframework.web.bind.ServletRequestBindingException |
+| `└──`[**`ValidationAdviceTraits`**](src/main/java/com/ksoot/problem/spring/advice/validation/ValidationAdviceTraits.java)                                                    |                                                           |                                                             |
+| `    ├──`[`ConstraintViolationAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/validation/ConstraintViolationAdviceTrait.java)                        | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                    |
+| `    └──`[`BindAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/validation/BindAdviceTrait.java)                                                      | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                    |
+| `    └──`[`MethodArgumentNotValidAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/validation/MethodArgumentNotValidAdviceTrait.java)                  | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                    |
+| `    └──`[`MethodArgumentTypeMismatchAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/validation/MethodArgumentTypeMismatchAdviceTrait.java)          | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                    |
+| `    └──`[`TypeMismatchAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/validation/TypeMismatchAdviceTrait.java)                                      | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                    |
 
 
 #### Dao advices
 
 | Dao Advice Traits                                                                                                                              | Produces                                                  | Error Key                                              |
 |------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------|--------------------------------------------------------|
-| [**`DaoAdviceTraits`**](src/main/java/com/pchf/problem/spring/advice/dao/DaoAdviceTraits.java)                                          |                                                           |                                                        | 
-| `├──`[**`DataIntegrityViolationAdviceTrait`**](src/main/java/com/pchf/problem/spring/advice/dao/DataIntegrityViolationAdviceTrait.java) | [`500 Internal Server Error`](https://httpstatus.es/500)  | data.integrity.violation.\<Failed DB constraint name\> |
-| `├──`[**`DuplicateKeyExceptionAdviceTrait`**](src/main/java/com/pchf/problem/spring/advice/dao/DuplicateKeyExceptionAdviceTrait.java)   | [`500 Internal Server Error`](https://httpstatus.es/500)  | data.integrity.violation.\<Failed DB constraint name\> |
+| [**`DaoAdviceTraits`**](src/main/java/com/ksoot/problem/spring/advice/dao/DaoAdviceTraits.java)                                          |                                                           |                                                        | 
+| `├──`[**`DataIntegrityViolationAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/dao/DataIntegrityViolationAdviceTrait.java) | [`500 Internal Server Error`](https://httpstatus.es/500)  | data.integrity.violation.\<Failed DB constraint name\> |
+| `├──`[**`DuplicateKeyExceptionAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/dao/DuplicateKeyExceptionAdviceTrait.java)   | [`500 Internal Server Error`](https://httpstatus.es/500)  | data.integrity.violation.\<Failed DB constraint name\> |
 
 It is autoconfigured if `spring-data-jpa` or `spring-data-mongodb` jar is detected in classpath 
 and `ConditionalOnWebApplication.Type` is `SERVLET`
 Database type must be specified in `application.properties` in case application is using some relational database, 
-it is used to autoconfigure [**`ConstraintNameResolver`**](src/main/java/com/pchf/problem/spring/advice/dao/ConstraintNameResolver.java) 
+it is used to autoconfigure [**`ConstraintNameResolver`**](src/main/java/com/ksoot/problem/spring/advice/dao/ConstraintNameResolver.java) 
 to extract database constraint name from exception message to derive error key 
 when `DataIntegrityViolationException` is thrown
 
@@ -121,17 +121,17 @@ when `DataIntegrityViolationException` is thrown
 
 | Security Advice Traits                                                                                                                                      | Produces                                        | Error Key              |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|------------------------|
-| [**`SecurityAdviceTraits`**](src/main/java/com/pchf/problem/spring/advice/security/SecurityAdviceTraits.java)                                        |                                                 |                        |
-| `├──`[**`AuthenticationAdviceTrait`**](src/main/java/com/pchf/problem/spring/advice/security/AuthenticationAdviceTrait.java)                         | [`401 Unauthorized`](https://httpstatus.es/401) | security.unauthorized  |
-| `├──`[**`InsufficientAuthenticationAdviceTrait`**](src/main/java/com/pchf/problem/spring/advice/security/InsufficientAuthenticationAdviceTrait.java) | [`401 Unauthorized`](https://httpstatus.es/401) | security.unauthorized  |
-| `├──`[**`AccessDeniedAdviceTrait`**](src/main/java/com/pchf/problem/spring/advice/security/AccessDeniedAdviceTrait.java)                             | [`403 Forbidden`](https://httpstatus.es/403)    | security.access.denied |
+| [**`SecurityAdviceTraits`**](src/main/java/com/ksoot/problem/spring/advice/security/SecurityAdviceTraits.java)                                        |                                                 |                        |
+| `├──`[**`AuthenticationAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/security/AuthenticationAdviceTrait.java)                         | [`401 Unauthorized`](https://httpstatus.es/401) | security.unauthorized  |
+| `├──`[**`InsufficientAuthenticationAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/security/InsufficientAuthenticationAdviceTrait.java) | [`401 Unauthorized`](https://httpstatus.es/401) | security.unauthorized  |
+| `├──`[**`AccessDeniedAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/security/AccessDeniedAdviceTrait.java)                             | [`403 Forbidden`](https://httpstatus.es/403)    | security.access.denied |
 
 
 For **Servlet** (Web) applications
 It is autoconfigured if `spring-security-config` jar is detected in classpath and `ConditionalOnWebApplication.Type` is `SERVLET`
 
-[**`ProblemAuthenticationEntryPoint`**](src/main/java/com/pchf/problem/spring/advice/security/ProblemAuthenticationEntryPoint.java)
-and [**`ProblemAccessDeniedHandler`**](src/main/java/com/pchf/problem/spring/advice/security/ProblemAccessDeniedHandler.java) 
+[**`ProblemAuthenticationEntryPoint`**](src/main/java/com/ksoot/problem/spring/advice/security/ProblemAuthenticationEntryPoint.java)
+and [**`ProblemAccessDeniedHandler`**](src/main/java/com/ksoot/problem/spring/advice/security/ProblemAccessDeniedHandler.java) 
 are autoconfigured as `authenticationEntryPoint` and `accessDeniedHandler` beans respectively. 
 
 But to make it work following needs to be done in application Spring Security configuration
@@ -196,16 +196,16 @@ SecurityWebFilterChain securityWebFilterChain(final ServerHttpSecurity http) {
 
 | OpenAPI Validation Advice Traits                                                                                                       | Produces                                        | Error Key                  |
 |----------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|----------------------------|
-| [**`OpenApiValidationAdviceTrait`**](src/main/java/com/pchf/problem/spring/advice/validation/OpenApiValidationAdviceTrait.java) | [`400 Bad Request`](https://httpstatus.es/400)  | *Derived* from exception   |
+| [**`OpenApiValidationAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/validation/OpenApiValidationAdviceTrait.java) | [`400 Bad Request`](https://httpstatus.es/400)  | *Derived* from exception   |
 
-[**`OpenApiValidationExceptionHandler`**](src/main/java/com/pchf/problem/spring/boot/autoconfigure/web/OpenApiValidationExceptionHandler.java) is configured if `swagger-request-validator-spring-webmvc-2.34.x.jar` is detected in classpath 
+[**`OpenApiValidationExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/web/OpenApiValidationExceptionHandler.java) is configured if `swagger-request-validator-spring-webmvc-2.34.x.jar` is detected in classpath 
 and `ConditionalOnWebApplication.Type` is `SERVLET` and at least one of `problem.open-api.req-validation-enabled` or `problem.open-api.res-validation-enabled` is set as `true` in `application.properties`
 
 **Note**: The same needs to be implemented and tested for **Reactive** (Webflux) applications
 
 ## Configurations
 
-The [`NoHandlerFoundAdviceTrait`](src/main/java/com/pchf/problem/spring/advice/routing/NoHandlerFoundAdviceTrait.java)
+The [`NoHandlerFoundAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/routing/NoHandlerFoundAdviceTrait.java)
 in addition also requires the following configuration:
 
 ```properties
@@ -219,8 +219,8 @@ spring.jpa.database=POSTGRESQL
 Refer to [`Database`](https://github.com/spring-projects/spring-framework/blob/main/spring-orm/src/main/java/org/springframework/orm/jpa/vendor/Database.java) for the list of database vendors.
 DB2, DERBY, H2, HANA, HSQL, INFORMIX, MYSQL, ORACLE, POSTGRESQL, SQL_SERVER, SYBASE
 
-**Note**: [**`ConstraintNameResolver`**](src/main/java/com/pchf/problem/spring/advice/dao/ConstraintNameResolver.java) is implemented for Postgres, SQL Server and MongoDB only as of now.
-If any other relational database is used then respective [**`ConstraintNameResolver`**](src/main/java/com/pchf/problem/spring/advice/dao/ConstraintNameResolver.java) need to be implemented.
+**Note**: [**`ConstraintNameResolver`**](src/main/java/com/ksoot/problem/spring/advice/dao/ConstraintNameResolver.java) is implemented for Postgres, SQL Server and MongoDB only as of now.
+If any other relational database is used then respective [**`ConstraintNameResolver`**](src/main/java/com/ksoot/problem/spring/advice/dao/ConstraintNameResolver.java) need to be implemented.
 
 Make sure to disable the `ErrorMvcAutoConfiguration` as follows
 
@@ -271,7 +271,7 @@ problem.open-api.res-validation-enabled=false
 At least once of `req-validation-enabled` or `res-validation-enabled` must be true and `path` must be given with a valid Open API specification file 
 to enable Open API validation exception. General practice is to validate request only, not response.
 
-Refer to [**`ProblemProperties`**](src/main/java/com/pchf/problem/spring/common/config/ProblemProperties.java)
+Refer to [**`ProblemProperties`**](src/main/java/com/ksoot/problem/spring/common/config/ProblemProperties.java)
 to have a look at defaults for above `properties`
 
 ## Usage
@@ -379,8 +379,8 @@ otherwise `HttpStatus` is specified in the java code.
 ## Creating and throwing exceptions
 
 Apart from exceptions thrown by frameworks or java, every application need to throw custom exceptions.
-[**`ApplicationProblem`**](src/main/java/com/pchf/problem/core/ApplicationProblem.java) and
-[**`ApplicationException`**](src/main/java/com/pchf/problem/core/ApplicationException.java) 
+[**`ApplicationProblem`**](src/main/java/com/ksoot/problem/core/ApplicationProblem.java) and
+[**`ApplicationException`**](src/main/java/com/ksoot/problem/core/ApplicationException.java) 
 classes are available in the library to throw an unchecked or checked exception respectively.
 There should not be any need to create any custom exception, but if there is a pressing need to do so, 
 it can be created and corresponding custom `ControllerAdvice` can be defined for the same, though not recommended.
@@ -391,7 +391,7 @@ While defining a custom `ControllerAdvice` in application following `annotation`
 It makes `ControllerAdvice` to take precedence over the fallback advice which handles `Throwable` 
 i.e. for all exceptions for which no `ControllerAdvice`s are defined.
 
-[**`Problems`**](src/main/java/com/pchf/problem/Problems.java) **is the central static helper class to create 
+[**`Problems`**](src/main/java/com/ksoot/problem/Problems.java) **is the central static helper class to create 
 Problem instances and throw either checked or unchecked exceptions**, as demonstrated below.
 It provides fluent methods to build and throw exceptions.
 
@@ -418,7 +418,7 @@ If the messages are not found in `properties` files, defaults are taken as follo
 * Message and Details defaults are taken from thrown exception's `exception.getMessage()`
 
 There are multiple other methods available while creating exceptions through Problems helper. 
-For better understanding, have a look at java docs for each method in [**`Problems`**](src/main/java/com/pchf/problem/Problems.java)
+For better understanding, have a look at java docs for each method in [**`Problems`**](src/main/java/com/ksoot/problem/Problems.java)
 ```java
 throw Problems.newInstance("sample.problem")
     .defaultMessage("Default message if not found in properties file")
@@ -447,7 +447,7 @@ Problem problemTwo = Problems.newInstance("sample.problem.two").get();
 throw Problems.throwAble(Status.MULTI_STATUS, problemOne, problemTwo);
 ```
 
-**It is recommended to use just** [**`Problems`**](src/main/java/com/pchf/problem/Problems.java), 
+**It is recommended to use just** [**`Problems`**](src/main/java/com/ksoot/problem/Problems.java), 
 but following are also the ways to create exceptions by using inbuilt exception classes. 
 These classes are internally used by `problem-handler`.
 
@@ -644,5 +644,5 @@ Rajveer Singh, In case you find any issues or need any support, please ping me o
 Inspired and taken base code from [**`Zalando Problem libraries`**](https://github.com/zalando/problem-spring-web)
 
 ## Known Issues
-* If an application uses multiple vendor relational databases then the [**`ConstraintNameResolver`**](src/main/java/com/pchf/problem/spring/advice/dao/ConstraintNameResolver.java) 
+* If an application uses multiple vendor relational databases then the [**`ConstraintNameResolver`**](src/main/java/com/ksoot/problem/spring/advice/dao/ConstraintNameResolver.java) 
 may not work properly, needs further testing. For example if it is using Postgres and SQL Server both.
