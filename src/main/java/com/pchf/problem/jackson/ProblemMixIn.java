@@ -29,13 +29,9 @@ interface ProblemMixIn extends Problem {
   @Override
   String getTitle();
 
-  @JsonProperty("message")
+  @JsonProperty("detail")
   @Override
-  String getMessage();
-
-  @JsonProperty("details")
-  @Override
-  String getDetails();
+  String getDetail();
 
   @JsonAnyGetter
   @Override

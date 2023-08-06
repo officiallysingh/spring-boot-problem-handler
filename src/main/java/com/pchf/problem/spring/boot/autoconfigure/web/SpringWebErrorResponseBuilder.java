@@ -1,6 +1,5 @@
 package com.pchf.problem.spring.boot.autoconfigure.web;
 
-import com.pchf.problem.ProblemDetails;
 import com.pchf.problem.core.ErrorResponseBuilder;
 import com.pchf.problem.core.MediaTypes;
 import com.pchf.problem.core.Problem;
@@ -10,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.accept.ContentNegotiationStrategy;
@@ -22,7 +22,7 @@ import java.util.Optional;
 import static jakarta.servlet.RequestDispatcher.ERROR_EXCEPTION;
 import static org.springframework.web.context.request.RequestAttributes.SCOPE_REQUEST;
 
-class SpringWebErrorResponseBuilder implements ErrorResponseBuilder<NativeWebRequest, ResponseEntity<ProblemDetails>> {
+class SpringWebErrorResponseBuilder implements ErrorResponseBuilder<NativeWebRequest, ResponseEntity<ProblemDetail>> {
 
   @SneakyThrows(HttpMediaTypeNotAcceptableException.class)
   public static Optional<MediaType> negotiate(final NativeWebRequest request) {
@@ -32,40 +32,41 @@ class SpringWebErrorResponseBuilder implements ErrorResponseBuilder<NativeWebReq
   }
 
   @Override
-  public ResponseEntity<ProblemDetails> buildResponse(final Throwable throwable, final NativeWebRequest request,
-                                                      final HttpStatus status, final HttpHeaders headers, final Problem... problems) {
+  public ResponseEntity<ProblemDetail> buildResponse(final Throwable throwable, final NativeWebRequest request,
+                                                     final HttpStatus status, final HttpHeaders headers, final Problem problem) {
     if (status == HttpStatus.INTERNAL_SERVER_ERROR) {
       request.setAttribute(ERROR_EXCEPTION, throwable, SCOPE_REQUEST);
     }
 
-    ProblemDetails problemDetails = ProblemDetails.of(this.requestUri(request), this.requestMethod(request),
-        problems);
-    Optional<ResponseEntity<ProblemDetails>> responseEntity = negotiate(request).map(contentType -> ResponseEntity
-        .status(status).headers(headers).contentType(contentType).body(problemDetails));
+    ProblemDetail problemDetail = createProblemDetail(request, status, problem);
+    Optional<ResponseEntity<ProblemDetail>> responseEntity = negotiate(request).map(contentType -> ResponseEntity
+        .status(status).headers(headers).contentType(contentType).body(problemDetail));
+
     if (responseEntity.isPresent()) {
       return postProcess(responseEntity.get(), request);
     } else {
-      return fallback(request, status, headers, problems);
+      return fallback(request, status, headers, problem);
     }
   }
 
-  private ResponseEntity<ProblemDetails> fallback(final NativeWebRequest request, final HttpStatus status,
-                                                  final HttpHeaders headers, final Problem... problems) {
-    ProblemDetails problemDetails = ProblemDetails.of(this.requestUri(request), this.requestMethod(request),
-        problems);
-    return ResponseEntity.status(status).headers(headers).contentType(MediaTypes.PROBLEM).body(problemDetails);
+  private ResponseEntity<ProblemDetail> fallback(final NativeWebRequest request, final HttpStatus status,
+                                                 final HttpHeaders headers, final Problem problem) {
+    ProblemDetail problemDetail = createProblemDetail(request, status, problem);
+    return ResponseEntity.status(status).headers(headers).contentType(MediaTypes.PROBLEM).body(problemDetail);
   }
 
-  private ResponseEntity<ProblemDetails> postProcess(final ResponseEntity<ProblemDetails> errorResponse,
-                                                     final NativeWebRequest request) {
+  private ResponseEntity<ProblemDetail> postProcess(final ResponseEntity<ProblemDetail> errorResponse,
+                                                    final NativeWebRequest request) {
     return errorResponse;
   }
 
-  private URI requestUri(final NativeWebRequest request) {
+  @Override
+  public URI requestUri(final NativeWebRequest request) {
     return URI.create(request.getNativeRequest(HttpServletRequest.class).getRequestURI());
   }
 
-  private HttpMethod requestMethod(final NativeWebRequest request) {
+  @Override
+  public HttpMethod requestMethod(final NativeWebRequest request) {
     return HttpMethod.valueOf(request.getNativeRequest(HttpServletRequest.class).getMethod());
   }
 }

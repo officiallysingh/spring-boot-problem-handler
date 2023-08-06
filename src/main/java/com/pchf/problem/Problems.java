@@ -25,10 +25,8 @@ import java.util.Set;
 
 import static com.pchf.problem.core.ProblemConstant.CODE_CODE_PREFIX;
 import static com.pchf.problem.core.ProblemConstant.CODE_RESOLVER;
-import static com.pchf.problem.core.ProblemConstant.DETAILS_CODE_PREFIX;
-import static com.pchf.problem.core.ProblemConstant.DETAILS_RESOLVER;
-import static com.pchf.problem.core.ProblemConstant.MESSAGE_CODE_PREFIX;
-import static com.pchf.problem.core.ProblemConstant.MESSAGE_RESOLVER;
+import static com.pchf.problem.core.ProblemConstant.DETAIL_CODE_PREFIX;
+import static com.pchf.problem.core.ProblemConstant.DETAIL_RESOLVER;
 import static com.pchf.problem.core.ProblemConstant.TITLE_CODE_PREFIX;
 import static com.pchf.problem.core.ProblemConstant.TITLE_RESOLVER;
 import static com.pchf.problem.spring.config.ProblemMessageProvider.getMessage;
@@ -43,18 +41,17 @@ public class Problems {
 
   // ------------------------------- Factory methods -------------------------------------
 
-  public static CauseBuilder newInstance(final String code, final String title, final String message, final String details) {
-    return new Builder(code, title, message, details);
+  public static CauseBuilder newInstance(final String code, final String title, final String detail) {
+    return new Builder(code, title, detail);
   }
 
   public static CauseBuilder newInstance(final MessageSourceResolvable codeResolver,
                                          final MessageSourceResolvable titleResolver,
-                                         final MessageSourceResolvable messageResolver,
-                                         final MessageSourceResolvable detailsResolver) {
-    return new Builder(codeResolver, titleResolver, messageResolver, detailsResolver);
+                                         final MessageSourceResolvable detailResolver) {
+    return new Builder(codeResolver, titleResolver, detailResolver);
   }
 
-  public static DefaultMessageBuilder newInstance(final String errorKey) {
+  public static DefaultDetailBuilder newInstance(final String errorKey) {
     return new Builder(errorKey);
   }
 
@@ -66,7 +63,7 @@ public class Problems {
   public static ApplicationProblem throwAble(final HttpStatus status, final Problem problem) {
     Assert.notNull(problem, "'problem' must not be null");
     return new ApplicationProblem(status, problem.getCode(), problem.getTitle(),
-        problem.getMessage(), problem.getDetails(), problem.getCause(), problem.getParameters());
+        problem.getDetail(), problem.getCause(), problem.getParameters());
   }
 
   public static MultiProblem throwAble(final HttpStatus status, final List<Problem> problems) {
@@ -81,7 +78,7 @@ public class Problems {
   public static ApplicationException throwAbleChecked(final HttpStatus status, final Problem problem) {
     Assert.notNull(problem, "'problem' must not be null");
     return new ApplicationException(status, problem.getCode(), problem.getTitle(),
-        problem.getMessage(), problem.getDetails(), problem.getCause(), problem.getParameters());
+        problem.getDetail(), problem.getCause(), problem.getParameters());
   }
 
   public static ApplicationProblem notFound() {
@@ -94,31 +91,19 @@ public class Problems {
 
   // ---------------------- Builder -------------------------
   public interface TitleBuilder {
-    public MessageBuilder title(final MessageSourceResolvable titleResolver);
+    public DetailBuilder title(final MessageSourceResolvable titleResolver);
   }
 
-  public interface MessageBuilder {
-    public DetailsBuilder message(final MessageSourceResolvable messageResolver);
+  public interface DetailBuilder {
+    public DefaultDetailBuilder detail(final MessageSourceResolvable detailResolver);
   }
 
-  public interface DetailsBuilder {
-    public CauseBuilder details(final MessageSourceResolvable detailsResolver);
+  public interface DefaultDetailBuilder extends DetailArgsBuilder {
+    public DetailArgsBuilder defaultDetail(@Nullable final String detail);
   }
 
-  public interface DefaultMessageBuilder extends MessageArgsBuilder {
-    public MessageArgsBuilder defaultMessage(@Nullable final String message);
-  }
-
-  public interface MessageArgsBuilder extends DefaultDetailsBuilder {
-    public DefaultDetailsBuilder messageArgs(@Nullable final Object... messageArgs);
-  }
-
-  public interface DefaultDetailsBuilder extends DetailsArgsBuilder {
-    public DetailsArgsBuilder defaultDetails(@Nullable final String details);
-  }
-
-  public interface DetailsArgsBuilder extends CauseBuilder {
-    public CauseBuilder detailsArgs(@Nullable final Object... detailsArgs);
+  public interface DetailArgsBuilder extends CauseBuilder {
+    public CauseBuilder detailArgs(@Nullable final Object... detailArgs);
   }
 
   public interface CauseBuilder extends ParameterBuilder {
@@ -142,32 +127,28 @@ public class Problems {
     public ApplicationException throwAbleChecked(final HttpStatus status);
   }
 
-  public static class Builder implements TitleBuilder, MessageBuilder, DetailsBuilder, DefaultMessageBuilder, CauseBuilder {
+  public static class Builder implements TitleBuilder, DetailBuilder, DefaultDetailBuilder {
 
     private static final Set<String> RESERVED_PROPERTIES = new HashSet<>(
-        Arrays.asList("code", "title", "message", "details", "cause",
-            CODE_RESOLVER, TITLE_RESOLVER, MESSAGE_RESOLVER, DETAILS_RESOLVER));
+        Arrays.asList("code", "title", "detail", "cause",
+            CODE_RESOLVER, TITLE_RESOLVER, DETAIL_RESOLVER));
 
     private String code;
     private String title;
-    private String message;
-    private String details;
+    private String detail;
 
     private String errorKey;
-    private String defaultMessage;
-    private Object[] messageArgs;
-    private String defaultDetails;
-    private Object[] detailsArgs;
+    private String defaultDetail;
+    private Object[] detailArgs;
 
     private ThrowableProblem cause;
 
     private Map<String, Object> parameters = new LinkedHashMap<>(4);
 
-    Builder(final String code, final String title, final String message, final String details) {
+    Builder(final String code, final String title, final String detail) {
       this.code = code;
       this.title = title;
-      this.message = message;
-      this.details = details;
+      this.detail = detail;
     }
 
     Builder(final String errorKey) {
@@ -181,20 +162,18 @@ public class Problems {
 
     Builder(final MessageSourceResolvable codeResolver,
             final MessageSourceResolvable titleResolver,
-            final MessageSourceResolvable messageResolver,
-            final MessageSourceResolvable detailsResolver) {
-      this(getMessage(codeResolver), getMessage(titleResolver), getMessage(messageResolver), getMessage(detailsResolver));
+            final MessageSourceResolvable detailResolver) {
+      this(getMessage(codeResolver), getMessage(titleResolver), getMessage(detailResolver));
 
       if (ProblemBeanRegistry.problemProperties().isDebugEnabled()) {
         this.parameters.put(CODE_RESOLVER, codeResolver);
         this.parameters.put(TITLE_RESOLVER, titleResolver);
-        this.parameters.put(MESSAGE_RESOLVER, messageResolver);
-        this.parameters.put(DETAILS_RESOLVER, detailsResolver);
+        this.parameters.put(DETAIL_RESOLVER, detailResolver);
       }
     }
 
     @Override
-    public MessageBuilder title(final MessageSourceResolvable titleResolver) {
+    public DetailBuilder title(final MessageSourceResolvable titleResolver) {
       Assert.notNull(titleResolver, "'titleResolver' must not be null");
       this.title = getMessage(titleResolver);
       if (ProblemBeanRegistry.problemProperties().isDebugEnabled()) {
@@ -204,46 +183,24 @@ public class Problems {
     }
 
     @Override
-    public DetailsBuilder message(final MessageSourceResolvable messageResolver) {
-      Assert.notNull(messageResolver, "'messageResolver' must not be null");
-      this.message = getMessage(messageResolver);
+    public DefaultDetailBuilder detail(final MessageSourceResolvable detailResolver) {
+      Assert.notNull(detailResolver, "'detailResolver' must not be null");
+      this.detail = getMessage(detailResolver);
       if (ProblemBeanRegistry.problemProperties().isDebugEnabled()) {
-        this.parameters.put("messageResolver", messageResolver);
+        this.parameters.put("messageResolver", detailResolver);
       }
       return this;
     }
 
     @Override
-    public CauseBuilder details(final MessageSourceResolvable detailsResolver) {
-      Assert.notNull(detailsResolver, "'detailsResolver' must not be null");
-      this.details = getMessage(detailsResolver);
-      if (ProblemBeanRegistry.problemProperties().isDebugEnabled()) {
-        this.parameters.put("detailsResolver", detailsResolver);
-      }
+    public DetailArgsBuilder defaultDetail(@Nullable final String detail) {
+      this.defaultDetail = detail;
       return this;
     }
 
     @Override
-    public MessageArgsBuilder defaultMessage(@Nullable final String message) {
-      this.defaultMessage = message;
-      return this;
-    }
-
-    @Override
-    public DefaultDetailsBuilder messageArgs(@Nullable final Object... messageArgs) {
-      this.messageArgs = messageArgs;
-      return this;
-    }
-
-    @Override
-    public DetailsArgsBuilder defaultDetails(@Nullable final String details) {
-      this.defaultDetails = details;
-      return this;
-    }
-
-    @Override
-    public CauseBuilder detailsArgs(@Nullable final Object... detailsArgs) {
-      this.detailsArgs = detailsArgs;
+    public CauseBuilder detailArgs(@Nullable final Object... detailArgs) {
+      this.detailArgs = detailArgs;
       return this;
     }
 
@@ -273,19 +230,16 @@ public class Problems {
       if (StringUtils.isNotEmpty(this.errorKey)) {
         MessageSourceResolvable codeResolver = ProblemMessageSourceResolver.of(CODE_CODE_PREFIX + this.errorKey);
         MessageSourceResolvable titleResolver = ProblemMessageSourceResolver.of(TITLE_CODE_PREFIX + this.errorKey);
-        MessageSourceResolvable messageResolver = ProblemMessageSourceResolver.of(MESSAGE_CODE_PREFIX + this.errorKey, this.defaultMessage, this.messageArgs);
-        MessageSourceResolvable detailsResolver = ProblemMessageSourceResolver.of(DETAILS_CODE_PREFIX + this.errorKey, this.defaultDetails, this.detailsArgs);
+        MessageSourceResolvable detailResolver = ProblemMessageSourceResolver.of(DETAIL_CODE_PREFIX + this.errorKey, this.defaultDetail, this.detailArgs);
 
         this.code = getMessage(codeResolver);
         this.title = getMessage(titleResolver);
-        this.message = getMessage(messageResolver);
-        this.details = getMessage(detailsResolver);
+        this.detail = getMessage(detailResolver);
 
         if (ProblemBeanRegistry.problemProperties().isDebugEnabled()) {
           this.parameters.put(CODE_RESOLVER, codeResolver);
           this.parameters.put(TITLE_RESOLVER, titleResolver);
-          this.parameters.put(MESSAGE_RESOLVER, messageResolver);
-          this.parameters.put(DETAILS_RESOLVER, detailsResolver);
+          this.parameters.put(DETAIL_CODE_PREFIX, detailResolver);
         }
       }
     }
@@ -294,19 +248,16 @@ public class Problems {
       if (StringUtils.isNotEmpty(this.errorKey)) {
         MessageSourceResolvable codeResolver = ProblemMessageSourceResolver.of(CODE_CODE_PREFIX + this.errorKey, status.value());
         MessageSourceResolvable titleResolver = ProblemMessageSourceResolver.of(TITLE_CODE_PREFIX + this.errorKey, status.getReasonPhrase());
-        MessageSourceResolvable messageResolver = ProblemMessageSourceResolver.of(MESSAGE_CODE_PREFIX + this.errorKey, this.defaultMessage, this.messageArgs);
-        MessageSourceResolvable detailsResolver = ProblemMessageSourceResolver.of(DETAILS_CODE_PREFIX + this.errorKey, this.defaultDetails, this.detailsArgs);
+        MessageSourceResolvable detailResolver = ProblemMessageSourceResolver.of(DETAIL_CODE_PREFIX + this.errorKey, this.defaultDetail, this.detailArgs);
 
         this.code = getMessage(codeResolver);
         this.title = getMessage(titleResolver);
-        this.message = getMessage(messageResolver);
-        this.details = getMessage(detailsResolver);
+        this.detail = getMessage(detailResolver);
 
         if (ProblemBeanRegistry.problemProperties().isDebugEnabled()) {
           this.parameters.put(CODE_RESOLVER, codeResolver);
           this.parameters.put(TITLE_RESOLVER, titleResolver);
-          this.parameters.put(MESSAGE_RESOLVER, messageResolver);
-          this.parameters.put(DETAILS_RESOLVER, detailsResolver);
+          this.parameters.put(DETAIL_CODE_PREFIX, detailResolver);
         }
       }
     }
@@ -314,19 +265,19 @@ public class Problems {
     @Override
     public Problem get() {
       this.setParamsByErrorKey();
-      return Problem.of(this.code, this.title, this.message, this.details).cause(this.cause).parameters(this.parameters).build();
+      return Problem.of(this.code, this.title, this.detail).cause(this.cause).parameters(this.parameters).build();
     }
 
     @Override
     public ApplicationProblem throwAble(final HttpStatus status) {
       this.setParamsByErrorKey(status);
-      return ApplicationProblem.of(status, this.code, this.title, this.message, this.details, this.cause, this.parameters);
+      return ApplicationProblem.of(status, this.code, this.title, this.detail, this.cause, this.parameters);
     }
 
     @Override
     public ApplicationException throwAbleChecked(final HttpStatus status) {
       this.setParamsByErrorKey(status);
-      return ApplicationException.of(status, this.code, this.title, this.message, this.details, this.cause, this.parameters);
+      return ApplicationException.of(status, this.code, this.title, this.detail, this.cause, this.parameters);
     }
   }
 }

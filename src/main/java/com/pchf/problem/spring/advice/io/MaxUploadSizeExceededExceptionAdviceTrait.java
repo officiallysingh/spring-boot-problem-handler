@@ -29,12 +29,10 @@ public interface MaxUploadSizeExceededExceptionAdviceTrait<T, R> extends AdviceT
     }
     String maxFileSizeAllowed = bytes != -1 ? DataSize.ofBytes(bytes).toString() : "UNKNOWN";
 
-    String messageCode = ProblemConstant.MESSAGE_CODE_PREFIX + errorKey;
-    String detailsCode = ProblemConstant.DETAILS_CODE_PREFIX + errorKey;
+    String detailCode = ProblemConstant.DETAIL_CODE_PREFIX + errorKey;
 
     Problem problem = toProblem(exception, HttpStatus.BAD_REQUEST,
-        ProblemMessageSourceResolver.of(messageCode, defultMessage, new Object[] { maxFileSizeAllowed }),
-        ProblemMessageSourceResolver.of(detailsCode, defultMessage));
+        ProblemMessageSourceResolver.of(detailCode, defultMessage, new Object[] { maxFileSizeAllowed }));
 
     return create(exception, request, HttpStatus.BAD_REQUEST, problem);
   }

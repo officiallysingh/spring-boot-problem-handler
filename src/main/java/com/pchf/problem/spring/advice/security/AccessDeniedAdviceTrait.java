@@ -19,9 +19,7 @@ public interface AccessDeniedAdviceTrait<T, R> extends AdviceTrait<T, R> {
   @ExceptionHandler
   default R handleAccessDeniedException(final AccessDeniedException exception, final T request) {
     Problem problem = toProblem(exception, HttpStatus.FORBIDDEN,
-        ProblemMessageSourceResolver.of(ProblemConstant.MESSAGE_CODE_PREFIX + GeneralErrorKey.SECURITY_ACCESS_DENIED,
-            exception.getMessage()),
-        ProblemMessageSourceResolver.of(ProblemConstant.DETAILS_CODE_PREFIX + GeneralErrorKey.SECURITY_ACCESS_DENIED,
+        ProblemMessageSourceResolver.of(ProblemConstant.DETAIL_CODE_PREFIX + GeneralErrorKey.SECURITY_ACCESS_DENIED,
             exception.getMessage()));
     return create(exception, request, HttpStatus.FORBIDDEN, problem);
   }

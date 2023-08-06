@@ -1,7 +1,6 @@
 package com.pchf.problem.spring.boot.autoconfigure.webflux;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pchf.problem.ProblemDetails;
 import com.pchf.problem.spring.advice.security.SecurityAdviceTraits;
 import com.pchf.problem.spring.boot.autoconfigure.ProblemProperties;
 import com.pchf.problem.spring.boot.autoconfigure.SecurityAdviceEnabled;
@@ -15,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.web.server.ServerAuthenticationEntryPoint;
@@ -31,12 +31,12 @@ import reactor.core.publisher.Mono;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 @RequiredArgsConstructor
-class SecurityExceptionHandler implements SecurityAdviceTraits<ServerWebExchange, Mono<ResponseEntity<ProblemDetails>>> {
+class SecurityExceptionHandler implements SecurityAdviceTraits<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> {
 
   @ConditionalOnMissingBean
   @Bean
   ServerAuthenticationEntryPoint authenticationEntryPoint(
-      final SecurityAdviceTraits<ServerWebExchange, Mono<ResponseEntity<ProblemDetails>>> advice,
+      final SecurityAdviceTraits<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> advice,
       final ObjectMapper objectMapper) {
     return new ProblemAuthenticationEntryPoint(advice, objectMapper);
   }
@@ -44,7 +44,7 @@ class SecurityExceptionHandler implements SecurityAdviceTraits<ServerWebExchange
   @ConditionalOnMissingBean
   @Bean
   ServerAccessDeniedHandler serverAccessDeniedHandler(
-      final SecurityAdviceTraits<ServerWebExchange, Mono<ResponseEntity<ProblemDetails>>> advice,
+      final SecurityAdviceTraits<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> advice,
       final ObjectMapper objectMapper) {
     return new ProblemAccessDeniedHandler(advice, objectMapper);
   }

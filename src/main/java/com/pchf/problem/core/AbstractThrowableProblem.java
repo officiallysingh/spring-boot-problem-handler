@@ -13,8 +13,7 @@ public abstract class AbstractThrowableProblem extends ThrowableProblem {
 
   private final String code;
   private final String title;
-  private final String message;
-  private final String details;
+  private final String detail;
   private final Map<String, Object> parameters;
 
   protected AbstractThrowableProblem() {
@@ -26,28 +25,22 @@ public abstract class AbstractThrowableProblem extends ThrowableProblem {
   }
 
   protected AbstractThrowableProblem(final String code, final String title,
-                                     final String message) {
-    this(code, title, message, null);
+                                     final String detail) {
+    this(code, title, detail,null);
   }
 
   protected AbstractThrowableProblem(final String code, final String title,
-                                     final String message, final String details) {
-    this(code, title, message, details, null);
+                                     final String detail, @Nullable final ThrowableProblem cause) {
+    this(code, title, detail, cause, null);
   }
 
   protected AbstractThrowableProblem(final String code, final String title,
-                                     final String message, final String details, @Nullable final ThrowableProblem cause) {
-    this(code, title, message, details, cause, null);
-  }
-
-  protected AbstractThrowableProblem(final String code, final String title,
-                                     final String message, final String details, @Nullable final ThrowableProblem cause,
+                                     final String detail, @Nullable final ThrowableProblem cause,
                                      @Nullable final Map<String, Object> parameters) {
     super(cause);
     this.code = code;
     this.title = title;
-    this.message = message;
-    this.details = details;
+    this.detail = detail;
     this.parameters = Optional.ofNullable(parameters).orElseGet(LinkedHashMap::new);
   }
 
@@ -62,13 +55,8 @@ public abstract class AbstractThrowableProblem extends ThrowableProblem {
   }
 
   @Override
-  public String getMessage() {
-    return this.message;
-  }
-
-  @Override
-  public String getDetails() {
-    return this.details;
+  public String getDetail() {
+    return this.detail;
   }
 
   @Override

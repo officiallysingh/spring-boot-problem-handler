@@ -36,6 +36,8 @@ public class GeneralErrorKey {
 
   public static final String SECURITY_ACCESS_DENIED = "security.access.denied";
 
+  public static final String MULTIPLE_ERRORS = "multiple.errors";
+
   private GeneralErrorKey() {
     throw new IllegalStateException("Just a constants container, not supposed to be instantiated");
   }

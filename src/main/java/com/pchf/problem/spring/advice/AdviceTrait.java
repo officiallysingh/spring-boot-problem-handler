@@ -73,14 +73,14 @@ public interface AdviceTrait<T, R> extends BaseAdviceTrait {
     return create(throwable, request, status, headers, toProblem(throwable, status));
   }
 
-  default R create(final Throwable throwable, final T request, final HttpStatus status, final Problem... problems) {
-    return create(throwable, request, status, new HttpHeaders(), problems);
+  default R create(final Throwable throwable, final T request, final HttpStatus status, final Problem problem) {
+    return create(throwable, request, status, new HttpHeaders(), problem);
   }
 
   default R create(final Throwable throwable, final T request, final HttpStatus status, final HttpHeaders headers,
-                   final Problem... problems) {
-    Arrays.stream(problems).forEach(problem -> log(throwable, status));
-    return errorResponseBuilder().buildResponse(throwable, request, status, headers, problems);
+                   final Problem problem) {
+    log(throwable, status);
+    return errorResponseBuilder().buildResponse(throwable, request, status, headers, problem);
   }
 
   default R toProblem(final Throwable throwable, final T request) {
@@ -106,22 +106,18 @@ public interface AdviceTrait<T, R> extends BaseAdviceTrait {
         status.value());
     ProblemMessageSourceResolver defaultTitleResolver = ProblemMessageSourceResolver.of(ProblemConstant.TITLE_CODE_PREFIX + defaultErrorKey,
         status.getReasonPhrase());
-    ProblemMessageSourceResolver defaultMessageResolver = ProblemMessageSourceResolver.of(ProblemConstant.MESSAGE_CODE_PREFIX + defaultErrorKey,
-        throwable.getMessage());
-    ProblemMessageSourceResolver defaultDetailsResolver = ProblemMessageSourceResolver.of(ProblemConstant.DETAILS_CODE_PREFIX + defaultErrorKey,
+    ProblemMessageSourceResolver defaultDetailResolver = ProblemMessageSourceResolver.of(ProblemConstant.DETAIL_CODE_PREFIX + defaultErrorKey,
         throwable.getMessage());
 
     ProblemMessageSourceResolver codeResolver = ProblemMessageSourceResolver
         .of(ProblemConstant.CODE_CODE_PREFIX + errorKey, ProblemMessageProvider.getMessage(defaultCodeResolver));
     ProblemMessageSourceResolver titleResolver = ProblemMessageSourceResolver
         .of(ProblemConstant.TITLE_CODE_PREFIX + errorKey, ProblemMessageProvider.getMessage(defaultTitleResolver));
-    ProblemMessageSourceResolver messageResolver = ProblemMessageSourceResolver
-        .of(ProblemConstant.MESSAGE_CODE_PREFIX + errorKey, ProblemMessageProvider.getMessage(defaultMessageResolver));
-    ProblemMessageSourceResolver detailsResolver = ProblemMessageSourceResolver
-        .of(ProblemConstant.DETAILS_CODE_PREFIX + errorKey, ProblemMessageProvider.getMessage(defaultDetailsResolver));
+    ProblemMessageSourceResolver detailResolver = ProblemMessageSourceResolver
+        .of(ProblemConstant.DETAIL_CODE_PREFIX + errorKey, ProblemMessageProvider.getMessage(defaultDetailResolver));
 
     Problem problem = toProblem(throwable, codeResolver, titleResolver,
-        messageResolver, detailsResolver, statusResolver);
+        detailResolver, statusResolver);
     return create(throwable, request, status, problem);
   }
 

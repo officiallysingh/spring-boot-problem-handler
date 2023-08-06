@@ -1,6 +1,5 @@
 package com.pchf.problem.spring.boot.autoconfigure.web;
 
-import com.pchf.problem.ProblemDetails;
 import com.pchf.problem.core.ErrorResponseBuilder;
 import com.pchf.problem.spring.boot.autoconfigure.ProblemProperties;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
@@ -13,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.NativeWebRequest;
 
@@ -30,7 +30,7 @@ class ProblemWebAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  ErrorResponseBuilder<NativeWebRequest, ResponseEntity<ProblemDetails>> errorResponseBuilder() {
+  ErrorResponseBuilder<NativeWebRequest, ResponseEntity<ProblemDetail>> errorResponseBuilder() {
     return new SpringWebErrorResponseBuilder();
   }
 }

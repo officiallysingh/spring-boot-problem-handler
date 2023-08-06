@@ -27,10 +27,8 @@ public interface MethodNotAllowedAdviceTrait<T, R> extends AdviceTrait<T, R> {
     String allowedMethods = CollectionUtils.isEmpty(methods) ? "None"
         : methods.stream().map(HttpMethod::name).collect(Collectors.joining(","));
     Problem problem = toProblem(exception, HttpStatus.METHOD_NOT_ALLOWED,
-        ProblemMessageSourceResolver.of(ProblemConstant.MESSAGE_CODE_PREFIX + GeneralErrorKey.METHOD_NOT_ALLOWED,
-            "Requested Method: {0} not allowed, allowed methods are: {1}", new Object[]{requestedMethod, allowedMethods}),
-        ProblemMessageSourceResolver.of(ProblemConstant.DETAILS_CODE_PREFIX + GeneralErrorKey.METHOD_NOT_ALLOWED,
-            exception.getMessage()));
+        ProblemMessageSourceResolver.of(ProblemConstant.DETAIL_CODE_PREFIX + GeneralErrorKey.METHOD_NOT_ALLOWED,
+            "Requested Method: {0} not allowed, allowed methods are: {1}", new Object[]{requestedMethod, allowedMethods}));
 
     final HttpHeaders headers = new HttpHeaders();
     headers.setAllow(requireNonNull(methods));

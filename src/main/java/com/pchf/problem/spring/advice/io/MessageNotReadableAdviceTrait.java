@@ -39,16 +39,13 @@ public interface MessageNotReadableAdviceTrait<T, R> extends AdviceTrait<T, R> {
         .toArray(String[]::new);
     String[] titleCodes = Arrays.stream(errorPropertyKeys).map(errorKey -> ProblemConstant.TITLE_CODE_PREFIX + errorKey)
         .toArray(String[]::new);
-    String[] messageCodes = Arrays.stream(errorPropertyKeys).map(errorKey -> ProblemConstant.MESSAGE_CODE_PREFIX + errorKey)
-        .toArray(String[]::new);
-    String[] detailsCodes = Arrays.stream(errorPropertyKeys).map(errorKey -> ProblemConstant.DETAILS_CODE_PREFIX + errorKey)
+    String[] detailCodes = Arrays.stream(errorPropertyKeys).map(errorKey -> ProblemConstant.DETAIL_CODE_PREFIX + errorKey)
         .toArray(String[]::new);
 
     Problem problem = toProblem(invalidFormatException,
         ProblemMessageSourceResolver.of(codeCodes, "" + HttpStatus.BAD_REQUEST.value()),
         ProblemMessageSourceResolver.of(titleCodes, HttpStatus.BAD_REQUEST.getReasonPhrase()),
-        ProblemMessageSourceResolver.of(messageCodes, invalidFormatException.getMessage()),
-        ProblemMessageSourceResolver.of(detailsCodes, invalidFormatException.getMessage()));
+        ProblemMessageSourceResolver.of(detailCodes, invalidFormatException.getMessage()));
 
     return create(invalidFormatException, request, HttpStatus.BAD_REQUEST, problem);
   }

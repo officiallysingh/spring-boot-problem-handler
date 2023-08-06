@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.pchf.client</groupId>
+    <groupId>com.ksoot</groupId>
     <artifactId>spring-boot-problem-handler</artifactId>
     <version>0.0.1.SNAPSHOT</version>
     <name>spring-boot-problem-handler</name>
@@ -29,10 +29,14 @@
         <lombok.version>1.18.4</lombok.version>
         <junit.jupiter.version>5.9.1</junit.jupiter.version>
 
+<!--        <nexus.repository>https://nexus.piramalfinance.com/repository</nexus.repository>-->
         <maven-release-plugin.version>3.0.0-M1</maven-release-plugin.version>
         <maven-deploy-plugin.version>3.1.1</maven-deploy-plugin.version>
-        <scm.connection>scm:git:ssh://git@github.com:officiallysingh/spring-boot-problem-handler.git
-        </scm.connection>
+<!--        <scm.connection>https://gitlab.piramalfinance.com/common-clients-j17/problem-handler.git</scm.connection>-->
+<!--        <sonar.projectKey>common-clients-j17_problem-handler_AYiK2hN_LGE6IKYl0gca</sonar.projectKey>-->
+<!--        <sonar.qualitygate.wait>true</sonar.qualitygate.wait>-->
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
     <dependencyManagement>
@@ -64,6 +68,10 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
             <version>${apache.commons.collections.version}</version>
@@ -90,14 +98,6 @@
             <optional>true</optional>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.validation</groupId>
-            <artifactId>jakarta.validation-api</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
@@ -172,28 +172,10 @@
         </plugins>
     </build>
 
-    <scm>
-        <connection>${scm.connection}</connection>
-        <developerConnection>${scm.connection}</developerConnection>
-        <tag>HEAD</tag>
-<!--        <tag>1.0.1-feature_LMS-365</tag>-->
-    </scm>
-
-    <repositories>
-        <repository>
-            <id>piramal-releases</id>
-            <url>${nexus.repository}/piramal-releases/</url>
-        </repository>
-        <repository>
-            <id>piramal-snapshots</id>
-            <url>${nexus.repository}/piramal-snapshots/</url>
-        </repository>
-    </repositories>
-    <distributionManagement>
-        <repository>
-            <id>piramal-releases</id>
-            <url>${nexus.repository}/piramal-releases/</url>
-        </repository>
-    </distributionManagement>
+<!--    <scm>-->
+<!--        <connection>${scm.connection}</connection>-->
+<!--        <developerConnection>${scm.connection}</developerConnection>-->
+<!--        <tag>HEAD</tag>-->
+<!--    </scm>-->
 
 </project>

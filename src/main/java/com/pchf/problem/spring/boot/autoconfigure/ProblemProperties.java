@@ -19,6 +19,8 @@ public class ProblemProperties {
 
   private boolean enabled = true;
 
+  private String typeUrl;
+
   private boolean debugEnabled = false;
 
   private boolean causeChainsEnabled = false;

@@ -11,8 +11,7 @@ import org.springframework.util.MimeTypeUtils;
 
 import java.util.List;
 
-import static com.pchf.problem.core.ProblemConstant.DETAILS_CODE_PREFIX;
-import static com.pchf.problem.core.ProblemConstant.MESSAGE_CODE_PREFIX;
+import static com.pchf.problem.core.ProblemConstant.DETAIL_CODE_PREFIX;
 
 public interface BaseNotAcceptableAdviceTrait<T, R> extends AdviceTrait<T, R> {
 
@@ -21,11 +20,9 @@ public interface BaseNotAcceptableAdviceTrait<T, R> extends AdviceTrait<T, R> {
     final HttpHeaders headers = new HttpHeaders();
     headers.setAccept(supportedMediaTypes);
     Problem problem = toProblem(exception, HttpStatus.UNSUPPORTED_MEDIA_TYPE,
-        ProblemMessageSourceResolver.of(MESSAGE_CODE_PREFIX + GeneralErrorKey.MEDIA_TYPE_NOT_SUPPORTED,
+        ProblemMessageSourceResolver.of(DETAIL_CODE_PREFIX + GeneralErrorKey.MEDIA_TYPE_NOT_SUPPORTED,
             "Media Type: {0} Not Acceptable, Supported Media Types are: {1}", new Object[]{causeMediaType,
-                MimeTypeUtils.toString(supportedMediaTypes)}),
-        ProblemMessageSourceResolver.of(DETAILS_CODE_PREFIX + GeneralErrorKey.MEDIA_TYPE_NOT_SUPPORTED,
-            exception.getMessage()));
+                MimeTypeUtils.toString(supportedMediaTypes)}));
     return create(exception, request, HttpStatus.UNSUPPORTED_MEDIA_TYPE, headers, problem);
   }
 }

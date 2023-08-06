@@ -28,8 +28,8 @@ public abstract class ThrowableProblem extends RuntimeException implements Probl
   }
 
   @Override
-  public String getMessage() {
-    return Stream.of(getCode(), getTitle(), getDetails())
+  public String getDetail() {
+    return Stream.of(getCode(), getTitle())
         .filter(Objects::nonNull)
         .collect(joining(": "));
   }
@@ -44,5 +44,4 @@ public abstract class ThrowableProblem extends RuntimeException implements Probl
   public String toString() {
     return Problem.toString(this);
   }
-
 }

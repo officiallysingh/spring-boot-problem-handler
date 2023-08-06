@@ -22,15 +22,13 @@ public interface MissingServletRequestParameterAdviceTrait<T, R> extends BaseVal
 
     String codeCode = ProblemConstant.CODE_CODE_PREFIX + GeneralErrorKey.MISSING_SERVLET_REQUEST_PARAMETER + ProblemConstant.DOT + errorKey;
     String titleCode = ProblemConstant.TITLE_CODE_PREFIX + GeneralErrorKey.MISSING_SERVLET_REQUEST_PARAMETER + ProblemConstant.DOT + errorKey;
-    String messageCode = ProblemConstant.MESSAGE_CODE_PREFIX + GeneralErrorKey.MISSING_SERVLET_REQUEST_PARAMETER + ProblemConstant.DOT + errorKey;
-    String detailsCode = ProblemConstant.DETAILS_CODE_PREFIX + GeneralErrorKey.MISSING_SERVLET_REQUEST_PARAMETER + ProblemConstant.DOT + errorKey;
+    String detailCode = ProblemConstant.DETAIL_CODE_PREFIX + GeneralErrorKey.MISSING_SERVLET_REQUEST_PARAMETER + ProblemConstant.DOT + errorKey;
 
     HttpStatus status = defaultConstraintViolationStatus();
 
     Problem problem = toProblem(exception, ProblemMessageSourceResolver.of(codeCode, status.value()),
         ProblemMessageSourceResolver.of(titleCode, status.getReasonPhrase()),
-        ProblemMessageSourceResolver.of(messageCode, exception.getMessage()),
-        ProblemMessageSourceResolver.of(detailsCode, exception.getMessage()));
+        ProblemMessageSourceResolver.of(detailCode, exception.getMessage()));
 
     return create(exception, request, status, problem);
   }

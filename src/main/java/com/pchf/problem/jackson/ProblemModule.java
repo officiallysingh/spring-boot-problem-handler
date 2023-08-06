@@ -78,15 +78,15 @@ public final class ProblemModule extends Module {
   }
 
   private Class<?> mixinClass() {
-    if (this.stackTraces && this.cause) {
+//    if (this.stackTraces && this.cause) {
       return ExceptionalMixin.class;
-    } else if (!this.stackTraces && !this.cause) {
-      return ExceptionalWithoutStacktraceAndCauseMixin.class;
-    } else if (!this.stackTraces) {
-      return ExceptionalWithoutStacktraceMixin.class;
-    } else { //!this.cause
-      return ExceptionalWithoutCauseMixin.class;
-    }
+//    } else if (!this.stackTraces && !this.cause) {
+//      return ExceptionalWithoutStacktraceAndCauseMixin.class;
+//    } else if (!this.stackTraces) {
+//      return ExceptionalWithoutStacktraceMixin.class;
+//    } else { //!this.cause
+//      return ExceptionalWithoutCauseMixin.class;
+//    }
   }
 
   @Override

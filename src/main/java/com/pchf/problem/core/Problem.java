@@ -4,6 +4,7 @@ import jakarta.annotation.Nullable;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.Validate;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.Assert;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,28 +25,6 @@ import static java.util.stream.Collectors.joining;
  */
 public interface Problem {
 
-  static String toString(final Problem problem) {
-    final Stream<String> parts = Stream
-        .concat(Stream.of(problem.getCode(), problem.getTitle(), problem.getMessage(), problem.getDetails()),
-            problem.getParameters().entrySet().stream().map(Map.Entry::toString))
-        .filter(Objects::nonNull);
-
-    return problem.getCode() + "{" + parts.collect(joining(", ")) + "}";
-  }
-
-  // ------------- Build Problems ---------------
-  static TitleBuilder code(final String code) {
-    return new Builder(code);
-  }
-
-  static MessageBuilder of(final HttpStatus status) {
-    return new Builder("" + status.value(), status.getReasonPhrase());
-  }
-
-  static CauseBuilder of(final String code, final String title, final String message, final String details) {
-    return new Builder(code, title, message, details);
-  }
-
   String getCode();
 
   /**
@@ -57,14 +36,12 @@ public interface Problem {
    */
   String getTitle();
 
-  String getMessage();
-
   /**
    * A human readable explanation specific to this occurrence of the problem.
    *
    * @return A human readable explanation of this problem
    */
-  String getDetails();
+  String getDetail();
 
   ThrowableProblem getCause();
 
@@ -78,16 +55,34 @@ public interface Problem {
     return Collections.emptyMap();
   }
 
+  static String toString(final Problem problem) {
+    final Stream<String> parts = Stream
+        .concat(Stream.of(problem.getCode(), problem.getTitle(), problem.getDetail()),
+            problem.getParameters().entrySet().stream().map(Map.Entry::toString))
+        .filter(Objects::nonNull);
+
+    return problem.getCode() + "{" + parts.collect(joining(", ")) + "}";
+  }
+
+  // ------------- Build Problems ---------------
+  static TitleBuilder code(final String code) {
+    return new Builder(code);
+  }
+
+  static DetailBuilder of(final HttpStatus status) {
+    return new Builder("" + status.value(), status.getReasonPhrase());
+  }
+
+  static CauseBuilder of(final String code, final String title, final String detail) {
+    return new Builder(code, title, detail);
+  }
+
   public interface TitleBuilder {
-    MessageBuilder title(final String title);
+    DetailBuilder title(final String title);
   }
 
-  public interface MessageBuilder {
-    DetailsBuilder message(final String message);
-  }
-
-  public interface DetailsBuilder {
-    CauseBuilder details(final String details);
+  public interface DetailBuilder {
+    CauseBuilder detail(final String detail);
   }
 
   public interface CauseBuilder extends ParameterBuilder {
@@ -102,68 +97,58 @@ public interface Problem {
     org.apache.commons.lang3.builder.Builder<ThrowableProblem> parameters(@Nullable final Map<String, Object> parameters);
   }
 
-  public static class Builder implements TitleBuilder, MessageBuilder, DetailsBuilder, CauseBuilder {
+  public static class Builder implements TitleBuilder, DetailBuilder, CauseBuilder {
 
     private static final Set<String> RESERVED_PROPERTIES = new HashSet<>(
-        Arrays.asList("code", "title", "message", "details", "cause"));
-    private final Map<String, Object> parameters = new LinkedHashMap<>();
+        Arrays.asList("code", "title", "detail", "cause"));
     private String code;
     private String title;
-    private String message;
-    private String details;
+    private String detail;
     private ThrowableProblem cause;
+    private final Map<String, Object> parameters = new LinkedHashMap<>();
 
     Builder(final String code) {
-      Validate.notBlank(code, "'code' must not be null or empty");
+      Assert.hasText(code, "'code' must not be null or empty");
       this.code = code;
     }
 
     Builder(final String code, final String title) {
       this(code);
-      Validate.notBlank(title, "'title' must not be null or empty");
+      Assert.hasText(title, "'title' must not be null or empty");
       this.title = title;
     }
 
-    Builder(final String code, final String title, final String message, final String details) {
+    Builder(final String code, final String title, final String detail) {
       this(code, title);
-      Validate.notBlank(code, "'message' must not be null or empty");
-      Validate.notBlank(code, "'details' must not be null or empty");
-      this.message = message;
-      this.details = details;
+      Assert.hasText(detail, "'detail' must not be null or empty");
+      this.detail = detail;
     }
 
-    Builder(final String code, final String title, final String message, final String details,
+    Builder(final String code, final String title, final String detail,
             final ThrowableProblem cause) {
-      this(code, title, message, details);
+      this(code, title, detail);
       this.cause = cause;
     }
 
-    Builder(final String code, final String title, final String message, final String details,
+    Builder(final String code, final String title, final String detail,
             final ThrowableProblem cause, final Map<String, Object> parameters) {
-      this(code, title, message, details, cause);
+      this(code, title, detail, cause);
       if (MapUtils.isNotEmpty(parameters)) {
         this.parameters.putAll(parameters);
       }
     }
 
     @Override
-    public MessageBuilder title(final String title) {
-      Validate.notBlank(title, "'title' must not be null or empty");
+    public DetailBuilder title(final String title) {
+      Assert.hasText(title, "'title' must not be null or empty");
       this.title = title;
       return this;
     }
 
     @Override
-    public DetailsBuilder message(final String message) {
-      Validate.notBlank(code, "'message' must not be null or empty");
-      this.message = message;
-      return this;
-    }
-
-    @Override
-    public CauseBuilder details(final String details) {
-      Validate.notBlank(code, "'details' must not be null or empty");
-      this.details = details;
+    public CauseBuilder detail(final String detail) {
+      Assert.hasText(detail, "'detail' must not be null or empty");
+      this.detail = detail;
       return this;
     }
 
@@ -175,8 +160,8 @@ public interface Problem {
 
     @Override
     public ParameterBuilder parameter(final String key, final Object value) {
-      Validate.notBlank(key, "'key' must not be null or empty");
-      Validate.isTrue(!RESERVED_PROPERTIES.contains(key), "Property " + key + " is reserved");
+      Assert.hasText(key, "'key' must not be null or empty");
+      Assert.isTrue(!RESERVED_PROPERTIES.contains(key), "Property " + key + " is reserved");
       this.parameters.put(key, value);
       return this;
     }
@@ -192,7 +177,7 @@ public interface Problem {
 
     @Override
     public ThrowableProblem build() {
-      return new DefaultProblem(this.code, this.title, this.message, this.details, this.cause, this.parameters);
+      return new DefaultProblem(this.code, this.title, this.detail, this.cause, this.parameters);
     }
   }
 }

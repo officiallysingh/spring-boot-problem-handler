@@ -1,6 +1,5 @@
 package com.pchf.problem.spring.boot.autoconfigure.webflux;
 
-import com.pchf.problem.ProblemDetails;
 import com.pchf.problem.core.ErrorResponseBuilder;
 import com.pchf.problem.spring.boot.autoconfigure.ProblemProperties;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -13,6 +12,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -31,7 +31,7 @@ class ProblemWebfluxAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  ErrorResponseBuilder<ServerWebExchange, Mono<ResponseEntity<ProblemDetails>>> errorResponseBuilder() {
+  ErrorResponseBuilder<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> errorResponseBuilder() {
     return new SpringWebfluxErrorResponseBuilder();
   }
 }

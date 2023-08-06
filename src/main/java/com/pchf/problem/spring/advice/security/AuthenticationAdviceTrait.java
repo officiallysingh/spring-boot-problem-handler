@@ -18,9 +18,7 @@ public interface AuthenticationAdviceTrait<T, R> extends AdviceTrait<T, R> {
   @ExceptionHandler
   default R handleAuthenticationException(final AuthenticationException exception, final T request) {
     Problem problem = toProblem(exception, HttpStatus.UNAUTHORIZED,
-        ProblemMessageSourceResolver.of(ProblemConstant.MESSAGE_CODE_PREFIX + GeneralErrorKey.SECURITY_UNAUTHORIZED,
-            exception.getMessage()),
-        ProblemMessageSourceResolver.of(ProblemConstant.DETAILS_CODE_PREFIX + GeneralErrorKey.SECURITY_UNAUTHORIZED,
+        ProblemMessageSourceResolver.of(ProblemConstant.DETAIL_CODE_PREFIX + GeneralErrorKey.SECURITY_UNAUTHORIZED,
             exception.getMessage()));
     return create(exception, request, HttpStatus.UNAUTHORIZED, problem);
   }

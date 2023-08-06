@@ -3,7 +3,6 @@ package com.pchf.problem.spring.boot.autoconfigure.web;
 import com.atlassian.oai.validator.OpenApiInteractionValidator;
 import com.atlassian.oai.validator.springmvc.OpenApiValidationInterceptor;
 import com.atlassian.oai.validator.springmvc.ValidationReportHandler;
-import com.pchf.problem.ProblemDetails;
 import com.pchf.problem.spring.advice.validation.OpenApiValidationAdviceTrait;
 import com.pchf.problem.spring.boot.autoconfigure.OpenAPIValidationAdviceEnabled;
 import com.pchf.problem.spring.boot.autoconfigure.ProblemProperties;
@@ -19,6 +18,7 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -31,7 +31,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 @RequiredArgsConstructor
-class OpenApiValidationExceptionHandler implements OpenApiValidationAdviceTrait<NativeWebRequest, ResponseEntity<ProblemDetails>> {
+class OpenApiValidationExceptionHandler implements OpenApiValidationAdviceTrait<NativeWebRequest, ResponseEntity<ProblemDetail>> {
 
   private final ProblemProperties problemProperties;
 

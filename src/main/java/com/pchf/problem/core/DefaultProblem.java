@@ -10,12 +10,12 @@ public final class DefaultProblem extends AbstractThrowableProblem {
 
   // TODO needed for jackson
   DefaultProblem(final String code, final String title, final String message,
-                 final String details, @Nullable final ThrowableProblem cause) {
-    super(code, title, message, details, cause);
+                 @Nullable final ThrowableProblem cause) {
+    super(code, title, message, cause);
   }
 
-  DefaultProblem(final String code, final String title, final String message, final String details,
+  DefaultProblem(final String code, final String title, final String message,
                  @Nullable final ThrowableProblem cause, @Nullable final Map<String, Object> parameters) {
-    super(code, title, message, details, cause, parameters);
+    super(code, title, message, cause, parameters);
   }
 }

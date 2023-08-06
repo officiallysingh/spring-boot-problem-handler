@@ -1,6 +1,5 @@
 package com.pchf.problem.spring.boot.autoconfigure.webflux;
 
-import com.pchf.problem.ProblemDetails;
 import com.pchf.problem.spring.advice.dao.ConstraintNameResolver;
 import com.pchf.problem.spring.advice.dao.DBType;
 import com.pchf.problem.spring.advice.dao.DaoAdviceTraits;
@@ -17,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.server.ServerWebExchange;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
-class DaoExceptionHandler implements DaoAdviceTraits<ServerWebExchange, Mono<ResponseEntity<ProblemDetails>>> {
+class DaoExceptionHandler implements DaoAdviceTraits<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> {
 
   private final Map<DBType, ConstraintNameResolver> constraintNameResolvers;
 

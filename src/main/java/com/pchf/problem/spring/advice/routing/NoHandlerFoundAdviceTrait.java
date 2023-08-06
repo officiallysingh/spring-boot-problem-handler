@@ -32,9 +32,7 @@ public interface NoHandlerFoundAdviceTrait<T, R> extends AdviceTrait<T, R> {
             HttpStatus.NOT_FOUND.value()),
         ProblemMessageSourceResolver.of(ProblemConstant.TITLE_CODE_PREFIX + GeneralErrorKey.NO_HANDLER_FOUND,
             HttpStatus.NOT_FOUND.getReasonPhrase()),
-        ProblemMessageSourceResolver.of(ProblemConstant.MESSAGE_CODE_PREFIX + GeneralErrorKey.NO_HANDLER_FOUND,
-            exception.getMessage()),
-        ProblemMessageSourceResolver.of(ProblemConstant.DETAILS_CODE_PREFIX + GeneralErrorKey.NO_HANDLER_FOUND,
+        ProblemMessageSourceResolver.of(ProblemConstant.DETAIL_CODE_PREFIX + GeneralErrorKey.NO_HANDLER_FOUND,
             exception.getMessage()));
     return create(exception, request, HttpStatus.NOT_FOUND, problem);
   }

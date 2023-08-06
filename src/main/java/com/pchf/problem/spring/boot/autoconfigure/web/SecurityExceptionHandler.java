@@ -1,6 +1,5 @@
 package com.pchf.problem.spring.boot.autoconfigure.web;
 
-import com.pchf.problem.ProblemDetails;
 import com.pchf.problem.spring.advice.security.ProblemAccessDeniedHandler;
 import com.pchf.problem.spring.advice.security.ProblemAuthenticationEntryPoint;
 import com.pchf.problem.spring.advice.security.SecurityAdviceTraits;
@@ -16,6 +15,7 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -32,7 +32,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 @RequiredArgsConstructor
-class SecurityExceptionHandler implements SecurityAdviceTraits<NativeWebRequest, ResponseEntity<ProblemDetails>> {
+class SecurityExceptionHandler implements SecurityAdviceTraits<NativeWebRequest, ResponseEntity<ProblemDetail>> {
 
   @ConditionalOnMissingBean
   @Bean

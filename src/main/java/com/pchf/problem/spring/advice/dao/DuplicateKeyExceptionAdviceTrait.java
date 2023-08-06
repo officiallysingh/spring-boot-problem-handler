@@ -23,13 +23,11 @@ public interface DuplicateKeyExceptionAdviceTrait<T, R> extends BaseDataIntegrit
 
     String codeCode = ProblemConstant.CODE_CODE_PREFIX + GeneralErrorKey.DATA_INTEGRITY_VIOLATION + ProblemConstant.DOT + constraintName;
     String titleCode = ProblemConstant.TITLE_CODE_PREFIX + GeneralErrorKey.DATA_INTEGRITY_VIOLATION + ProblemConstant.DOT + constraintName;
-    String messageCode = ProblemConstant.MESSAGE_CODE_PREFIX + GeneralErrorKey.DATA_INTEGRITY_VIOLATION + ProblemConstant.DOT + constraintName;
-    String detailsCode = ProblemConstant.DETAILS_CODE_PREFIX + GeneralErrorKey.DATA_INTEGRITY_VIOLATION + ProblemConstant.DOT + constraintName;
+    String messageCode = ProblemConstant.DETAIL_CODE_PREFIX + GeneralErrorKey.DATA_INTEGRITY_VIOLATION + ProblemConstant.DOT + constraintName;
 
     Problem problem = toProblem(exception, ProblemMessageSourceResolver.of(codeCode, status.value()),
         ProblemMessageSourceResolver.of(titleCode, status.getReasonPhrase()),
-        ProblemMessageSourceResolver.of(messageCode, ProblemConstant.DB_CONSTRAINT_VIOLATION_DEFAULT_MESSAGE),
-        ProblemMessageSourceResolver.of(detailsCode, exception.getMessage()));
+        ProblemMessageSourceResolver.of(messageCode, ProblemConstant.DB_CONSTRAINT_VIOLATION_DEFAULT_MESSAGE));
 
     return create(exception, request, status, problem);
   }

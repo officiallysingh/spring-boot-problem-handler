@@ -13,22 +13,12 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @JsonIgnoreProperties(ignoreUnknown = true)
 interface ExceptionalMixin {
 
-  // Because of it, the 'message' field was not appearing in exception response
-//    @JsonIgnore
-//    String getMessage();
-
   @JsonIgnore
   String getLocalizedMessage();
 
-  @JsonInclude(NON_NULL)
-  ThrowableProblem getCause();
-
-  // decision about inclusion is up to derived mixins
-  @JsonProperty("stacktrace")
-  @JsonSerialize(contentUsing = ToStringSerializer.class)
+  @JsonIgnore
   StackTraceElement[] getStackTrace();
 
   @JsonIgnore
   Throwable[] getSuppressed();
-
 }

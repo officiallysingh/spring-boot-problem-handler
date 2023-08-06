@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.annotation.Nullable;
 import org.apache.commons.lang3.Validate;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.Assert;
 
 import java.util.Map;
 
@@ -16,49 +17,40 @@ public final class ApplicationException extends Exception implements Exceptional
 
   private final String title;
 
-  private final String message;
-
-  private final String details;
+  private final String detail;
 
   private Map<String, Object> parameters;
 
   private ThrowableProblem cause;
 
-  public ApplicationException(final HttpStatus status, final String code, final String title, final String message,
-                              final String details, @Nullable final ThrowableProblem cause, @Nullable final Map<String, Object> parameters) {
+  public ApplicationException(final HttpStatus status, final String code, final String title, final String detail,
+                              @Nullable final ThrowableProblem cause, @Nullable final Map<String, Object> parameters) {
     super(cause);
-    Validate.notNull(status, "'status' must not be null");
-    Validate.notBlank(code, "'code' must not be null or empty");
-    Validate.notBlank(title, "'title' must not be null or empty");
-    Validate.notBlank(message, "'message' must not be null or empty");
-    Validate.notBlank(details, "'details' must not be null or empty");
+    Assert.notNull(status, "'status' must not be null");
+    Assert.hasText(code, "'code' must not be null or empty");
+    Assert.hasText(title, "'title' must not be null or empty");
+    Assert.hasText(detail, "'detail' must not be null or empty");
     this.status = status;
     this.code = code;
     this.title = title;
-    this.message = message;
-    this.details = details;
+    this.detail = detail;
     this.cause = cause;
     this.parameters = parameters;
   }
 
   public static ApplicationException of(final HttpStatus status, final String code, final String title,
-                                        final String message, final String details) {
-    return new ApplicationException(status, code, title, message, details, null, null);
+                                        final String detail) {
+    return new ApplicationException(status, code, title, detail, null, null);
   }
 
   public static ApplicationException of(final HttpStatus status, final String code, final String title,
-                                        final String message, final String details, @Nullable final ThrowableProblem cause) {
-    return new ApplicationException(status, code, title, message, details, cause, null);
+                                        final String detail, @Nullable final ThrowableProblem cause) {
+    return new ApplicationException(status, code, title, detail, cause, null);
   }
 
   public static ApplicationException of(final HttpStatus status, final String code, final String title,
-                                        final String message, final String details, @Nullable final Map<String, Object> parameters) {
-    return new ApplicationException(status, code, title, message, details, null, parameters);
-  }
-
-  public static ApplicationException of(final HttpStatus status, final String code, final String title,
-                                        final String message, final String details, @Nullable final ThrowableProblem cause, @Nullable final Map<String, Object> parameters) {
-    return new ApplicationException(status, code, title, message, details, cause,
+                                        final String detail, @Nullable final ThrowableProblem cause, @Nullable final Map<String, Object> parameters) {
+    return new ApplicationException(status, code, title, detail, cause,
         parameters);
   }
 
@@ -78,13 +70,8 @@ public final class ApplicationException extends Exception implements Exceptional
   }
 
   @Override
-  public String getMessage() {
-    return this.message;
-  }
-
-  @Override
-  public String getDetails() {
-    return this.details;
+  public String getDetail() {
+    return this.detail;
   }
 
   @Override

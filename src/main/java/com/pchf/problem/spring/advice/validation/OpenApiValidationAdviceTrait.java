@@ -18,38 +18,52 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
+import static com.pchf.problem.core.ProblemConstant.CONSTRAINT_VIOLATION_CODE_CODE_PREFIX;
+import static com.pchf.problem.core.ProblemConstant.CONSTRAINT_VIOLATION_DETAIL_CODE_PREFIX;
+import static com.pchf.problem.core.ProblemConstant.CONSTRAINT_VIOLATION_TITLE_CODE_PREFIX;
+import static com.pchf.problem.core.ProblemConstant.VIOLATIONS_KEY;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public interface OpenApiValidationAdviceTrait<T, R> extends BaseValidationAdviceTrait<T, R> {
 
   @ExceptionHandler(InvalidRequestException.class)
   default R handleInvalidRequest(final InvalidRequestException exception, final T request) {
-
-    final List<Problem> problems = handleValidationReport(exception.getValidationReport(), exception);
-
+    final List<ViolationVM> violations = handleValidationReport(exception.getValidationReport(), exception);
+    Map<String, Object> parameters = new LinkedHashMap<>(4);
+    parameters.put(VIOLATIONS_KEY, violations);
+    Problem problem = toProblem(exception, ProblemMessageSourceResolver.of(CONSTRAINT_VIOLATION_CODE_CODE_PREFIX),
+        ProblemMessageSourceResolver.of(CONSTRAINT_VIOLATION_TITLE_CODE_PREFIX),
+        ProblemMessageSourceResolver.of(CONSTRAINT_VIOLATION_DETAIL_CODE_PREFIX), parameters);
     return create(exception, request, defaultConstraintViolationStatus(),
-        problems.toArray(new Problem[problems.size()]));
+        problem);
   }
 
   @ExceptionHandler
   default R handleInvalidResponse(final InvalidResponseException exception, final T request) {
-
-    final List<Problem> problems = handleValidationReport(exception.getValidationReport(), exception);
-
+    final List<ViolationVM> violations = handleValidationReport(exception.getValidationReport(), exception);
+    Map<String, Object> parameters = new LinkedHashMap<>(4);
+    parameters.put(VIOLATIONS_KEY, violations);
+    Problem problem = toProblem(exception, ProblemMessageSourceResolver.of(CONSTRAINT_VIOLATION_CODE_CODE_PREFIX),
+        ProblemMessageSourceResolver.of(CONSTRAINT_VIOLATION_TITLE_CODE_PREFIX),
+        ProblemMessageSourceResolver.of(CONSTRAINT_VIOLATION_DETAIL_CODE_PREFIX), parameters);
     return create(exception, request, defaultConstraintViolationStatus(),
-        problems.toArray(new Problem[problems.size()]));
+        problem);
   }
 
-  default List<Problem> handleValidationReport(final ValidationReport validationReport, final Throwable exception) {
+  default List<ViolationVM> handleValidationReport(final ValidationReport validationReport, final Throwable exception) {
     return validationReport.getMessages().stream().filter(message -> message.getLevel() == Level.ERROR)
         .flatMap(message -> handleValidationReportMessage(message, exception).stream()).toList();
   }
 
-  default List<Problem> handleValidationReportMessage(final Message message, final Throwable exception) {
+  default List<ViolationVM> handleValidationReportMessage(final Message message, final Throwable exception) {
 
     HttpStatus status = defaultConstraintViolationStatus();
+    String propertyPath = message.getContext().flatMap(MessageContext::getParameter).map(Parameter::getName)
+        .orElse("");
 
     List<String[]> errorPropertyKeys = deriveOpenApiValidationErrorKeys(message);
 
@@ -57,23 +71,16 @@ public interface OpenApiValidationAdviceTrait<T, R> extends BaseValidationAdvice
       String[] codeCodes = Arrays.stream(propertyKeys)
           .map(errorKey -> ProblemConstant.CODE_CODE_PREFIX + GeneralErrorKey.OPEN_API_VIOLATION + ProblemConstant.DOT + errorKey)
           .toArray(String[]::new);
-      String[] titleCodes = Arrays.stream(propertyKeys)
-          .map(errorKey -> ProblemConstant.TITLE_CODE_PREFIX + GeneralErrorKey.OPEN_API_VIOLATION + ProblemConstant.DOT + errorKey)
-          .toArray(String[]::new);
       String[] messageCodes = Arrays.stream(propertyKeys)
-          .map(errorKey -> ProblemConstant.MESSAGE_CODE_PREFIX + GeneralErrorKey.OPEN_API_VIOLATION + ProblemConstant.DOT + errorKey)
-          .toArray(String[]::new);
-      String[] detailsCodes = Arrays.stream(propertyKeys)
-          .map(errorKey -> ProblemConstant.DETAILS_CODE_PREFIX + GeneralErrorKey.OPEN_API_VIOLATION + ProblemConstant.DOT + errorKey)
+          .map(errorKey -> ProblemConstant.DETAIL_CODE_PREFIX + GeneralErrorKey.OPEN_API_VIOLATION + ProblemConstant.DOT + errorKey)
           .toArray(String[]::new);
 
-      Problem problem = toProblem(exception, ProblemMessageSourceResolver.of(codeCodes, "" + status.value()),
-          ProblemMessageSourceResolver.of(titleCodes, status.getReasonPhrase()),
-          ProblemMessageSourceResolver.of(messageCodes, message.getMessage()),
-          ProblemMessageSourceResolver.of(detailsCodes, message.getMessage()));
-      return problem;
+      ProblemMessageSourceResolver codeResolver = ProblemMessageSourceResolver.of(codeCodes, "" + status.value());
+      ProblemMessageSourceResolver messageResolver = ProblemMessageSourceResolver.of(messageCodes, message.getMessage());
+      return createViolation(codeResolver, messageResolver, propertyPath);
     }).toList();
   }
+
 
   default List<String[]> deriveOpenApiValidationErrorKeys(final Message message) {
     String propertyKey = message.getContext().flatMap(MessageContext::getParameter).map(Parameter::getName)

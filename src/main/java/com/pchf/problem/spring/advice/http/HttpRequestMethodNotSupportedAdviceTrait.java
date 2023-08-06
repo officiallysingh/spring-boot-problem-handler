@@ -22,10 +22,8 @@ public interface HttpRequestMethodNotSupportedAdviceTrait<T, R> extends AdviceTr
     String requestedMethod = exception.getMethod();
     String allowedMethods = ArrayUtils.isEmpty(methods) ? "None" : String.join(",", methods);
     Problem problem = toProblem(exception, HttpStatus.METHOD_NOT_ALLOWED,
-        ProblemMessageSourceResolver.of(ProblemConstant.MESSAGE_CODE_PREFIX + GeneralErrorKey.REQUEST_METHOD_NOT_SUPPORTED,
-            "Requested Method: {0} not allowed, allowed methods are: {1}", new Object[]{requestedMethod, allowedMethods}),
-        ProblemMessageSourceResolver.of(ProblemConstant.DETAILS_CODE_PREFIX + GeneralErrorKey.REQUEST_METHOD_NOT_SUPPORTED,
-            exception.getMessage()));
+        ProblemMessageSourceResolver.of(ProblemConstant.DETAIL_CODE_PREFIX + GeneralErrorKey.REQUEST_METHOD_NOT_SUPPORTED,
+            "Requested Method: {0} not allowed, allowed methods are: {1}", new Object[]{requestedMethod, allowedMethods}));
 
     final HttpHeaders headers = new HttpHeaders();
     headers.setAllow(requireNonNull(exception.getSupportedHttpMethods()));
