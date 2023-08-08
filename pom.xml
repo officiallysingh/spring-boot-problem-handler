@@ -12,29 +12,20 @@
 
     <properties>
         <java.version>17</java.version>
-        <spring.boot.version>3.1.0</spring.boot.version>
-        <spring.cloud.version>2022.0.3</spring.cloud.version>
-        <spring.cloud.aws.version>2.3.0</spring.cloud.aws.version>
-        <aws.java.sdk.version>1.12.372</aws.java.sdk.version>
-        <jakarta.servlet.version>6.0.0</jakarta.servlet.version>
-        <jakarta-annotation-api.version>2.1.1</jakarta-annotation-api.version>
-        <hibernate.validator.version>8.0.0.Final</hibernate.validator.version>
-        <openapispec.validator.version>2.34.1</openapispec.validator.version>
-        <apache.commons.collections.version>4.4</apache.commons.collections.version>
-        <apache.httpclient.version>4.5.13</apache.httpclient.version>
-        <apache.commons.io.version>2.11.0</apache.commons.io.version>
-        <google.guava.version>31.1-jre</google.guava.version>
+        <spring-boot.version>3.1.0</spring-boot.version>
+        <spring-cloud.version>2022.0.3</spring-cloud.version>
+        <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
+        <jakarta.annotation-api.version>2.1.1</jakarta.annotation-api.version>
+        <swagger-request-validator-spring-webmvc.version>2.34.1</swagger-request-validator-spring-webmvc.version>
+        <commons-collections4.version>4.4</commons-collections4.version>
+        <guava.version>31.1-jre</guava.version>
         <failsafe.version>2.4.4</failsafe.version>
-        <jakarta.money.version>0.0.1-SNAPSHOT</jakarta.money.version>
-        <lombok.version>1.18.4</lombok.version>
         <junit.jupiter.version>5.9.1</junit.jupiter.version>
 
-<!--        <nexus.repository>https://nexus.piramalfinance.com/repository</nexus.repository>-->
+<!--        <nexus.repository></nexus.repository>-->
         <maven-release-plugin.version>3.0.0-M1</maven-release-plugin.version>
         <maven-deploy-plugin.version>3.1.1</maven-deploy-plugin.version>
-<!--        <scm.connection>https://gitlab.piramalfinance.com/common-clients-j17/problem-handler.git</scm.connection>-->
-<!--        <sonar.projectKey>common-clients-j17_problem-handler_AYiK2hN_LGE6IKYl0gca</sonar.projectKey>-->
-<!--        <sonar.qualitygate.wait>true</sonar.qualitygate.wait>-->
+        <scm.connection>scm:git:ssh://git@github.com:officiallysingh/spring-boot-problem-handler.git</scm.connection>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
@@ -44,14 +35,14 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring.cloud.version}</version>
+                <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring.boot.version}</version>
+                <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -74,17 +65,17 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
-            <version>${apache.commons.collections.version}</version>
+            <version>${commons-collections4.version}</version>
         </dependency>
         <dependency>
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
-            <version>${jakarta-annotation-api.version}</version>
+            <version>${jakarta.annotation-api.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>${google.guava.version}</version>
+            <version>${guava.version}</version>
         </dependency>
         <dependency>
             <groupId>net.jodah</groupId>
@@ -141,13 +132,13 @@
         <dependency>
             <groupId>com.atlassian.oai</groupId>
             <artifactId>swagger-request-validator-spring-webmvc</artifactId>
-            <version>${openapispec.validator.version}</version>
+            <version>${swagger-request-validator-spring-webmvc.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>${jakarta.servlet.version}</version>
+            <version>${jakarta.servlet-api.version}</version>
         </dependency>
 
         <dependency>
