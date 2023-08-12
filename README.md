@@ -639,7 +639,7 @@ Example response
 }
 ```
 ## Authors and acknowledgment
-Rajveer Singh, In case you find any issues or need any support, please ping me on Teams or email me at rajveer.singh2@piramal.com
+Rajveer Singh, In case you find any issues or need any support, please ping me on Teams or email me at raj14.1984@gmail.com
 
 ## Credits and references
 Inspired and taken base code from [**`Zalando Problem libraries`**](https://github.com/zalando/problem-spring-web)
