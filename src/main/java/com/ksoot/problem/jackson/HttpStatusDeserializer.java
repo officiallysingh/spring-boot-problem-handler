@@ -8,11 +8,11 @@ import org.springframework.http.HttpStatusCode;
 import java.io.IOException;
 import java.util.Map;
 
-final class StatusTypeDeserializer extends JsonDeserializer<HttpStatusCode> {
+final class HttpStatusDeserializer extends JsonDeserializer<HttpStatusCode> {
 
   private final Map<Integer, HttpStatusCode> index;
 
-  StatusTypeDeserializer(final Map<Integer, HttpStatusCode> index) {
+  HttpStatusDeserializer(final Map<Integer, HttpStatusCode> index) {
     this.index = index;
   }
 

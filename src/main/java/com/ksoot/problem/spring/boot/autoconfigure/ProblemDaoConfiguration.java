@@ -4,6 +4,7 @@ import com.ksoot.problem.spring.advice.dao.ConstraintNameResolver;
 import com.ksoot.problem.spring.advice.dao.MongoConstraintNameResolver;
 import com.ksoot.problem.spring.advice.dao.PostgresConstraintNameResolver;
 import com.ksoot.problem.spring.advice.dao.SQLServerConstraintNameResolver;
+import com.ksoot.problem.spring.config.ProblemProperties;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -37,7 +38,7 @@ class ProblemDaoConfiguration {
     }
   }
 
-  @ConditionalOnMissingBean(name = "postgresqlConstraintNameResolver")
+  @ConditionalOnMissingBean(name = "sqlServerConstraintNameResolver")
   @Conditional(ORMUrlAvailable.class)
   @ConditionalOnProperty(prefix = "spring.jpa", name = "database", havingValue = "SQL_SERVER")
   public static class SQLServerConstraintNameResolverConfiguration {

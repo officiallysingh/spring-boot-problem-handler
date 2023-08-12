@@ -1,7 +1,7 @@
 package com.ksoot.problem.spring.boot.autoconfigure.webflux;
 
 import com.ksoot.problem.spring.advice.webflux.ProblemHandlingWebflux;
-import com.ksoot.problem.spring.boot.autoconfigure.ProblemProperties;
+import com.ksoot.problem.spring.config.ProblemProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

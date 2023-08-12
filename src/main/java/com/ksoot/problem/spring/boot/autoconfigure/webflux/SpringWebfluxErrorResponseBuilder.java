@@ -46,15 +46,15 @@ public class SpringWebfluxErrorResponseBuilder
     return ErrorResponseBuilder.getProblemMediaType(mediaTypes);
   }
 
+  private Mono<ResponseEntity<ProblemDetail>> postProcess(final Mono<ResponseEntity<ProblemDetail>> errorResponse,
+                                                          final ServerWebExchange request) {
+    return errorResponse;
+  }
+
   private Mono<ResponseEntity<ProblemDetail>> fallback(final ServerWebExchange request, final HttpStatus status,
                                                        final HttpHeaders headers, final Problem problem) {
     ProblemDetail problemDetail = createProblemDetail(request, status, problem);
     return Mono.just(ResponseEntity.status(status).headers(headers).contentType(MediaTypes.PROBLEM).body(problemDetail));
-  }
-
-  private Mono<ResponseEntity<ProblemDetail>> postProcess(final Mono<ResponseEntity<ProblemDetail>> errorResponse,
-                                                          final ServerWebExchange request) {
-    return errorResponse;
   }
 
   @Override

@@ -4,9 +4,11 @@ import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.util.VersionUtil;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.ksoot.problem.core.Exceptional;
 import com.ksoot.problem.core.DefaultProblem;
 import com.ksoot.problem.core.Problem;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 
@@ -16,8 +18,6 @@ import java.util.Map;
 
 public final class ProblemModule extends Module {
 
-  private final boolean stackTraces;
-  private final boolean cause;
   private final Map<Integer, HttpStatusCode> statuses;
 
   /**
@@ -40,12 +40,10 @@ public final class ProblemModule extends Module {
   public <E extends Enum<?> & HttpStatusCode> ProblemModule(final Class<? extends E>... types)
       throws IllegalArgumentException {
 
-    this(false, false, buildIndex(types));
+    this(buildIndex(types));
   }
 
-  private ProblemModule(final boolean stackTraces, final boolean cause, final Map<Integer, HttpStatusCode> statuses) {
-    this.stackTraces = stackTraces;
-    this.cause = cause;
+  private ProblemModule(final Map<Integer, HttpStatusCode> statuses) {
     this.statuses = statuses;
   }
 
@@ -78,15 +76,7 @@ public final class ProblemModule extends Module {
   }
 
   private Class<?> mixinClass() {
-//    if (this.stackTraces && this.cause) {
       return ExceptionalMixin.class;
-//    } else if (!this.stackTraces && !this.cause) {
-//      return ExceptionalWithoutStacktraceAndCauseMixin.class;
-//    } else if (!this.stackTraces) {
-//      return ExceptionalWithoutStacktraceMixin.class;
-//    } else { //!this.cause
-//      return ExceptionalWithoutCauseMixin.class;
-//    }
   }
 
   @Override
@@ -98,17 +88,14 @@ public final class ProblemModule extends Module {
     module.setMixInAnnotation(DefaultProblem.class, AbstractThrowableProblemMixIn.class);
     module.setMixInAnnotation(Problem.class, ProblemMixIn.class);
 
-    module.addSerializer(HttpStatusCode.class, new StatusTypeSerializer());
-    module.addDeserializer(HttpStatusCode.class, new StatusTypeDeserializer(this.statuses));
+    module.addSerializer(HttpStatusCode.class, new HttpStatusSerializer());
+    module.addDeserializer(HttpStatusCode.class, new HttpStatusDeserializer(this.statuses));
+
+    module.addSerializer(HttpMethod.class, new HttpMethodSerializer());
+    module.addDeserializer(HttpMethod.class, new HttpMethodDeserializer());
+
+    module.addSerializer(StackTraceElement.class, new ToStringSerializer());
 
     module.setupModule(context);
-  }
-
-//    public ProblemModule withStackTraces() {
-//        return withStackTraces(true);
-//    }
-
-  public ProblemModule with(final boolean stackTraces, final boolean cause) {
-    return new ProblemModule(stackTraces, cause, this.statuses);
   }
 }

@@ -49,15 +49,15 @@ class SpringWebErrorResponseBuilder implements ErrorResponseBuilder<NativeWebReq
     }
   }
 
+  private ResponseEntity<ProblemDetail> postProcess(final ResponseEntity<ProblemDetail> errorResponse,
+                                                    final NativeWebRequest request) {
+    return errorResponse;
+  }
+
   private ResponseEntity<ProblemDetail> fallback(final NativeWebRequest request, final HttpStatus status,
                                                  final HttpHeaders headers, final Problem problem) {
     ProblemDetail problemDetail = createProblemDetail(request, status, problem);
     return ResponseEntity.status(status).headers(headers).contentType(MediaTypes.PROBLEM).body(problemDetail);
-  }
-
-  private ResponseEntity<ProblemDetail> postProcess(final ResponseEntity<ProblemDetail> errorResponse,
-                                                    final NativeWebRequest request) {
-    return errorResponse;
   }
 
   @Override

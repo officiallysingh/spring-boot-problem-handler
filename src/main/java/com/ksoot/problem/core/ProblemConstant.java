@@ -5,11 +5,11 @@ public class ProblemConstant {
   public static final String CODE_KEY = "code";
   public static final String METHOD_KEY = "method";
   public static final String TIMESTAMP_KEY = "timestamp";
-
-  public static final String DOT = ".";
-
+  public static final String STACKTRACE_KEY = "statcktrace";
+  public static final String CAUSE_KEY = "cause";
   public static final String ERRORS_KEY = "errors";
   public static final String VIOLATIONS_KEY = "violations";
+  public static final String DOT = ".";
 
   public static final String CODE_CODE_PREFIX = "code.";
   public static final String TITLE_CODE_PREFIX = "title.";

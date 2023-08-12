@@ -1,7 +1,7 @@
 package com.ksoot.problem.spring.boot.autoconfigure.webflux;
 
 import com.ksoot.problem.core.ErrorResponseBuilder;
-import com.ksoot.problem.spring.boot.autoconfigure.ProblemProperties;
+import com.ksoot.problem.spring.config.ProblemProperties;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -30,7 +30,7 @@ import reactor.core.publisher.Mono;
 class ProblemWebfluxAutoConfiguration {
 
   @Bean
-  @ConditionalOnMissingBean
+  @ConditionalOnMissingBean(ErrorResponseBuilder.class)
   ErrorResponseBuilder<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> errorResponseBuilder() {
     return new SpringWebfluxErrorResponseBuilder();
   }

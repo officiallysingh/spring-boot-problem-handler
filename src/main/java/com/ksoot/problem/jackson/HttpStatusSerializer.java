@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatusCode;
 
 import java.io.IOException;
 
-final class StatusTypeSerializer extends JsonSerializer<HttpStatusCode> {
+final class HttpStatusSerializer extends JsonSerializer<HttpStatusCode> {
 
   @Override
   public void serialize(final HttpStatusCode status, final JsonGenerator json, final SerializerProvider serializers) throws IOException {

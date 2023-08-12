@@ -1,6 +1,5 @@
 package com.ksoot.problem.spring.config;
 
-import com.ksoot.problem.spring.boot.autoconfigure.ProblemProperties;
 import com.ksoot.problem.core.ErrorResponseBuilder;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableConfigurationProperties(ProblemProperties.class)
-@ConditionalOnProperty(prefix = "problem", name = "enabled", havingValue = "true", matchIfMissing = true)
+//@ConditionalOnProperty(prefix = "problem", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class ProblemBeanRegistry implements ApplicationContextAware {
 
   private static ApplicationContext applicationContext;

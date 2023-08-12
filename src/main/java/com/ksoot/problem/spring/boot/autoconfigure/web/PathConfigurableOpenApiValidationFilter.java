@@ -1,31 +1,43 @@
 package com.ksoot.problem.spring.boot.autoconfigure.web;
 
 import com.atlassian.oai.validator.springmvc.OpenApiValidationFilter;
-import com.ksoot.problem.spring.boot.autoconfigure.ProblemProperties;
+import com.ksoot.problem.spring.config.ProblemProperties;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.util.AntPathMatcher;
+
+import java.util.List;
 
 public class PathConfigurableOpenApiValidationFilter extends OpenApiValidationFilter {
 
-  private AntPathMatcher matcher = new AntPathMatcher();
+  private final AntPathMatcher pathMatcher;
 
-  private String openApiLocation;
+  private final String openApiLocation;
 
-  public PathConfigurableOpenApiValidationFilter(final ProblemProperties.OpenApi openProperties) {
-    super(openProperties.isReqValidationEnabled(), openProperties.isResValidationEnabled());
-    this.openApiLocation = openProperties.getPath();
+  private final List<String> excludePatterns;
+
+  public PathConfigurableOpenApiValidationFilter(final ProblemProperties.OpenApi openApiProperties) {
+    super(openApiProperties.isReqValidationEnabled(), openApiProperties.isResValidationEnabled());
+    this.openApiLocation = openApiProperties.getPath();
+    this.pathMatcher = new AntPathMatcher();
+    this.excludePatterns = openApiProperties.getExcludePatterns();
   }
 
-  //	@Override
+  @Override
   protected boolean shouldNotFilter(final HttpServletRequest request) {
-    String path = request.getRequestURI();
-    return this.matcher.match("/**/v3/api-docs", path) || this.matcher.match("/v3/api-docs", path)
-        || this.matcher.match("/v3/api-docs/*", path)
-        || this.matcher.match("/swagger-ui.html", path)
-        || this.matcher.match("/**/swagger-ui.html", path)
-        || this.matcher.match("/swagger-ui/*", path)
-        || this.matcher.match("/**/swagger-ui/*", path)
-        || this.matcher.match("/**" + this.openApiLocation, path)
-        || this.matcher.match(this.openApiLocation, path);
+    String requestPath = request.getRequestURI();
+    boolean excludedPath = CollectionUtils.isNotEmpty(this.excludePatterns)
+        ? this.excludePatterns.stream().anyMatch(pattern -> pathMatcher.match(pattern, requestPath))
+        : false;
+    return this.pathMatcher.match("/**/v3/api-docs", requestPath)
+        || this.pathMatcher.match("/v3/api-docs", requestPath)
+        || this.pathMatcher.match("/v3/api-docs/*", requestPath)
+        || this.pathMatcher.match("/swagger-ui.html", requestPath)
+        || this.pathMatcher.match("/**/swagger-ui.html", requestPath)
+        || this.pathMatcher.match("/swagger-ui/*", requestPath)
+        || this.pathMatcher.match("/**/swagger-ui/*", requestPath)
+        || this.pathMatcher.match("/**" + this.openApiLocation, requestPath)
+        || this.pathMatcher.match(this.openApiLocation, requestPath)
+        || excludedPath;
   }
 }

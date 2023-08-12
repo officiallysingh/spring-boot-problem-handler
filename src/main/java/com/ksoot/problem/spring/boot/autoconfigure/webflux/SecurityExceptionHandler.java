@@ -2,8 +2,8 @@ package com.ksoot.problem.spring.boot.autoconfigure.webflux;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ksoot.problem.spring.advice.security.SecurityAdviceTraits;
-import com.ksoot.problem.spring.boot.autoconfigure.ProblemProperties;
 import com.ksoot.problem.spring.boot.autoconfigure.SecurityAdviceEnabled;
+import com.ksoot.problem.spring.config.ProblemProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;

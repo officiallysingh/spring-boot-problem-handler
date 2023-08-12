@@ -1,4 +1,4 @@
-package com.ksoot.problem.spring.boot.autoconfigure;
+package com.ksoot.problem.spring.config;
 
 import jakarta.validation.Valid;
 import lombok.Getter;
@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Rajveer Singh
@@ -23,15 +26,13 @@ public class ProblemProperties {
 
   private boolean debugEnabled = false;
 
-  private boolean causeChainsEnabled = false;
-
   private boolean stacktraceEnabled = false;
+
+  private boolean causeChainsEnabled = false;
 
   private boolean ormAdviceEnabled = true;
 
   private boolean securityAdviceEnabled = true;
-
-  private boolean jacksonModuleEnabled = true;
 
   private OpenApi openApi = new OpenApi();
 
@@ -43,6 +44,8 @@ public class ProblemProperties {
   public static class OpenApi {
 
     private String path = "/oas/api.json";
+
+    private List<String> excludePatterns = new ArrayList<>();
 
     private boolean reqValidationEnabled = false;
 

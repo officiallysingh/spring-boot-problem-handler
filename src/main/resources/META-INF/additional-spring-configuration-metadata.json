@@ -37,16 +37,15 @@
 			"description": "Default: true, Whether or not to Enable Security exception handling advices"
 		},
 		{
-			"name": "problem.jackson-module-enabled",
-			"type": "java.lang.Boolean",
-			"defaultValue": "true",
-			"description": "Default: true, Whether or not to Enable Jackson Problem module"
-		},
-		{
 			"name": "problem.open-api.path",
 			"type": "java.lang.String",
 			"defaultValue": "/oas/api.json",
 			"description": "Default: /oas/api.json, Path of API Specification json file"
+		},
+		{
+			"name": "problem.open-api.exclude-patterns",
+			"type": "java.lang.String",
+			"description": "Default: None. List of path patterns in ant-pattern format to exclude from OpenAPI Specification validation"
 		},
 		{
 			"name": "problem.open-api.req-validation-enabled",
@@ -62,4 +61,3 @@
 		}
 	]
 }
-

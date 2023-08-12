@@ -1,7 +1,7 @@
 package com.ksoot.problem.spring.boot.autoconfigure.web;
 
 import com.ksoot.problem.spring.advice.web.ProblemHandlingWeb;
-import com.ksoot.problem.spring.boot.autoconfigure.ProblemProperties;
+import com.ksoot.problem.spring.config.ProblemProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

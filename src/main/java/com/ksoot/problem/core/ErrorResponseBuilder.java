@@ -17,6 +17,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.ksoot.problem.core.ProblemConstant.CAUSE_KEY;
+import static com.ksoot.problem.core.ProblemConstant.CODE_KEY;
+import static com.ksoot.problem.core.ProblemConstant.METHOD_KEY;
+import static com.ksoot.problem.core.ProblemConstant.TIMESTAMP_KEY;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 public interface ErrorResponseBuilder<T, R> {
@@ -37,9 +41,9 @@ public interface ErrorResponseBuilder<T, R> {
   }
 
   R buildResponse(final Throwable throwable, final T request, final HttpStatus status,
-                         final HttpHeaders headers, final Problem problem);
+                  final HttpHeaders headers, final Problem problem);
 
-  default ProblemDetail createProblemDetail(final T request, final HttpStatus status,  final Problem problem) {
+  default ProblemDetail createProblemDetail(final T request, final HttpStatus status, final Problem problem) {
     ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, problem.getDetail());
     problemDetail.setTitle(problem.getTitle());
     problemDetail.setInstance(requestUri(request));
@@ -47,20 +51,24 @@ public interface ErrorResponseBuilder<T, R> {
       URI type = URI.create(ProblemBeanRegistry.problemProperties().getTypeUrl() + "#" + problem.getCode());
       problemDetail.setType(type);
     }
-    problemDetail.setProperty(ProblemConstant.METHOD_KEY, requestMethod(request).name());
-    problemDetail.setProperty(ProblemConstant.TIMESTAMP_KEY, OffsetDateTime.now());
-    problemDetail.setProperty(ProblemConstant.CODE_KEY, problem.getCode());
+    problemDetail.setProperty(METHOD_KEY, requestMethod(request));
+    problemDetail.setProperty(TIMESTAMP_KEY, OffsetDateTime.now());
+    problemDetail.setProperty(CODE_KEY, problem.getCode());
 
     if (MapUtils.isNotEmpty(problem.getParameters())) {
       problem.getParameters().forEach((k, v) -> problemDetail.setProperty(k, v));
     }
-    if(Objects.nonNull(problem.getCause())) {
-      problemDetail.setProperty("cause", problem.getCause());
+    if (Objects.nonNull(problem.getCause())) {
+      problemDetail.setProperty(CAUSE_KEY, problem.getCause());
     }
     return problemDetail;
   }
 
-  URI requestUri(final T request);
+  default URI requestUri(final T request) {
+    throw new UnsupportedOperationException("Method need to be implemented in implementation class");
+  }
 
-  HttpMethod requestMethod(final T request);
+  default HttpMethod requestMethod(final T request) {
+    throw new UnsupportedOperationException("Method need to be implemented in implementation class");
+  }
 }

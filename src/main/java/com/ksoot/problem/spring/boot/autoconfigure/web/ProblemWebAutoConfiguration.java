@@ -1,7 +1,7 @@
 package com.ksoot.problem.spring.boot.autoconfigure.web;
 
 import com.ksoot.problem.core.ErrorResponseBuilder;
-import com.ksoot.problem.spring.boot.autoconfigure.ProblemProperties;
+import com.ksoot.problem.spring.config.ProblemProperties;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -29,7 +29,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 class ProblemWebAutoConfiguration {
 
   @Bean
-  @ConditionalOnMissingBean
+  @ConditionalOnMissingBean(ErrorResponseBuilder.class)
   ErrorResponseBuilder<NativeWebRequest, ResponseEntity<ProblemDetail>> errorResponseBuilder() {
     return new SpringWebErrorResponseBuilder();
   }
