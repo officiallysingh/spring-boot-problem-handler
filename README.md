@@ -54,7 +54,7 @@ such as for Handling Security, OpenAPI and Dao related exceptions, which are ela
 * A lot of inbuilt `ControllerAdvice`s out of box to handling most common exceptions.
 * Extendable to add more advices in consumer applications and weaved into aligned framework for exception handling
 * Provides mechanism to specify error response for any kind of exception without defining any `ControllerAdvice`
-* Works with both Spring web and Spring webflux
+* Works with both Spring Web and Spring Webflux
 * Customizable to override the default messages
 * The autoconfigured advices can be disabled or overridden or extended as per needs
 
@@ -65,51 +65,63 @@ such as for Handling Security, OpenAPI and Dao related exceptions, which are ela
 These advices are autoconfigured as either bean of class [**`ExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/web/ExceptionHandler.java) 
 or [**`ProblemHandlingWebflux`**](src/main/java/com/ksoot/problem/spring/advice/webflux/advice/ProblemHandlingWebflux.java) depending on whether application is of type **Servlet** or **Reactive** respetively
 
-| General Advice Traits                                                                                                                                                              | Produces                                                  | Error Key                                                         |
-|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------|-------------------------------------------------------------------|
-| [**`ProblemHandlingWeb`**](src/main/java/com/ksoot/problem/spring/advice/web/advice/ProblemHandlingWeb.java)                                                                 |                                                           |                                                                   |
-| [**`ProblemHandlingWebflux`**](src/main/java/com/ksoot/problem/spring/advice/webflux/advice/ProblemHandlingWebflux.java)                                                     |                                                           |                                                                   |
-| `├──`[**`ApplicationAdviceTraits`**](src/main/java/com/ksoot/problem/spring/advice/application/ApplicationAdviceTraits.java)                                                 |                                                           |                                                                   |
-| `│   ├──`[`ApplicationProblemAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/application/ApplicationProblemAdviceTrait.java)                            | *depends*                                                 | Provided by application while throwing exception                  |
-| `│   ├──`[`ApplicationExceptionAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/application/ApplicationExceptionAdviceTrait.java)                        | *depends*                                                 | Provided by application while throwing exception                  |
-| `│   └──`[ `ApplicationMultiProblemAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/application/ApplicationMultiProblemAdviceTrait.java)                 | *depends*                                                 | Provided by application while throwing exception                  |
-| `├──`[**`GeneralAdviceTraits`**](src/main/java/com/ksoot/problem/spring/advice/general/GeneralAdviceTraits.java)                                                             |                                                           |                                                                   |
-| `│   ├──`[`ProblemAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/general/ProblemAdviceTrait.java)                                                      | [`500 Internal Server Error`](https://httpstatus.es/500)  | internal.server.error                                             |
-| `│   ├──`[`ThrowableAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/general/ThrowableAdviceTrait.java)                                                  | [`500 Internal Server Error`](https://httpstatus.es/500)  | internal.server.error                                             |
-| `│   └──`[ `UnsupportedOperationAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/general/UnsupportedOperationAdviceTrait.java)                           | [`501 Not Implemented`](https://httpstatus.es/501)        | java.lang.UnsupportedOperationException                           |
-| `├──`[**`HttpAdviceTraits`**](src/main/java/com/ksoot/problem/spring/advice/http/HttpAdviceTraits.java)                                                                      |                                                           |                                                                   |
-| `│   ├──`[`HttpMediaTypeNotAcceptableAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/http/HttpMediaTypeNotAcceptableAdviceTrait.java)                   | [`415 Unsupported Media Type`](https://httpstatus.es/415) | media.type.not.acceptable                                         |
-| `│   ├──`[`HttpMediaTypeNotSupportedExceptionAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/http/HttpMediaTypeNotSupportedExceptionAdviceTrait.java)   | [`415 Unsupported Media Type`](https://httpstatus.es/415) | media.type.not.supported                                          |
-| `│   ├──`[`UnsupportedMediaTypeStatusAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/http/UnsupportedMediaTypeStatusAdviceTrait.java)                   | [`415 Unsupported Media Type`](https://httpstatus.es/415) | media.type.not.supported                                          |
-| `│   ├──`[`HttpRequestMethodNotSupportedAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/http/http/HttpRequestMethodNotSupportedAdviceTrait.java)        | [`405 Method Not Allowed`](https://httpstatus.es/405)     | request.method.not.supported                                      |
-| `│   ├──`[`MethodNotAllowedAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/http/MethodNotAllowedAdviceTrait.java)                                       | [`405 Method Not Allowed`](https://httpstatus.es/405)     | method.not.allowed                                                |
-| `│   ├──`[`NotAcceptableStatusAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/http/NotAcceptableStatusAdviceTrait.java)                                 | [`406 Not Acceptable`](https://httpstatus.es/406)         | org.springframework.web.server.NotAcceptableStatusException       |
-| `│   ├──`[`ResponseStatusAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/http/ResponseStatusAdviceTrait.java)                                           | *depends*                                                 |                                                                   |
-| `├──`[**`IOAdviceTraits`**](src/main/java/com/ksoot/problem/spring/advice/io/IOAdviceTraits.java)                                                                            |                                                           |                                                                   |
-| `│   ├──`[`MessageNotReadableAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/io/MessageNotReadableAdviceTrait.java)                                     | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                          |
-| `│   └──`[`MultipartAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/io/MultipartAdviceTrait.java)                                                       | [`400 Bad Request`](https://httpstatus.es/400)            | org.springframework.web.multipart.MultipartException              |
-| `│   └──`[`MultipartAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/io/MaxUploadSizeExceededExceptionAdviceTrait.java)                                  | [`400 Bad Request`](https://httpstatus.es/400)            | org.springframework.web.multipart.MaxUploadSizeExceededException  |
-| `├──`[**`RoutingAdviceTraits`**](src/main/java/com/ksoot/problem/spring/advice/routing/RoutingAdviceTraits.java)                                                             |                                                           |                                                                   |
-| `│   ├──`[`MissingRequestHeaderAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/routing/MissingRequestHeaderAdviceTrait.java)                            | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                          |
-| `│   ├──`[`MissingServletRequestParameterAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/routing/MissingServletRequestParameterAdviceTrait.java)        | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                          |
-| `│   ├──`[`MissingServletRequestPartAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/routing/MissingServletRequestPartAdviceTrait.java)                  | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                          |
-| `│   ├──`[`NoHandlerFoundAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/routing/NoHandlerFoundAdviceTrait.java)                                        | [`404 Not Found`](https://httpstatus.es/404)              | no.handler.found                                                  |
-| `│   └──`[`ServletRequestBindingAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/routing/ServletRequestBindingAdviceTrait.java)                          | [`400 Bad Request`](https://httpstatus.es/400)            | org.springframework.web.bind.ServletRequestBindingException       |
-| `└──`[**`ValidationAdviceTraits`**](src/main/java/com/ksoot/problem/spring/advice/validation/ValidationAdviceTraits.java)                                                    |                                                           |                                                                   |
-| `    ├──`[`ConstraintViolationAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/validation/ConstraintViolationAdviceTrait.java)                        | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                          |
-| `    └──`[`BindAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/validation/BindAdviceTrait.java)                                                      | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                          |
-| `    └──`[`MethodArgumentNotValidAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/validation/MethodArgumentNotValidAdviceTrait.java)                  | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                          |
-| `    └──`[`MethodArgumentTypeMismatchAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/validation/MethodArgumentTypeMismatchAdviceTrait.java)          | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                          |
-| `    └──`[`TypeMismatchAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/validation/TypeMismatchAdviceTrait.java)                                      | [`400 Bad Request`](https://httpstatus.es/400)            | *Derived* from exception                                          |
+| General Advice Traits                                                                                                                                         | Produces                                                    | Error Key                                                           |
+|---------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------|---------------------------------------------------------------------|
+| [**`ApplicationAdviceTraits`**](src/main/java/com/ksoot/problem/spring/advice/application/ApplicationAdviceTraits.java)                                       |                                                             |                                                                     |
+| `├──`[`ApplicationProblemAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/application/ApplicationProblemAdviceTrait.java)                          | *depends*                                                   | Provided by application while throwing exception                    |
+| `├──`[`ApplicationExceptionAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/application/ApplicationExceptionAdviceTrait.java)                      | *depends*                                                   | Provided by application while throwing exception                    |
+| `└──`[ `ApplicationMultiProblemAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/application/ApplicationMultiProblemAdviceTrait.java)               | *depends*                                                   | Provided by application while throwing exception                    |
+| [**`GeneralAdviceTraits`**](src/main/java/com/ksoot/problem/spring/advice/general/GeneralAdviceTraits.java)                                                   |                                                             |                                                                     |
+| `├──`[`ProblemAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/general/ProblemAdviceTrait.java)                                                    | [`500 Internal Server Error`](https://httpstatus.es/500)    | internal.server.error                                               |
+| `├──`[`ThrowableAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/general/ThrowableAdviceTrait.java)                                                | [`500 Internal Server Error`](https://httpstatus.es/500)    | internal.server.error                                               |
+| `└──`[ `UnsupportedOperationAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/general/UnsupportedOperationAdviceTrait.java)                         | [`501 Not Implemented`](https://httpstatus.es/501)          | java.lang.UnsupportedOperationException                             |
+| [**`HttpAdviceTraits`**](src/main/java/com/ksoot/problem/spring/advice/http/HttpAdviceTraits.java)                                                            |                                                             |                                                                     |
+| `├──`[`HttpMediaTypeNotAcceptableAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/http/HttpMediaTypeNotAcceptableAdviceTrait.java)                 | [`415 Unsupported Media Type`](https://httpstatus.es/415)   | media.type.not.acceptable                                           |
+| `├──`[`HttpMediaTypeNotSupportedExceptionAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/http/HttpMediaTypeNotSupportedExceptionAdviceTrait.java) | [`415 Unsupported Media Type`](https://httpstatus.es/415)   | media.type.not.supported                                            |
+| `├──`[`UnsupportedMediaTypeStatusAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/http/UnsupportedMediaTypeStatusAdviceTrait.java)                 | [`415 Unsupported Media Type`](https://httpstatus.es/415)   | media.type.not.supported                                            |
+| `├──`[`HttpRequestMethodNotSupportedAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/http/http/HttpRequestMethodNotSupportedAdviceTrait.java)      | [`405 Method Not Allowed`](https://httpstatus.es/405)       | request.method.not.supported                                        |
+| `├──`[`MethodNotAllowedAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/http/MethodNotAllowedAdviceTrait.java)                                     | [`405 Method Not Allowed`](https://httpstatus.es/405)       | method.not.allowed                                                  |
+| `├──`[`NotAcceptableStatusAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/http/NotAcceptableStatusAdviceTrait.java)                               | [`406 Not Acceptable`](https://httpstatus.es/406)           | org.springframework.web.server.NotAcceptableStatusException         |
+| `└──`[`ResponseStatusAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/http/ResponseStatusAdviceTrait.java)                                         | *depends*                                                   |                                                                     |
+| [**`IOAdviceTraits`**](src/main/java/com/ksoot/problem/spring/advice/io/IOAdviceTraits.java)                                                                  |                                                             |                                                                     |
+| `├──`[`MessageNotReadableAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/io/MessageNotReadableAdviceTrait.java)                                   | [`400 Bad Request`](https://httpstatus.es/400)              | *Derived* from exception                                            |
+| `├──`[`MultipartAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/io/MultipartAdviceTrait.java)                                                     | [`400 Bad Request`](https://httpstatus.es/400)              | org.springframework.web.multipart.MultipartException                |
+| `└──`[`MultipartAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/io/MaxUploadSizeExceededExceptionAdviceTrait.java)                                | [`400 Bad Request`](https://httpstatus.es/400)              | org.springframework.web.multipart.MaxUploadSizeExceededException    |
+| [**`RoutingAdviceTraits`**](src/main/java/com/ksoot/problem/spring/advice/routing/RoutingAdviceTraits.java)                                                   |                                                             |                                                                     |
+| `├──`[`MissingRequestHeaderAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/routing/MissingRequestHeaderAdviceTrait.java)                          | [`400 Bad Request`](https://httpstatus.es/400)              | *Derived* from exception                                            |
+| `├──`[`MissingServletRequestParameterAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/routing/MissingServletRequestParameterAdviceTrait.java)      | [`400 Bad Request`](https://httpstatus.es/400)              | *Derived* from exception                                            |
+| `├──`[`MissingServletRequestPartAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/routing/MissingServletRequestPartAdviceTrait.java)                | [`400 Bad Request`](https://httpstatus.es/400)              | *Derived* from exception                                            |
+| `├──`[`NoHandlerFoundAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/routing/NoHandlerFoundAdviceTrait.java)                                      | [`404 Not Found`](https://httpstatus.es/404)                | no.handler.found                                                    |
+| `└──`[`ServletRequestBindingAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/routing/ServletRequestBindingAdviceTrait.java)                        | [`400 Bad Request`](https://httpstatus.es/400)              | org.springframework.web.bind.ServletRequestBindingException         |
+| [**`ValidationAdviceTraits`**](src/main/java/com/ksoot/problem/spring/advice/validation/ValidationAdviceTraits.java)                                          |                                                             |                                                                     |
+| `├──`[`ConstraintViolationAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/validation/ConstraintViolationAdviceTrait.java)                         | [`400 Bad Request`](https://httpstatus.es/400)              | *Derived* from exception                                            |
+| `├──`[`BindAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/validation/BindAdviceTrait.java)                                                       | [`400 Bad Request`](https://httpstatus.es/400)              | *Derived* from exception                                            |
+| `├──`[`MethodArgumentNotValidAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/validation/MethodArgumentNotValidAdviceTrait.java)                   | [`400 Bad Request`](https://httpstatus.es/400)              | *Derived* from exception                                            |
+| `├──`[`MethodArgumentTypeMismatchAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/validation/MethodArgumentTypeMismatchAdviceTrait.java)           | [`400 Bad Request`](https://httpstatus.es/400)              | *Derived* from exception                                            |
+| `└──`[`TypeMismatchAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/validation/TypeMismatchAdviceTrait.java)                                       | [`400 Bad Request`](https://httpstatus.es/400)              | *Derived* from exception                                            |
+| [`WebExchangeBindAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/webflux/WebExchangeBindAdviceTrait.java)                                         | [`400 Bad Request`](https://httpstatus.es/400)              | *Derived* from exception                                            |
+
+
+**Composite advice traits**
+
+| Spring Web Advice Traits                                                                                                  | Spring Webflux Advice Traits                                                                                               |
+|---------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
+| [**`ProblemHandlingWeb`**](src/main/java/com/ksoot/problem/spring/advice/web/advice/ProblemHandlingWeb.java)              | [**`ProblemHandlingWebflux`**](src/main/java/com/ksoot/problem/spring/advice/webflux/advice/ProblemHandlingWebflux.java)   |
+| `├──`[`GeneralAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/general/GeneralAdviceTraits.java)              | `├──`[`GeneralAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/general/GeneralAdviceTraits.java)               |
+| `├──`[`HttpAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/http/HttpAdviceTraits.java)                       | `├──`[`HttpAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/http/HttpAdviceTraits.java)                        |
+| `├──`[`IOAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/io/IOAdviceTraits.java)                             | `├──`[`IOAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/io/IOAdviceTraits.java)                              |
+| `├──`[ `RoutingAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/routing/RoutingAdviceTraits.java)             | `├──`[`WebExchangeBindAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/webflux/WebExchangeBindAdviceTrait.java) |
+| `├──`[ `ValidationAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/validation/ValidationAdviceTraits.java)    | `├──`[`ValidationAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/validation/ValidationAdviceTraits.java)      |
+| `└──`[ `ApplicationAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/application/ApplicationAdviceTraits.java) | `└──`[`ApplicationAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/application/ApplicationAdviceTraits.java)   |
 
 
 #### Dao advices
 
-| Dao Advice Traits                                                                                                                              | Produces                                                  | Error Key                                              |
-|------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------|--------------------------------------------------------|
+| Dao Advice Traits                                                                                                                        | Produces                                                  | Error Key                                              |
+|------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------|--------------------------------------------------------|
 | [**`DaoAdviceTraits`**](src/main/java/com/ksoot/problem/spring/advice/dao/DaoAdviceTraits.java)                                          |                                                           |                                                        | 
 | `├──`[**`DataIntegrityViolationAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/dao/DataIntegrityViolationAdviceTrait.java) | [`500 Internal Server Error`](https://httpstatus.es/500)  | data.integrity.violation.\<Failed DB constraint name\> |
-| `├──`[**`DuplicateKeyExceptionAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/dao/DuplicateKeyExceptionAdviceTrait.java)   | [`500 Internal Server Error`](https://httpstatus.es/500)  | data.integrity.violation.\<Failed DB constraint name\> |
+| `└──`[**`DuplicateKeyExceptionAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/dao/DuplicateKeyExceptionAdviceTrait.java)   | [`500 Internal Server Error`](https://httpstatus.es/500)  | data.integrity.violation.\<Failed DB constraint name\> |
 
 It is autoconfigured if `spring-data-jpa` or `spring-data-mongodb` jar is detected in classpath 
 and `ConditionalOnWebApplication.Type` is `SERVLET`
@@ -120,12 +132,12 @@ when `DataIntegrityViolationException` is thrown
 
 #### Security advices
 
-| Security Advice Traits                                                                                                                                      | Produces                                        | Error Key              |
-|-------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|------------------------|
+| Security Advice Traits                                                                                                                                | Produces                                        | Error Key              |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|------------------------|
 | [**`SecurityAdviceTraits`**](src/main/java/com/ksoot/problem/spring/advice/security/SecurityAdviceTraits.java)                                        |                                                 |                        |
 | `├──`[**`AuthenticationAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/security/AuthenticationAdviceTrait.java)                         | [`401 Unauthorized`](https://httpstatus.es/401) | security.unauthorized  |
 | `├──`[**`InsufficientAuthenticationAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/security/InsufficientAuthenticationAdviceTrait.java) | [`401 Unauthorized`](https://httpstatus.es/401) | security.unauthorized  |
-| `├──`[**`AccessDeniedAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/security/AccessDeniedAdviceTrait.java)                             | [`403 Forbidden`](https://httpstatus.es/403)    | security.access.denied |
+| `└──`[**`AccessDeniedAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/security/AccessDeniedAdviceTrait.java)                             | [`403 Forbidden`](https://httpstatus.es/403)    | security.access.denied |
 
 
 For **Servlet** (Web) applications
@@ -191,18 +203,17 @@ SecurityWebFilterChain securityWebFilterChain(final ServerHttpSecurity http) {
     return http.build();
 }
 ```
-**Note**: For `web-flux` need to test and verify once.
 
 #### OpenAPI validation advice
 
-| OpenAPI Validation Advice Traits                                                                                                       | Produces                                        | Error Key                  |
-|----------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|----------------------------|
-| [**`OpenApiValidationAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/validation/OpenApiValidationAdviceTrait.java) | [`400 Bad Request`](https://httpstatus.es/400)  | *Derived* from exception   |
+| OpenAPI Validation Advice Traits                                                                                                   | Produces                                        | Error Key                  |
+|------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|----------------------------|
+| [**`OpenApiValidationAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/validation/OpenApiValidationAdviceTrait.java)   | [`400 Bad Request`](https://httpstatus.es/400)  | *Derived* from exception   |
 
 [**`OpenApiValidationExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/web/OpenApiValidationExceptionHandler.java) is configured if `swagger-request-validator-spring-webmvc-2.34.x.jar` is detected in classpath 
 and `ConditionalOnWebApplication.Type` is `SERVLET` and at least one of `problem.open-api.req-validation-enabled` or `problem.open-api.res-validation-enabled` is set as `true` in `application.properties`
 
-**Note**: The same needs to be implemented and tested for **Reactive** (Webflux) applications
+**Note**: It is available for Spring Web applications only not for Webflux
 
 ## Configurations
 
@@ -213,7 +224,7 @@ in addition also requires the following configuration:
 spring.mvc.throw-exception-if-no-handler-found=true
 ```
 
-While using ORM advices, set database platform as follows.
+While using Dao advices, set database platform as follows.
 ```properties
 spring.jpa.database=POSTGRESQL
 ```
@@ -221,7 +232,7 @@ Refer to [`Database`](https://github.com/spring-projects/spring-framework/blob/m
 DB2, DERBY, H2, HANA, HSQL, INFORMIX, MYSQL, ORACLE, POSTGRESQL, SQL_SERVER, SYBASE
 
 **Note**: [**`ConstraintNameResolver`**](src/main/java/com/ksoot/problem/spring/advice/dao/ConstraintNameResolver.java) is implemented for Postgres, SQL Server and MongoDB only as of now.
-If any other relational database is used then respective [**`ConstraintNameResolver`**](src/main/java/com/ksoot/problem/spring/advice/dao/ConstraintNameResolver.java) need to be implemented.
+If any other relational database is used then respective [**`ConstraintNameResolver`**](src/main/java/com/ksoot/problem/spring/advice/dao/ConstraintNameResolver.java) need to be implemented and defined as a bean.
 
 Make sure to disable the `ErrorMvcAutoConfiguration` as follows
 
@@ -241,7 +252,7 @@ by specifying the property with different value in application's `errors.propert
 spring.messages.basename=i18n/errors,i18/problems
 spring.messages.use-code-as-default-message=true
 ```
-if `use-code-as-default-message` is set to false and the message is not found in any of the `properties` file 
+if `use-code-as-default-message` is set to `false` and the message is not found in any of the `properties` file 
 then it will throw exception saying message not found with given key. 
 So if it is intended to enforce all messages for exceptions to be specified in `properties` file, set it to `false`, 
 but not recommended.
@@ -264,12 +275,14 @@ To enable OpenAPI validation following properties need to be specified along wit
 ```properties
 # Must start with /
 problem.open-api.path=/oas/api.json
+# To exclude URI patterns from OpenAPI specification validation
+problem.open-api.exclude-patterns=/api/states,/api/states/**,/api/employees,/api/employees/**,/problems/**
 # To validate requests with OpenAPI Spec
 problem.open-api.req-validation-enabled=true
 # To validate responses with OpenAPI Spec
 problem.open-api.res-validation-enabled=false
 ```
-At least once of `req-validation-enabled` or `res-validation-enabled` must be true and `path` must be given with a valid Open API specification file 
+At least once of `req-validation-enabled` or `res-validation-enabled` must be `true` and `path` must be given with a valid Open API specification file 
 to enable Open API validation exception. General practice is to validate request only, not response.
 
 Refer to [**`ProblemProperties`**](src/main/java/com/ksoot/problem/spring/common/config/ProblemProperties.java)
@@ -280,18 +293,14 @@ to have a look at defaults for above `properties`
 Following is an example response for an error.
 ```json
 {
-  "instance": "/api/myjob",
-  "method": "PUT",
-  "requestTime": "2023-06-11T16:10:26.310178Z",
-  "errorCount": 1,
-  "errors": [
-    {
-      "code": "409",
-      "title": "Conflict",
-      "message": "A job with given parameters already completed",
-      "details": "Please force restart the job"
-    }
-  ]
+  "type":"http://localhost:8080/problems/help.html#500",
+  "title":"Internal Server Error",
+  "status":500,
+  "detail":"A job instance already exists and is complete for parameters={'interestAccrualDate':'{value=2023-08-13, type=class java.time.LocalDate, identifying=true}','loanAccountNumbers':'{value=[], type=interface java.util.List, identifying=false}'}.  If you want to run this job again, change the parameters.",
+  "instance":"/api/myjob",
+  "method":"PUT",
+  "timestamp":"2023-08-14T20:45:45.737227+05:30",
+  "code":"500"
 }
 ```
 This message and details are being picked up from `properties` file.
@@ -303,53 +312,42 @@ problem.debug-enabled=true
 Now the error response itself would contain the resolvers for respective attributes, as follows.
 ```json
 {
-  "instance": "/api/myjob",
-  "method": "PUT",
-  "requestTime": "2023-06-11T17:14:03.52623Z",
-  "errorCount": 1,
-  "errors": [
-    {
-      "code": "409",
-      "title": "Conflict",
-      "message": "A job with given parameters already completed",
-      "details": "Please force restart the job",
-      "codeResolver": {
-        "codes": [
-          "code.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException"
-        ],
-        "defaultMessage": "409",
-        "arguments": null
-      },
-      "titleResolver": {
-        "codes": [
-          "title.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException"
-        ],
-        "defaultMessage": "Conflict",
-        "arguments": null
-      },
-      "messageResolver": {
-        "codes": [
-          "message.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException"
-        ],
-        "defaultMessage": "A job instance already exists and is complete for parameters={'date':'{value=2023-06-10, type=class java.time.LocalDate, identifying=true}'}.  If you want to run this job again, change the parameters.",
-        "arguments": null
-      },
-      "detailsResolver": {
-        "codes": [
-          "details.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException"
-        ],
-        "defaultMessage": "A job instance already exists and is complete for parameters={'date':'{value=2023-06-10, type=class java.time.LocalDate, identifying=true}'}.  If you want to run this job again, change the parameters.",
-        "arguments": null
-      },
-      "statusResolver": {
-        "codes": [
-          "status.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException"
-        ],
-        "defaultMessage": "500",
-        "arguments": null
-      }
-    }
-  ]
+  "type":"http://localhost:8080/problems/help.html#500",
+  "title":"Internal Server Error",
+  "status":500,
+  "detail":"A job instance already exists and is complete for parameters={'interestAccrualDate':'{value=2023-08-13, type=class java.time.LocalDate, identifying=true}','loanAccountNumbers':'{value=[], type=interface java.util.List, identifying=false}'}.  If you want to run this job again, change the parameters.",
+  "instance":"/api/myjob",
+  "method":"PUT",
+  "timestamp":"2023-08-14T20:51:43.993249+05:30",
+  "code":"500",
+  "codeResolver":{
+    "codes":[
+      "code.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException"
+    ],
+    "defaultMessage":"500",
+    "arguments":null
+  },
+  "titleResolver":{
+    "codes":[
+      "title.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException"
+    ],
+    "defaultMessage":"Internal Server Error",
+    "arguments":null
+  },
+  "detailResolver":{
+    "codes":[
+      "detail.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException"
+    ],
+    "defaultMessage":"A job instance already exists and is complete for parameters={'interestAccrualDate':'{value=2023-08-13, type=class java.time.LocalDate, identifying=true}','loanAccountNumbers':'{value=[], type=interface java.util.List, identifying=false}'}.  If you want to run this job again, change the parameters.",
+    "arguments":null
+  },
+  "statusResolver":{
+    "codes":[
+      "status.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException"
+    ],
+    "defaultMessage":"500",
+    "arguments":null
+  }
 }
 ```
 Respective codes for corresponding attribute can be copied and message can be specified for same in `properties` file.
@@ -361,8 +359,7 @@ Hence the error response can be specified as follows.
 status.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException=409
 code.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException=Some code
 title.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException=Some title
-message.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException=Some message
-details.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException=Some details
+detail.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException=Some message details
 ```
 **This scenario also covers all the exceptions for which advices are not defined**.
 In such cases the **Error key** is derived as fully qualified exception class name. 
@@ -370,8 +367,8 @@ But additionally `HttpStatus` need to be specified in `properties` file as it ha
 if not given even in `properties` file `HttpStatus.INTERNAL_SERVER_ERROR` is taken as default
 
 To minimize the number of properties following defaults are taken if `HttpStatus` is specified as `status.`\<error key\> property.
-* Code is taken as specified `HttpStatus`'s int code e.g. if `HttpStatus` is given as EXPECTATION_FAILED then the Code default would be `417`
-* Title is taken as specified `HttpStatus`'s reason phrase e.g. if `HttpStatus` is given as EXPECTATION_FAILED like the Title default would be `Expectation Failed`
+* Code is taken as specified `HttpStatus`'s int code e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` then the Code default would be `417`
+* Title is taken as specified `HttpStatus`'s reason phrase e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` like the Title default would be `Expectation Failed`
 * Message and Details defaults are taken from thrown exception's `exception.getMessage()`
 
 **Note**: `status.`(error key) property is considered only for exceptions where no explicit advice is defined, 
@@ -407,8 +404,7 @@ Notice the error key *sample.problem* in following properties
 ```properties
 code.sample.problem=AYX123
 title.sample.problem=Some title
-message.sample.problem=Some message
-details.sample.problem=Some details
+detail.sample.problem=Some message details
 ```
 
 But exceptions come with some default attributes as follows, to minimize the number of properties required to be defined in `properties` file
@@ -422,10 +418,8 @@ There are multiple other methods available while creating exceptions through Pro
 For better understanding, have a look at java docs for each method in [**`Problems`**](src/main/java/com/ksoot/problem/Problems.java)
 ```java
 throw Problems.newInstance("sample.problem")
-    .defaultMessage("Default message if not found in properties file")
-    .messageArgs("PARAM")
-    .defaultDetails("Default details if not found in properties file")
-    .detailsArgs("P1", "P2")
+    .defaultDetail("Default details if not found in properties file")
+    .detailArgs("P1", "P2")
     .cause(new IllegalStateException("Artificially induced illegal state"))
     .throwAble(Status.EXPECTATION_FAILED); // .throwAbleChecked(Status.EXPECTATION_FAILED)
 ```
@@ -436,8 +430,7 @@ The attributes corresponding to error key `sample.problem` can be provided in `p
 ```properties
 code.sample.problem=404
 title.sample.problem=Some title
-message.sample.problem=Some message with param: {0}
-details.sample.problem=Some details with param one: {0} and param other: {1}
+detail.sample.problem=Some details with param one: {0} and param other: {1}
 ```
 
 Sometimes it is not desirable to throw exceptions as they occur, but collect them to throw at a later point in execution.
@@ -458,15 +451,14 @@ The `HttpStatus` for rest api response would be `500` in this case
 ```java
 ThrowableProblem problem = Problem.code("3456")
     .title("Service Error")
-    .message("Invalid request received")
-    .details("Please retry with correct input")
+    .detail("Please retry with correct input")
     .parameter("additional-attribute", "Some additional attribute") // Dynamically add any more attributes to error response
     .build();
 throw problem;
 ```
 
 `HttpStatus` can also be set over custom exception as follows, the same would reflect in error response and 
-other error attributes defult would be derived by given `@ResponseStatus`
+other error attributes default would be derived by given `@ResponseStatus`
 ```java
 @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
 private static final class MyException extends RuntimeException {
@@ -482,7 +474,7 @@ private static final class MyException extends RuntimeException {
 To throw an unchecked exception with specific `HttpStatus`
 ```java
 ApplicationProblem problem = ApplicationProblem.of(HttpStatus.BAD_REQUEST, "234", "Business error",
-        "Please provide correct input", "Please contact administrator if the error persists");
+        "Please contact administrator if the error persists");
 throw problem;
 ```
 
@@ -490,7 +482,7 @@ To throw a checked exception with specific `HttpStatus`, though checked exceptio
 ```java
 public void someMethod() throws ApplicationException {
     ApplicationException problem = ApplicationProblem.of(HttpStatus.BAD_REQUEST, "234", "Business error",
-        "Please provide correct input", "Please contact administrator if the error persists");
+        "Please contact administrator if the error persists");
     throw problem;
 }
 ```
@@ -504,112 +496,111 @@ problem.stacktrace-enabled=true
 Example response
 ```json
 {
-  "instance": "/api/myjob",
-  "method": "PUT",
-  "requestTime": "2023-06-11T17:39:13.328595Z",
-  "errorCount": 1,
-  "errors": [
-    {
-      "code": "409",
-      "title": "Conflict",
-      "message": "A job with given parameters already completed",
-      "details": "Please force restart the job",
-      "stacktrace": [
-        "org.springframework.batch.core.repository.support.SimpleJobRepository.createJobExecution(SimpleJobRepository.java:159)",
-        "java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)",
-        "java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)",
-        "java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)",
-        "java.base/java.lang.reflect.Method.invoke(Method.java:568)",
-        "org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:343)",
-        "org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)",
-        "org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)",
-        "org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)",
-        "org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:391)",
-        "org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)",
-        "org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)",
-        "org.springframework.batch.core.repository.support.AbstractJobRepositoryFactoryBean$1.invoke(AbstractJobRepositoryFactoryBean.java:207)",
-        "org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)",
-        "org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)",
-        "jdk.proxy2/jdk.proxy2.$Proxy136.createJobExecution(Unknown Source)",
-        "org.springframework.batch.core.launch.support.SimpleJobLauncher.run(SimpleJobLauncher.java:145)",
-        "org.springframework.batch.core.launch.support.TaskExecutorJobLauncher.run(TaskExecutorJobLauncher.java:59)",
-        "java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)",
-        "java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)",
-        "java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)",
-        "java.base/java.lang.reflect.Method.invoke(Method.java:568)",
-        "org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:343)",
-        "org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)",
-        "org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)",
-        "org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:750)",
-        "org.springframework.validation.beanvalidation.MethodValidationInterceptor.invoke(MethodValidationInterceptor.java:141)",
-        "org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)",
-        "org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:750)",
-        "org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:702)",
-        "java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)",
-        "java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)",
-        "java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)",
-        "java.base/java.lang.reflect.Method.invoke(Method.java:568)",
-        "org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)",
-        "org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)",
-        "org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)",
-        "org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)",
-        "org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)",
-        "org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)",
-        "org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)",
-        "org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)",
-        "org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)",
-        "org.springframework.web.servlet.FrameworkServlet.doPut(FrameworkServlet.java:925)",
-        "jakarta.servlet.http.HttpServlet.service(HttpServlet.java:593)",
-        "org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)",
-        "jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)",
-        "org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)",
-        "org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)",
-        "org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)",
-        "org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)",
-        "org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)",
-        "org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)",
-        "org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)",
-        "org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)",
-        "org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)",
-        "org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)",
-        "org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)",
-        "org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)",
-        "org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)",
-        "org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:109)",
-        "org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)",
-        "org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)",
-        "org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)",
-        "org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)",
-        "org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)",
-        "org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)",
-        "org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)",
-        "org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:101)",
-        "org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)",
-        "org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)",
-        "org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)",
-        "org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)",
-        "org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)",
-        "org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)",
-        "org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)",
-        "org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)",
-        "org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)",
-        "org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)",
-        "org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)",
-        "org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)",
-        "org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)",
-        "org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)",
-        "org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)",
-        "org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)",
-        "org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)",
-        "java.base/java.lang.Thread.run(Thread.java:833)"
-      ]
-    }
+  "type":"http://localhost:8080/problems/help.html#500",
+  "title":"Internal Server Error",
+  "status":500,
+  "detail":"A job instance already exists and is complete for parameters={'interestAccrualDate':'{value=2023-08-13, type=class java.time.LocalDate, identifying=true}','loanAccountNumbers':'{value=[], type=interface java.util.List, identifying=false}'}.  If you want to run this job again, change the parameters.",
+  "instance":"/api/myjob",
+  "method":"PUT",
+  "timestamp":"2023-08-14T21:01:56.378749+05:30",
+  "code":"500",
+  "statcktrace":[
+    "org.springframework.batch.core.repository.support.SimpleJobRepository.createJobExecution(SimpleJobRepository.java:159)",
+    "java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)",
+    "java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)",
+    "java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)",
+    "java.base/java.lang.reflect.Method.invoke(Method.java:568)",
+    "org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:343)",
+    "org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)",
+    "org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)",
+    "org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)",
+    "org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:391)",
+    "org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)",
+    "org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)",
+    "org.springframework.batch.core.repository.support.AbstractJobRepositoryFactoryBean$1.invoke(AbstractJobRepositoryFactoryBean.java:207)",
+    "org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)",
+    "org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)",
+    "jdk.proxy2/jdk.proxy2.$Proxy155.createJobExecution(Unknown Source)",
+    "org.springframework.batch.core.launch.support.SimpleJobLauncher.run(SimpleJobLauncher.java:145)",
+    "org.springframework.batch.core.launch.support.TaskExecutorJobLauncher.run(TaskExecutorJobLauncher.java:59)",
+    "com.piramal.lms.accrual.domain.service.AccrualJobService.submitInterestAccrualJob(AccrualJobService.java:78)",
+    "com.piramal.lms.accrual.controller.InterestAccrualController.accrueInterest(InterestAccrualController.java:112)",
+    "java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)",
+    "java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)",
+    "java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)",
+    "java.base/java.lang.reflect.Method.invoke(Method.java:568)",
+    "org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:343)",
+    "org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)",
+    "org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)",
+    "org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:750)",
+    "org.springframework.validation.beanvalidation.MethodValidationInterceptor.invoke(MethodValidationInterceptor.java:141)",
+    "org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)",
+    "org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:750)",
+    "org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:702)",
+    "com.piramal.lms.accrual.controller.InterestAccrualController$$SpringCGLIB$$0.accrueInterest(<generated>)",
+    "java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)",
+    "java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)",
+    "java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)",
+    "java.base/java.lang.reflect.Method.invoke(Method.java:568)",
+    "org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)",
+    "org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)",
+    "org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)",
+    "org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)",
+    "org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)",
+    "org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)",
+    "org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)",
+    "org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)",
+    "org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)",
+    "org.springframework.web.servlet.FrameworkServlet.doPut(FrameworkServlet.java:925)",
+    "jakarta.servlet.http.HttpServlet.service(HttpServlet.java:593)",
+    "org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)",
+    "jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)",
+    "org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)",
+    "org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)",
+    "org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)",
+    "org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)",
+    "org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)",
+    "org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)",
+    "org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)",
+    "org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)",
+    "org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)",
+    "org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)",
+    "org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)",
+    "org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)",
+    "org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)",
+    "org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:109)",
+    "org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)",
+    "org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)",
+    "org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)",
+    "org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)",
+    "org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)",
+    "org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)",
+    "org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)",
+    "org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:101)",
+    "org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)",
+    "org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)",
+    "org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)",
+    "org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)",
+    "org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)",
+    "org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)",
+    "org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)",
+    "org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)",
+    "org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)",
+    "org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)",
+    "org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)",
+    "org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)",
+    "org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)",
+    "org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)",
+    "org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)",
+    "org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)",
+    "org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)",
+    "java.base/java.lang.Thread.run(Thread.java:833)"
   ]
 }
 ```
 
 ## Causal chains
-An exception may have a cause, which in tern may also have one and so one.
+An exception may have a cause, which in tern may also have another and so on.
 The complete cause chain can also be viewed in error response, again it should just be used for local debugging purposes only.
 
 ```properties
@@ -618,28 +609,28 @@ problem.cause-chains-enabled=true
 Example response
 ```json
 {
-  "instance": "/api/myjob",
-  "method": "PUT",
-  "requestTime": "2023-06-11T17:43:36.889372Z",
-  "errorCount": 1,
-  "errors": [
-    {
-      "code": "500",
-      "title": "Internal Server Error",
-      "message": "Invalid input job run date",
-      "details": "Invalid input job run date",
-      "cause": {
-        "code": "500",
-        "title": "Internal Server Error",
-        "message": "A job instance already exists and is complete for parameters={'date':'{value=2023-06-10, type=class java.time.LocalDate, identifying=true}'}.  If you want to run this job again, change the parameters.",
-        "details": "A job instance already exists and is complete for parameters={'date':'{value=2023-06-10, type=class java.time.LocalDate, identifying=true}'}.  If you want to run this job again, change the parameters."
-      }
+  "type":"http://localhost:8080/problems/help.html#501",
+  "title":"Not Implemented",
+  "status":501,
+  "detail":"expected",
+  "instance":"/problems/handler-throwable-annotated-cause",
+  "method":"GET",
+  "timestamp":"2023-08-14T22:09:56.284473+05:30",
+  "code":"501",
+  "cause":{
+    "code":"501",
+    "title":"Not Implemented",
+    "message":"501{501, Not Implemented}",
+    "detail":"com.ksoot.problem.demo.controller.DemoProblemController$MyException",
+    "cause":{
+      "code":"501",
+      "title":"Not Implemented"
     }
-  ]
+  }
 }
 ```
 ## Authors and acknowledgment
-Rajveer Singh, In case you find any issues or need any support, please ping me on Teams or email me at raj14.1984@gmail.com
+Rajveer Singh, In case you find any issues or need any support, please email me at raj14.1984@gmail.com
 
 ## Credits and references
 Inspired and taken base code from [**`Zalando Problem libraries`**](https://github.com/zalando/problem-spring-web)

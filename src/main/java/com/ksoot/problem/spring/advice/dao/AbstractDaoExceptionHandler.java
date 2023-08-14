@@ -1,0 +1,70 @@
+package com.ksoot.problem.spring.advice.dao;
+
+import com.ksoot.problem.spring.advice.dao.ConstraintNameResolver;
+import com.ksoot.problem.spring.advice.dao.DBType;
+import com.ksoot.problem.spring.advice.dao.DaoAdviceTraits;
+import com.ksoot.problem.spring.config.ProblemConfigException;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.env.Environment;
+import org.springframework.orm.jpa.vendor.Database;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+public abstract class AbstractDaoExceptionHandler<T, R> implements DaoAdviceTraits<T, R> {
+
+  protected final Map<DBType, ConstraintNameResolver> constraintNameResolvers;
+
+  protected final Database database;
+
+  protected AbstractDaoExceptionHandler(final List<ConstraintNameResolver> constraintNameResolvers,
+                                        final Environment env) {
+    if (CollectionUtils.isNotEmpty(constraintNameResolvers)) {
+      this.constraintNameResolvers = constraintNameResolvers.stream()
+          .collect(Collectors.toMap(ConstraintNameResolver::dbType, Function.identity()));
+    } else {
+      this.constraintNameResolvers = Collections.EMPTY_MAP;
+    }
+
+    String dbPlateform = env.getProperty("spring.jpa.database");
+    if (this.constraintNameResolvers.containsKey(DBType.POSTGRESQL)
+        || this.constraintNameResolvers.containsKey(DBType.SQL_SERVER)
+        || this.constraintNameResolvers.containsKey(DBType.MYSQL)
+        || this.constraintNameResolvers.containsKey(DBType.ORACLE)) {
+      if (StringUtils.isEmpty(dbPlateform)) {
+        throw new ProblemConfigException(
+            "Property \"spring.jpa.database\" not found. Please specify database plateform in configurations");
+      } else {
+        this.database = Database.valueOf(dbPlateform);
+      }
+    } else {
+      this.database = null;
+    }
+  }
+
+  @Override
+  public String resolveConstraintName(final String exceptionMessage) {
+    if (exceptionMessage.contains("WriteError")) { // MongoDB constraint violation
+      return this.constraintNameResolvers.get(DBType.MONGO_DB).resolveConstraintName(exceptionMessage);
+    } else {
+      switch (this.database) {
+        case SQL_SERVER:
+          return this.constraintNameResolvers.get(DBType.SQL_SERVER).resolveConstraintName(exceptionMessage);
+        case POSTGRESQL:
+          return this.constraintNameResolvers.get(DBType.POSTGRESQL).resolveConstraintName(exceptionMessage);
+        case MYSQL:
+          return this.constraintNameResolvers.get(DBType.MYSQL).resolveConstraintName(exceptionMessage);
+        case ORACLE:
+          return this.constraintNameResolvers.get(DBType.ORACLE).resolveConstraintName(exceptionMessage);
+        // TODO: Add more cases for other databases constraint name resolver implementations
+        default:
+          throw new IllegalStateException("constraintNameResolver bean could not be found, "
+              + "add ConstraintNameResolver implementation for: " + this.database);
+      }
+    }
+  }
+}

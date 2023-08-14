@@ -129,8 +129,6 @@ public interface BaseAdviceTrait {
   default ThrowableProblem prepare(final Throwable throwable, final String code, final String title,
                                    final String detail, final Map<String, Object> parameters) {
     if (ProblemBeanRegistry.problemProperties().isStacktraceEnabled()) {
-//      String stacktrace = ProblemUtils.getStackTrace(throwable);
-//      parameters.put(STACKTRACE_KEY, stacktrace);
       final StackTraceElement[] stackTrace = ProblemUtils.createStackTrace(throwable);
       parameters.put(STACKTRACE_KEY, stackTrace);
     }

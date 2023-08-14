@@ -119,7 +119,7 @@ public interface Problem {
 
     Builder(final String code, final String title, final String detail) {
       this(code, title);
-      Assert.hasText(detail, "'detail' must not be null or empty");
+//      Assert.hasText(detail, "'detail' must not be null or empty");
       this.detail = detail;
     }
 
@@ -146,7 +146,7 @@ public interface Problem {
 
     @Override
     public CauseBuilder detail(final String detail) {
-      Assert.hasText(detail, "'detail' must not be null or empty");
+//      Assert.hasText(detail, "'detail' must not be null or empty");
       this.detail = detail;
       return this;
     }
