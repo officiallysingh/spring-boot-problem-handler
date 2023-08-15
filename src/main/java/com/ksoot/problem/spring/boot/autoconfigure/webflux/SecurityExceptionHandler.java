@@ -1,6 +1,8 @@
 package com.ksoot.problem.spring.boot.autoconfigure.webflux;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ksoot.problem.spring.advice.security.ProblemServerAccessDeniedHandler;
+import com.ksoot.problem.spring.advice.security.ProblemServerAuthenticationEntryPoint;
 import com.ksoot.problem.spring.advice.security.SecurityAdviceTraits;
 import com.ksoot.problem.spring.boot.autoconfigure.SecurityAdviceEnabled;
 import com.ksoot.problem.spring.config.ProblemProperties;
@@ -38,14 +40,14 @@ class SecurityExceptionHandler implements SecurityAdviceTraits<ServerWebExchange
   ServerAuthenticationEntryPoint authenticationEntryPoint(
       final SecurityAdviceTraits<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> advice,
       final ObjectMapper objectMapper) {
-    return new ProblemAuthenticationEntryPoint(advice, objectMapper);
+    return new ProblemServerAuthenticationEntryPoint(advice, objectMapper);
   }
 
   @ConditionalOnMissingBean
   @Bean
-  ServerAccessDeniedHandler serverAccessDeniedHandler(
+  ServerAccessDeniedHandler accessDeniedHandler(
       final SecurityAdviceTraits<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> advice,
       final ObjectMapper objectMapper) {
-    return new ProblemAccessDeniedHandler(advice, objectMapper);
+    return new ProblemServerAccessDeniedHandler(advice, objectMapper);
   }
 }

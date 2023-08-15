@@ -30,7 +30,9 @@ public class ProblemProperties {
 
   private boolean causeChainsEnabled = false;
 
-  private boolean ormAdviceEnabled = true;
+  private boolean jacksonModuleEnabled = true;
+
+  private boolean daoAdviceEnabled = true;
 
   private boolean securityAdviceEnabled = true;
 

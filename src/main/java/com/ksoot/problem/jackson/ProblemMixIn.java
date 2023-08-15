@@ -18,7 +18,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
     defaultImpl = DefaultProblem.class,
     visible = true)
 @JsonInclude(NON_EMPTY)
-@JsonPropertyOrder({"code", "title", "message", "details"})
+@JsonPropertyOrder({"code", "title", "details"})
 interface ProblemMixIn extends Problem {
 
   @JsonProperty("code")

@@ -16,7 +16,7 @@ public class ORMAdviceEnabled extends AllNestedConditions {
   static class ProblemEnabled {
   }
 
-  @ConditionalOnProperty(prefix = "problem", name = "orm-advice-enabled", havingValue = "true", matchIfMissing = true)
+  @ConditionalOnProperty(prefix = "problem", name = "dao-advice-enabled", havingValue = "true", matchIfMissing = true)
   static class ORMEnabledEnabled {
   }
 }

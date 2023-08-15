@@ -1,4 +1,4 @@
-package com.ksoot.problem.spring.boot.autoconfigure.webflux;
+package com.ksoot.problem.spring.advice.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ksoot.problem.spring.advice.security.SecurityAdviceTraits;
@@ -12,7 +12,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
-public class ProblemAccessDeniedHandler implements ServerAccessDeniedHandler {
+public class ProblemServerAccessDeniedHandler implements ServerAccessDeniedHandler {
 
   private final SecurityAdviceTraits<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> advice;
 

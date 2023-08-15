@@ -27,7 +27,7 @@ public interface MethodArgumentNotValidAdviceTrait<T, R> extends BaseBindingResu
     parameters.put(VIOLATIONS_KEY, violations);
     Problem problem = toProblem(exception, ProblemMessageSourceResolver.of(CONSTRAINT_VIOLATION_CODE_CODE_PREFIX),
         ProblemMessageSourceResolver.of(CONSTRAINT_VIOLATION_TITLE_CODE_PREFIX),
-        ProblemMessageSourceResolver.of(CONSTRAINT_VIOLATION_DETAIL_CODE_PREFIX), parameters);
+        ProblemMessageSourceResolver.of(CONSTRAINT_VIOLATION_DETAIL_CODE_PREFIX, exception.getMessage()), parameters);
     return create(exception, request, defaultConstraintViolationStatus(),
         problem);
   }

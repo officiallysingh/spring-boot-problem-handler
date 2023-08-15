@@ -4,6 +4,7 @@ import org.springframework.boot.autoconfigure.condition.AnyNestedCondition;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Conditional;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 
 /**
@@ -16,6 +17,7 @@ public class DaoAdviceEnabled extends AnyNestedCondition {
   }
 
   @Conditional(ORMUrlAvailable.class)
+  @ConditionalOnClass(value = {JpaRepository.class})
   static class ORMAvailable {
 
   }

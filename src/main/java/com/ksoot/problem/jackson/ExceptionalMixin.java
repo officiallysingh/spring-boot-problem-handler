@@ -10,6 +10,9 @@ interface ExceptionalMixin {
   String getLocalizedMessage();
 
   @JsonIgnore
+  String getMessage();
+
+  @JsonIgnore
   StackTraceElement[] getStackTrace();
 
   @JsonIgnore

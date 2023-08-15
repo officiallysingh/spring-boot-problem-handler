@@ -36,14 +36,14 @@ class SecurityExceptionHandler implements SecurityAdviceTraits<NativeWebRequest,
 
   @ConditionalOnMissingBean
   @Bean
-  AuthenticationEntryPoint problemAuthenticationEntryPoint(
+  AuthenticationEntryPoint authenticationEntryPoint(
       final HandlerExceptionResolver resolver) {
     return new ProblemAuthenticationEntryPoint(resolver);
   }
 
   @ConditionalOnMissingBean
   @Bean
-  AccessDeniedHandler problemAccessDeniedHandler(
+  AccessDeniedHandler accessDeniedHandler(
       final HandlerExceptionResolver resolver) {
     return new ProblemAccessDeniedHandler(resolver);
   }

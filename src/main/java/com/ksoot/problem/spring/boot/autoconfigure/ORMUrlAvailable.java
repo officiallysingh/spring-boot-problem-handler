@@ -4,7 +4,7 @@ import org.springframework.boot.autoconfigure.condition.AnyNestedCondition;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 /**
- * Condition to register advice for ORM exception handling.
+ * Condition to register advice for Dao exception handling.
  */
 public class ORMUrlAvailable extends AnyNestedCondition {
 
@@ -13,10 +13,10 @@ public class ORMUrlAvailable extends AnyNestedCondition {
   }
 
   @ConditionalOnProperty(prefix = "spring.datasource", name = "url")
-  static class ReqValidationEnabled {
+  static class SpringDatasourceUrlAvailable {
   }
 
   @ConditionalOnProperty(prefix = "spring.r2dbc", name = "url")
-  static class ResValidationEnabled {
+  static class SpringR2dbcUrlAvailable {
   }
 }

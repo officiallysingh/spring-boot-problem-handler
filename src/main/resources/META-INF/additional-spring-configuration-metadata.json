@@ -25,10 +25,16 @@
 			"description": "Default: false, Whether or not to include exception cause in error response messages"
 		},
 		{
-			"name": "problem.orm-advice-enabled",
+			"name": "problem.jackson-module-enabled",
 			"type": "java.lang.Boolean",
 			"defaultValue": "true",
-			"description": "Default: true, Whether or not to Enable ORM exception handling advices"
+			"description": "Default: true, Whether or not to Enable Jackson Problem module"
+		},
+		{
+			"name": "problem.dao-advice-enabled",
+			"type": "java.lang.Boolean",
+			"defaultValue": "true",
+			"description": "Default: true, Whether or not to Enable DAO exception handling advices"
 		},
 		{
 			"name": "problem.security-advice-enabled",

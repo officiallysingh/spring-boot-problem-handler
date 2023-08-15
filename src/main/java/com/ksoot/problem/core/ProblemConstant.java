@@ -28,6 +28,7 @@ public class ProblemConstant {
   public static final String CONSTRAINT_VIOLATION_TITLE_CODE_PREFIX = TITLE_CODE_PREFIX + GeneralErrorKey.CONSTRAINT_VIOLATION;
   public static final String CONSTRAINT_VIOLATION_DETAIL_CODE_PREFIX = DETAIL_CODE_PREFIX + GeneralErrorKey.CONSTRAINT_VIOLATION;
 
+  public static final String CONSTRAINT_VIOLATION_DEFAULT_MESSAGE = "Constraints violated";
   public static final String DB_CONSTRAINT_VIOLATION_DEFAULT_MESSAGE = "Database constraints violated";
 
   private ProblemConstant() {
