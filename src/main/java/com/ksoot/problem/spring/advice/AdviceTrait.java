@@ -132,9 +132,8 @@ public interface AdviceTrait<T, R> extends BaseAdviceTrait {
 //		}
 //	}
 
-  // ErrorResponseBuilder can have different implementations as per consumer
-  // needs.
-  // so can be overridden. Would be different for Web or Webflux applications
+  // ErrorResponseBuilder can have different implementations as per consumer needs, So can be overridden.
+  // Would be different for Web or Webflux applications
   default ErrorResponseBuilder<T, R> errorResponseBuilder() {
     return ProblemBeanRegistry.errorResponseBuilder();
   }

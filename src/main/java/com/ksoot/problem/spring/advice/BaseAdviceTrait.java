@@ -53,7 +53,7 @@ public interface BaseAdviceTrait {
   }
 
   default ThrowableProblem toProblem(final Throwable throwable, final HttpStatus status, final String detail) {
-    return toProblem(throwable, String.valueOf(status.value()), status.getReasonPhrase(), detail);
+    return toProblem(throwable, ProblemUtils.statusCode(status), status.getReasonPhrase(), detail);
   }
 
   default ThrowableProblem toProblem(final Throwable throwable, final String code, final String title,
@@ -71,7 +71,7 @@ public interface BaseAdviceTrait {
 
   default ThrowableProblem toProblem(final Throwable throwable, final HttpStatus status,
                                      final MessageSourceResolvable detailResolver) {
-    return toProblem(throwable, String.valueOf(status.value()), status.getReasonPhrase(), detailResolver);
+    return toProblem(throwable, ProblemUtils.statusCode(status), status.getReasonPhrase(), detailResolver);
   }
 
   default ThrowableProblem toProblem(final Throwable throwable, final String code, final String title,

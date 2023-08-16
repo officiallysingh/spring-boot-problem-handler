@@ -22,8 +22,6 @@ all can be done with zero custom code but specifying error details in `propertie
 
 ## Installation
 
-### Spring boot
-
 Add the `spring-boot-problem-handler.jar` to application dependencies. That is all it takes to get a default working 
 exception handling mechanism in an application
 ```xml
@@ -64,7 +62,7 @@ such as for Handling Security, OpenAPI and Dao related exceptions, which are ela
 #### General advices recommended for Spring Rest services need to handle
 
 These advices are autoconfigured as either bean of type [**`ProblemHandlingWeb`**](src/main/java/com/ksoot/problem/spring/advice/web/ProblemHandlingWeb.java) 
-or [**`ProblemHandlingWebflux`**](src/main/java/com/ksoot/problem/spring/advice/webflux/advice/ProblemHandlingWebflux.java) depending on whether application is of type **Servlet** or **Reactive** respectively
+or [**`ProblemHandlingWebflux`**](src/main/java/com/ksoot/problem/spring/advice/webflux/advice/ProblemHandlingWebflux.java) depending on whether application is type **String Web** (Servlet) or **String Webflux** (Reactive) respectively.
 
 | General Advice Traits                                                                                                                                         | Produces                                                    | Error Key                                                           |
 |---------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------|---------------------------------------------------------------------|
@@ -218,9 +216,9 @@ These advices are autoconfigured as bean
 [**`OpenApiValidationExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/web/OpenApiValidationExceptionHandler.java) if following conditions are true
 * `swagger-request-validator-spring-webmvc-2.34.x.jar` is detected in classpath 
 * At least one of `problem.open-api.req-validation-enabled` or `problem.open-api.res-validation-enabled` is set as `true`
-* A valid OpenAPI Spec provided as config `problem.open-api.path`
+* A valid OpenAPI Spec is provided as config `problem.open-api.path`
 
-**Note**: It is available for **String Web** (Servlet) only, not for **String Webflux** (Reactive)
+**Note**: It is available for **String Web** (Servlet) applications only, not for **String Webflux** (Reactive) application
 
 ## Configurations
 
@@ -311,8 +309,8 @@ to have a look at defaults for above `properties`
 ## Usage
 
 ### Error Key
-For each exception an **Error Key** is either derived or specified by application while throwing exception. 
-It is used to externalize the error attributes in `properties` file. 
+The main concept behind specifying the error attributes in `properties` file is **Error key**, which is mandatory to be unique for each error scenario.
+It is either derived or specified by application while throwing exception and used to externalize the error attributes in `properties` file. 
 
 For example if error key for some exception is `some.error.key`, then error response attributes can be specified in `properties` file as follows.
 ```properties
@@ -413,7 +411,7 @@ if not given even in `properties` file `HttpStatus.INTERNAL_SERVER_ERROR` is tak
 To minimize the number of properties following defaults are taken if `HttpStatus` is specified as `status.`\<error key\> property.
 * Code is taken as specified `HttpStatus`'s int code e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` then the Code default would be `417`
 * Title is taken as specified `HttpStatus`'s reason phrase e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` like the Title default would be `Expectation Failed`
-* Message and Details defaults are taken from thrown exception's `exception.getMessage()`
+* Detail default is taken from thrown exception's `exception.getMessage()`
 
 **Note**: `status.`\<error key\> property is considered only for exceptions where no explicit advice is defined, 
 otherwise `HttpStatus` is specified in the java code.
@@ -433,9 +431,8 @@ The simplistic way is to just specify a unique error key and `HttpStatus`.
 ```java
 throw Problems.newInstance("sample.problem").throwAble(HttpStatus.EXPECTATION_FAILED);
 ```
-Error response attributes `code`, `title` and `details` are expected from the message source (`properties` file) available as follows.
-The main concept behind specifying the error attributes in `properties` file is **Error key**, which is mandatory to be unique for each error scenario.
-Notice the error key *sample.problem* in following properties
+Error response attributes `code`, `title` and `detail` are expected from the message source (`properties` file) available as follows.
+Notice the Error key **sample.problem** in following properties
 
 ```properties
 code.sample.problem=AYX123
@@ -469,7 +466,7 @@ title.sample.problem=Some title
 detail.sample.problem=Some details with param one: {0} and param other: {1}
 ```
 
-Sometimes it is not desirable to throw exceptions as they occur, but collect them to throw at a later point in execution.
+Sometimes it is not desirable to throw exceptions as they occur, but to collect them to throw at a later point in execution.
 Or to throw multiple exceptions together.That can be done as follows.
 ```java
 Problem problemOne = Problems.newInstance("sample.problem.one").get();
@@ -628,7 +625,7 @@ class CustomMethodArgumentNotValidExceptionHandler implements MethodArgumentNotV
         List<String> violations = processBindingResult(exception.getBindingResult());
         final String errors = violations.stream()
             .collect(Collectors.joining(", "));
-        Problem problem = Problem.code(String.valueOf(HttpStatus.BAD_REQUEST.value())).title(HttpStatus.BAD_REQUEST.getReasonPhrase())
+        Problem problem = Problem.code(ProblemUtils.statusCode(HttpStatus.BAD_REQUEST)).title(HttpStatus.BAD_REQUEST.getReasonPhrase())
             .detail(errors).build();
         return create(exception, request, HttpStatus.BAD_REQUEST,
             problem);
@@ -665,7 +662,7 @@ For **String Webflux** (Reactive) applications
 class CustomMethodArgumentNotValidExceptionHandler implements MethodArgumentNotValidAdviceTrait<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> {
 
   public Mono<ResponseEntity<ProblemDetail>> handleMethodArgumentNotValid(final MethodArgumentNotValidException exception, final ServerWebExchange request) {
-    // It remains the same as specified for Spring web, above
+    // It remains the same as implemented for Spring web, above
   }
 }
 ```
@@ -698,7 +695,7 @@ For **String Webflux** (Reactive) applications
 public class MyCustomAdvice implements AdviceTrait<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> {
 
     public Mono<ResponseEntity<ProblemDetail>> handleMyCustomException(final MyCustomException exception, final ServerWebExchange request) {
-        // It remains the same as specified for Spring web, above
+        // It remains the same as implemented for Spring web, above
     }
 }
 ```
