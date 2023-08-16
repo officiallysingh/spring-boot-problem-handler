@@ -318,6 +318,11 @@ code.some.error.key=some-error
 title.some.error.key=Some Error
 detail.some.error.key=Something has gone wrong, please look into the logs for details
 ```
+In case of exceptions for which advices are not defined, status also need to be specified in `properties` file as follows.
+```properties
+status.some.error.key=400
+```
+
 It is elaborated in below sections.
 
 ### Error response structure
@@ -584,8 +589,8 @@ Example response
 
 ## Customizations
 ### Customize error response
-The error response is totally customizable by defining a bean of type [**`ErrorResponseBuilder`**](src/main/java/com/ksoot/problem/core/ErrorResponseBuilder.java) demonstrated as follows
-* If it is required to customize the error response attribute names, it can be done by implementing custom serialization for `ProblemDetail` using Jackson Mixin
+The error response is totally customizable by defining a bean of type [**`ErrorResponseBuilder`**](src/main/java/com/ksoot/problem/core/ErrorResponseBuilder.java) demonstrated as follows.
+* If it is required to customize the error response attribute names, it can be done by implementing custom serialization for `ProblemDetail` using Jackson Mixin.
 * Define custom error response class as follows.
 ```java
 @Getter
@@ -611,7 +616,7 @@ class CustomErrorResponseBuilder implements ErrorResponseBuilder<NativeWebReques
 }
 ```
 ### Customize or Override advices
-Any autoconfigured advice can be customized by overriding respective advices for advice and providing a different implementation. 
+Any autoconfigured advice can be customized by overriding the same and providing a different implementation. 
 Make sure to add annotation `@Order(Ordered.HIGHEST_PRECEDENCE)` over the class, 
 It makes this handler to take precedence over the fallback advice which handles `Throwable` i.e. for all exceptions for which no `ControllerAdvice`s are defined.
 
