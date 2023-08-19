@@ -29,7 +29,7 @@ class ProblemDaoConfiguration {
 
   @ConditionalOnMissingBean(name = "postgresqlConstraintNameResolver")
   @Conditional(ORMUrlAvailable.class)
-  @ConditionalOnProperty(prefix = "spring.jpa", name = "database", havingValue = "POSTGRESQL", matchIfMissing = false)
+  @ConditionalOnProperty(prefix = "spring.jpa", name = "database", havingValue = "POSTGRESQL")
   public static class PostgresqlConstraintNameResolverConfiguration {
 
     @Bean

@@ -126,7 +126,7 @@ These advices are autoconfigured as a bean `DaoExceptionHandler` if following co
 * `spring-data-jpa` or `spring-data-mongodb` jar is detected in classpath 
 * `problem.dao-advice-enabled` is not set to `false`. Its default value is `true`
 * If using relation databases then `spring-data-jpa` jar is detected in classpath and Either `spring.datasource.url` or `spring.r2dbc.url` is configured
-* If using MongoDB the `spring-data-mongodb` jar is detected in classpath and `spring.data.mongodb.uri` is configured
+* If using MongoDB then `spring-data-mongodb` jar is detected in classpath and `spring.data.mongodb.uri` is configured
 
 **Note**: Database type must be specified in `application.properties` in case application is using some relational database, 
 it is used to autoconfigure [**`ConstraintNameResolver`**](src/main/java/com/ksoot/problem/spring/advice/dao/ConstraintNameResolver.java) 
@@ -326,7 +326,7 @@ status.some.error.key=400
 It is elaborated in below sections.
 
 ### Error response structure
-Following is an example response for an error.
+Following is an example response body for an error.
 ```json
 {
   "type":"http://localhost:8080/problems/help.html#500",
@@ -339,6 +339,14 @@ Following is an example response for an error.
   "code":"500"
 }
 ```
+Response Header when service is configured for Json `HttpMessageConverters`
+```json
+content-type: application/problem+json
+```
+Response Header when service is configured for XML `HttpMessageConverters`
+```json
+content-type: application/problem+xml
+```
 
 * `type`:- A URI reference that identifies the problem type.  When dereferenced, it provides human-readable documentation for this error.
   If not set `about:blank` is taken as default.
@@ -347,7 +355,7 @@ Following is an example response for an error.
 * `detail`:- A human-readable explanation specific to this occurrence of error.
 * `instance`:- The API URI reference where this error has occurred.
 * `method`:- `HttpMethod` for given `instance` where this error has occurred.
-* `timestamp`:- `OffsetDateTime` of occurrance of this error.
+* `timestamp`:- `OffsetDateTime` of occurrence of this error.
 * `code`:- Unique `String` code for this error. Used in `type`. Commonly used to set unique codes for different business error scenarios
 
 

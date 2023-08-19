@@ -1,13 +1,9 @@
 package com.ksoot.problem.spring.advice.dao;
 
-import com.ksoot.problem.spring.advice.dao.ConstraintNameResolver;
-import com.ksoot.problem.spring.advice.dao.DBType;
-import com.ksoot.problem.spring.advice.dao.DaoAdviceTraits;
 import com.ksoot.problem.spring.config.ProblemConfigException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.env.Environment;
-import org.springframework.orm.jpa.vendor.Database;
 
 import java.util.Collections;
 import java.util.List;
