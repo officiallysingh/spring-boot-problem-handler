@@ -8,8 +8,6 @@ import com.ksoot.problem.spring.config.ProblemMessageProvider;
 import com.ksoot.problem.spring.config.ProblemMessageSourceResolver;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -22,25 +20,6 @@ import static com.ksoot.problem.core.ProblemConstant.STACKTRACE_KEY;
 import static com.ksoot.problem.core.ProblemConstant.STATUS_RESOLVER;
 import static com.ksoot.problem.core.ProblemConstant.TITLE_RESOLVER;
 
-/**
- * <p>
- * Advice traits are simple interfaces that provide a single method with a
- * default implementation. They are used to provide {@link ExceptionHandler}
- * implementations to be used in Spring Controllers and/or in a
- * {@link ControllerAdvice}. Clients can choose which traits they what to use à
- * la carte.
- * </p>
- * <p>
- * Advice traits are grouped in packages, based on they use cases. Every package
- * has a composite advice trait that bundles all traits of that package.
- * </p>
- *
- * @see ControllerAdvice
- * @see ExceptionHandler
- * @see Throwable
- * @see Exception
- * @see Problem
- */
 public interface BaseAdviceTrait {
 
   default ThrowableProblem toProblem(final Throwable throwable) {

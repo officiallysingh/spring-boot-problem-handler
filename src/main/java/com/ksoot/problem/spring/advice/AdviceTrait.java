@@ -1,59 +1,19 @@
 package com.ksoot.problem.spring.advice;
 
-import com.ksoot.problem.spring.advice.application.ApplicationProblemAdviceTrait;
-import com.ksoot.problem.spring.advice.general.GeneralAdviceTraits;
-import com.ksoot.problem.spring.advice.http.HttpAdviceTraits;
-import com.ksoot.problem.spring.advice.network.NetworkAdviceTraits;
-import com.ksoot.problem.spring.advice.routing.RoutingAdviceTraits;
-import com.ksoot.problem.spring.advice.validation.ValidationAdviceTraits;
-import com.ksoot.problem.spring.advice.webflux.ProblemHandlingWebflux;
-import com.ksoot.problem.spring.config.ProblemBeanRegistry;
-import com.ksoot.problem.spring.config.ProblemMessageProvider;
-import com.ksoot.problem.spring.config.ProblemMessageSourceResolver;
+import com.ksoot.problem.core.ErrorResponseBuilder;
 import com.ksoot.problem.core.GeneralErrorKey;
 import com.ksoot.problem.core.Problem;
 import com.ksoot.problem.core.ProblemConstant;
-import com.ksoot.problem.core.ErrorResponseBuilder;
 import com.ksoot.problem.core.ProblemUtils;
-import com.ksoot.problem.spring.advice.io.IOAdviceTraits;
+import com.ksoot.problem.spring.config.ProblemBeanRegistry;
+import com.ksoot.problem.spring.config.ProblemMessageProvider;
+import com.ksoot.problem.spring.config.ProblemMessageSourceResolver;
 import org.apache.commons.lang3.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
-/**
- * <p>
- * Advice traits are simple interfaces that provide a single method with a
- * default implementation. They are used to provide {@link ExceptionHandler}
- * implementations to be used in {@link Controller Controllers} and/or in a
- * {@link ControllerAdvice}. Clients can choose which traits they what to use à
- * la carte.
- * </p>
- * <p>
- * Advice traits are grouped in packages, based on they use cases. Every package
- * has a composite advice trait that bundles all traits of that package.
- * Additionally there is one {@link ProblemHandlingWebflux major composite
- * advice trait} that in turn bundles all other composites.
- * </p>
- *
- * @see ControllerAdvice
- * @see ExceptionHandler
- * @see Throwable
- * @see Exception
- * @see Problem
- * @see ProblemHandlingWebflux
- * @see ApplicationProblemAdviceTrait
- * @see GeneralAdviceTraits
- * @see HttpAdviceTraits
- * @see IOAdviceTraits
- * @see NetworkAdviceTraits
- * @see RoutingAdviceTraits
- * @see ValidationAdviceTraits
- */
 public interface AdviceTrait<T, R> extends BaseAdviceTrait {
 
   Logger logger = LoggerFactory.getLogger(AdviceTrait.class);

@@ -4,9 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.ksoot</groupId>
+    <groupId>io.github.officiallysingh</groupId>
     <artifactId>spring-boot-problem-handler</artifactId>
-    <version>0.0.1.SNAPSHOT</version>
+<!--    <version>0.0.1.SNAPSHOT</version>-->
+    <version>1.0</version>
     <name>spring-boot-problem-handler</name>
     <description>Commons exception handler library</description>
 
