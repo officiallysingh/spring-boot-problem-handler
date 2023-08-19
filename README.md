@@ -28,7 +28,7 @@ exception handling mechanism in an application
 <dependency>
     <groupId>com.ksoot</groupId>
     <artifactId>spring-boot-problem-handler</artifactId>
-    <version>${spring-boot-problem-handle.version}</version>
+    <version>${spring-boot-problem-handler.version}</version>
 </dependency>
 ```
 
@@ -348,6 +348,7 @@ Response Header when service is configured for XML `HttpMessageConverters`
 content-type: application/problem+xml
 ```
 
+**Error Response description**
 * `type`:- A URI reference that identifies the problem type.  When dereferenced, it provides human-readable documentation for this error.
   If not set `about:blank` is taken as default.
 * `title`:- A short, human-readable summary of the error such as `Bad Request`.
@@ -356,7 +357,8 @@ content-type: application/problem+xml
 * `instance`:- The API URI reference where this error has occurred.
 * `method`:- `HttpMethod` for given `instance` where this error has occurred.
 * `timestamp`:- `OffsetDateTime` of occurrence of this error.
-* `code`:- Unique `String` code for this error. Used in `type`. Commonly used to set unique codes for different business error scenarios
+* `code`:- Unique `String` code for this error, should not contain spaces or special characters except '_' and '-'. 
+  Used in `type`. Commonly used to set unique codes for different business error scenarios.
 
 
 ### Problem Message resolvers
@@ -712,6 +714,9 @@ public class MyCustomAdvice implements AdviceTrait<ServerWebExchange, Mono<Respo
     }
 }
 ```
+
+## Licence
+Open source [**`The MIT License`**](http://www.opensource.org/licenses/mit-license.php)
 
 ## Authors and acknowledgment
 **Rajveer Singh**, In case you find any issues or need any support, please email me at raj14.1984@gmail.com
