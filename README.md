@@ -1,7 +1,8 @@
 # Spting boot Problem Handler
 
 A Generic library for handling exceptions in **String Web** (Servlet) and **String Webflux** (Reactive) applications, 
-implementing specification [**`Problem Details (RFC7807) for HTTP APIs`**](https://datatracker.ietf.org/doc/html/rfc7807)
+implementing specification [**`Problem Details (RFC7807) for HTTP APIs`**](https://datatracker.ietf.org/doc/html/rfc7807).
+Requires Java 17, Spring boot 3+ and Jakarta EE 10
 
 ## Introduction
 
@@ -22,7 +23,15 @@ all can be done with zero custom code but specifying error details in `propertie
 
 ## Installation
 
-Add the `spring-boot-problem-handler.jar` to application dependencies. That is all it takes to get a default working 
+**Current version: 1.0**
+
+```xml
+<properties>
+    <spring-boot-problem-handler.version>1.0</spring-boot-problem-handler.version>
+</properties>
+```
+
+Add the `spring-boot-problem-handler` jar to application dependencies. That is all it takes to get a default working 
 exception handling mechanism in an application
 ```xml
 <dependency>
@@ -32,7 +41,7 @@ exception handling mechanism in an application
 </dependency>
 ```
 
-Having `spring-boot-problem-handler.jar` in classpath does all hard part, A lot of advices are out of box available 
+Having `spring-boot-problem-handler` jar in classpath does all hard part, A lot of advices are out of box available 
 which are autoconfigures as `ControllerAdvice`s 
 depending on the jars in classpath of consumer application. 
 **Even for exceptions for which no advices are defined**, respective error response can be specified by 
