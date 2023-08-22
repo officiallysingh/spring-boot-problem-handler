@@ -6,10 +6,10 @@
 
     <groupId>io.github.officiallysingh</groupId>
     <artifactId>spring-boot-problem-handler</artifactId>
-<!--    <version>0.0.1.SNAPSHOT</version>-->
     <version>1.0</version>
     <name>spring-boot-problem-handler</name>
     <description>Commons exception handler library</description>
+    <url>https://github.com/officiallysingh/spring-boot-problem-handler</url>
 
     <organization>
         <name>Ksoot Technologies</name>
@@ -26,7 +26,7 @@
             <name>Rajveer Sing</name>
             <email>raj14.1984@gmail.com</email>
             <organization>Ksoot Technologies</organization>
-            <!--            <organizationUrl></organizationUrl>-->
+            <organizationUrl>http://www.ksoot.com</organizationUrl>
         </developer>
     </developers>
 
@@ -38,14 +38,19 @@
         <jakarta.annotation-api.version>2.1.1</jakarta.annotation-api.version>
         <swagger-request-validator-spring-webmvc.version>2.34.1</swagger-request-validator-spring-webmvc.version>
         <commons-collections4.version>4.4</commons-collections4.version>
-        <guava.version>31.1-jre</guava.version>
+        <guava.version>32.1.2-jre</guava.version>
         <failsafe.version>2.4.4</failsafe.version>
         <junit.jupiter.version>5.9.1</junit.jupiter.version>
 
-        <!--        <nexus.repository></nexus.repository>-->
+        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
+        <maven-gpg-plugin.version>3.1.0</maven-gpg-plugin.version>
+        <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
         <maven-release-plugin.version>3.0.0-M1</maven-release-plugin.version>
         <maven-deploy-plugin.version>3.1.1</maven-deploy-plugin.version>
         <scm.connection>scm:git:git@github.com:officiallysingh/spring-boot-problem-handler.git</scm.connection>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
@@ -149,18 +154,19 @@
     </dependencies>
 
     <scm>
-        <url>https://github.com/officiallysingh/spring-boot-problem-handler</url>
+        <url>https://github.com/officiallysingh/spring-boot-problem-handler/tree/main</url>
         <connection>${scm.connection}</connection>
         <developerConnection>${scm.connection}</developerConnection>
     </scm>
+
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
         <repository>
             <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
 
@@ -179,7 +185,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.2.1</version>
+                <version>${maven-source-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -192,7 +198,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.5.0</version>
+                <version>${maven-javadoc-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -208,7 +214,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>${maven-gpg-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>
@@ -222,11 +228,11 @@
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.13</version>
+                <version>${nexus-staging-maven-plugin.version}</version>
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
             </plugin>
