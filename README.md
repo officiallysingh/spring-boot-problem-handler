@@ -35,7 +35,7 @@ Add the `spring-boot-problem-handler` jar to application dependencies. That is a
 exception handling mechanism in an application
 ```xml
 <dependency>
-    <groupId>com.ksoot</groupId>
+    <groupId>io.github.officiallysingh</groupId>
     <artifactId>spring-boot-problem-handler</artifactId>
     <version>${spring-boot-problem-handler.version}</version>
 </dependency>
