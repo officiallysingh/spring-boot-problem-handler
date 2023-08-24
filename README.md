@@ -1,6 +1,6 @@
 # Spting boot Problem Handler
 
-A Generic library for handling exceptions in **String Web** (Servlet) and **String Webflux** (Reactive) applications, 
+A Generic library for handling exceptions in **Spring Web** (Servlet) and **Spring Webflux** (Reactive) applications, 
 implementing specification [**`Problem Details (RFC7807) for HTTP APIs`**](https://datatracker.ietf.org/doc/html/rfc7807).
 Requires Java 17, Spring boot 3+ and Jakarta EE 10
 
@@ -17,7 +17,7 @@ limited checked exceptions can be created and thrown from methods where calling 
 
 Standard way of handling exceptions in Spring is `@ControllerAdvice` using AOP, 
 following the same principles **spring-boot-problem-handler** makes available everything related to exception handling 
-for both **String Web** (Servlet) and **String Webflux** (Reactive) Spring boot Rest applications, 
+for both Spring Web and Spring Webflux Spring boot Rest applications, 
 so there is no need to define any custom exceptions or custom `ControllerAdvice` advices into consumer application, 
 all can be done with zero custom code but specifying error details in `properties` file.
 
@@ -53,7 +53,7 @@ their own custom `ControllerAdvice`s,
 Any existing advice can be referred to weave the custom advice into the framework.
 
 A default set of `ControllerAdvice`s are always configured irrespective of the fact that whether 
-the application is **String Web** (Servlet) and **String Webflux** (Reactive), but few advices are conditional 
+the application is Spring Web and Spring Webflux, but few advices are conditional 
 such as for Handling Security, OpenAPI and Dao related exceptions, which are elaborated in their respective sections.
 
 ## Features
@@ -62,7 +62,7 @@ such as for Handling Security, OpenAPI and Dao related exceptions, which are ela
 * Extendable to add more advices or override existing advices in consumer applications, weaving them into aligned framework for exception handling.
 * Customizable Error response structure.
 * Provides mechanism to specify error response for any kind of exception without defining any `ControllerAdvice`.
-* Works with both **String Web** (Servlet) and **String Webflux** (Reactive) applications.
+* Works with both Spring Web and Spring Webflux applications.
 * Customizable to override the default attributes in error response by overriding the same in `properties` file.
 * The autoconfigured advices can be disabled or overridden or extended as per needs.
 
@@ -71,7 +71,7 @@ such as for Handling Security, OpenAPI and Dao related exceptions, which are ela
 #### General advices recommended for Spring Rest services need to handle
 
 These advices are autoconfigured as either bean of type [**`ProblemHandlingWeb`**](src/main/java/com/ksoot/problem/spring/advice/web/ProblemHandlingWeb.java) 
-or [**`ProblemHandlingWebflux`**](src/main/java/com/ksoot/problem/spring/advice/webflux/advice/ProblemHandlingWebflux.java) depending on whether application is type **String Web** (Servlet) or **String Webflux** (Reactive) respectively.
+or [**`ProblemHandlingWebflux`**](src/main/java/com/ksoot/problem/spring/advice/webflux/ProblemHandlingWebflux.java) depending on whether application is type **String Web** or **String Webflux** respectively.
 
 | General Advice Traits                                                                                                                                         | Produces                                                    | Error Key                                                           |
 |---------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------|---------------------------------------------------------------------|
@@ -112,15 +112,15 @@ or [**`ProblemHandlingWebflux`**](src/main/java/com/ksoot/problem/spring/advice/
 
 **Composite advice traits**
 
-| Spring Web (Servlet) Advice Traits                                                                                        | Spring Webflux (Reactive) Advice Traits                                                                                    |
-|---------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
-| [**`ProblemHandlingWeb`**](src/main/java/com/ksoot/problem/spring/advice/web/advice/ProblemHandlingWeb.java)              | [**`ProblemHandlingWebflux`**](src/main/java/com/ksoot/problem/spring/advice/webflux/advice/ProblemHandlingWebflux.java)   |
-| `├──`[`GeneralAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/general/GeneralAdviceTraits.java)              | `├──`[`GeneralAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/general/GeneralAdviceTraits.java)               |
-| `├──`[`HttpAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/http/HttpAdviceTraits.java)                       | `├──`[`HttpAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/http/HttpAdviceTraits.java)                        |
-| `├──`[`IOAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/io/IOAdviceTraits.java)                             | `├──`[`IOAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/io/IOAdviceTraits.java)                              |
+| Spring Web Advice Traits                                                                                                  | Spring Webflux Advice Traits                                                                                   |
+|---------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
+| [**`ProblemHandlingWeb`**](src/main/java/com/ksoot/problem/spring/advice/web/ProblemHandlingWeb.java)                     | [**`ProblemHandlingWebflux`**](src/main/java/com/ksoot/problem/spring/advice/webflux/ProblemHandlingWebflux.java)   |
+| `├──`[`GeneralAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/general/GeneralAdviceTraits.java)              | `├──`[`GeneralAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/general/GeneralAdviceTraits.java)              |
+| `├──`[`HttpAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/http/HttpAdviceTraits.java)                       | `├──`[`HttpAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/http/HttpAdviceTraits.java)                       |
+| `├──`[`IOAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/io/IOAdviceTraits.java)                             | `├──`[`IOAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/io/IOAdviceTraits.java)                             |
 | `├──`[ `RoutingAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/routing/RoutingAdviceTraits.java)             | `├──`[`WebExchangeBindAdviceTrait`](src/main/java/com/ksoot/problem/spring/advice/webflux/WebExchangeBindAdviceTrait.java) |
-| `├──`[ `ValidationAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/validation/ValidationAdviceTraits.java)    | `├──`[`ValidationAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/validation/ValidationAdviceTraits.java)      |
-| `└──`[ `ApplicationAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/application/ApplicationAdviceTraits.java) | `└──`[`ApplicationAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/application/ApplicationAdviceTraits.java)   |
+| `├──`[ `ValidationAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/validation/ValidationAdviceTraits.java)    | `├──`[`ValidationAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/validation/ValidationAdviceTraits.java)     |
+| `└──`[ `ApplicationAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/application/ApplicationAdviceTraits.java) | `└──`[`ApplicationAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/application/ApplicationAdviceTraits.java)  |
 
 
 #### Dao advices
@@ -155,12 +155,13 @@ These advices are autoconfigured as a bean `SecurityExceptionHandler` if followi
 * `spring-security-config` jar is detected in classpath
 * `problem.security-advice-enabled` is not set to `false`. Its default value is `true`
 
-**For String Web (Servlet) applications** 
+**For String Web applications** 
 [**`ProblemAuthenticationEntryPoint`**](src/main/java/com/ksoot/problem/spring/advice/security/ProblemAuthenticationEntryPoint.java)
 and [**`ProblemAccessDeniedHandler`**](src/main/java/com/ksoot/problem/spring/advice/security/ProblemAccessDeniedHandler.java) 
 are autoconfigured as `authenticationEntryPoint` and `accessDeniedHandler` beans respectively. 
 
-But to make it work following needs to be done in application Spring Security configuration
+But to make it work following needs to be done in application Spring Security configuration. 
+Refer to example [**`SecurityConfiguration`**] (https://github.com/officiallysingh/problem-handler-web-demo/blob/main/src/main/java/com/ksoot/problem/demo/config/SecurityConfiguration.java)
 ```java
 @Autowired
 private AuthenticationEntryPoint authenticationEntryPoint;
@@ -186,12 +187,13 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 }
 ```
 
-**For String Webflux (Reactive) applications** 
+**For String Webflux applications** 
 [**`ServerAuthenticationEntryPoint`**](src/main/java/com/ksoot/problem/spring/advice/security/ProblemServerAccessDeniedHandler.java)
 and [**`ServerAccessDeniedHandler`**](src/main/java/com/ksoot/problem/spring/advice/security/ProblemServerAuthenticationEntryPoint.java)
 are autoconfigured as `authenticationEntryPoint` and `accessDeniedHandler` beans respectively.
 
-But to make it work following needs to be done in application Spring Security configuration
+But to make it work following needs to be done in application Spring Security configuration. 
+Refer to example [**`SecurityConfiguration`**] (https://github.com/officiallysingh/problem-handler-webflux-demo/blob/main/src/main/java/com/ksoot/problem/demo/config/SecurityConfiguration.java)
 ```java
 @Autowired
 private ServerAuthenticationEntryPoint authenticationEntryPoint;
@@ -227,7 +229,7 @@ These advices are autoconfigured as bean
 * At least one of `problem.open-api.req-validation-enabled` or `problem.open-api.res-validation-enabled` is set as `true`
 * A valid OpenAPI Spec is provided as config `problem.open-api.path`
 
-**Note**: It is available for **String Web** (Servlet) applications only, not for **String Webflux** (Reactive) application
+**Note**: It is available for Spring Web applications only, not for Spring Webflux application
 
 ## Configurations
 
@@ -312,9 +314,6 @@ problem.open-api.res-validation-enabled=false
 * `problem.open-api.req-validation-enabled`:- To enable or disable OpenAPI specification validation for request, default is `false`.
 * `problem.open-api.res-validation-enabled`:- To enable or disable OpenAPI specification validation for response, default is `false`.
 
-Refer to [**`ProblemProperties`**](src/main/java/com/ksoot/problem/spring/common/config/ProblemProperties.java)
-to have a look at defaults for above `properties`
-
 ## Usage
 
 ### Error Key
@@ -338,14 +337,14 @@ It is elaborated in below sections.
 Following is an example response body for an error.
 ```json
 {
-  "type":"http://localhost:8080/problems/help.html#500",
+  "type":"http://localhost:8080/problems/help.html#XYZ-001",
   "title":"Internal Server Error",
   "status":500,
   "detail":"A job instance already exists and is complete for parameters={'date':'{value=2023-08-13, type=class java.time.LocalDate, identifying=true}'}.  If you want to run this job again, change the parameters.",
   "instance":"/api/myjob",
   "method":"PUT",
   "timestamp":"2023-08-14T20:45:45.737227+05:30",
-  "code":"500"
+  "code":"XYZ-001"
 }
 ```
 Response Header when service is configured for Json `HttpMessageConverters`
@@ -378,14 +377,14 @@ problem.debug-enabled=true
 Now the error response itself would contain the resolvers for respective attributes, as follows.
 ```json
 {
-  "type":"http://localhost:8080/problems/help.html#500",
+  "type":"http://localhost:8080/problems/help.html#XYZ-001",
   "title":"Internal Server Error",
   "status":500,
   "detail":"A job instance already exists and is complete for parameters={'date':'{value=2023-08-13, type=class java.time.LocalDate, identifying=true}'}.  If you want to run this job again, change the parameters.",
   "instance":"/api/myjob",
   "method":"PUT",
   "timestamp":"2023-08-14T20:51:43.993249+05:30",
-  "code":"500",
+  "code":"XYZ-001",
   "codeResolver":{
     "codes":[
       "code.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException"
@@ -471,7 +470,7 @@ If the messages are not found in `properties` files, defaults are taken as follo
 * Title is taken as specified `HttpStatus`'s reason phrase e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` like the Title default would be `Expectation Failed`
 * Detail default is taken as thrown exception's `exception.getMessage()`
 
-There are multiple other methods available while creating exceptions through Problems helper. 
+There are multiple other methods available while creating exceptions through `Problems` helper class. 
 For better understanding, have a look at java docs for each method in [**`Problems`**](src/main/java/com/ksoot/problem/Problems.java)
 ```java
 throw Problems.newInstance("sample.problem")
@@ -498,22 +497,6 @@ Problem problemTwo = Problems.newInstance("sample.problem.two").get();
 throw Problems.throwAble(Status.MULTI_STATUS, problemOne, problemTwo);
 ```
 
-**It is recommended to use just** [**`Problems`**](src/main/java/com/ksoot/problem/Problems.java), 
-but following are also the ways to create exceptions by using inbuilt exception classes. 
-These classes are internally used by `spring-boot-problem-handler`.
-
-Exception instances can be created as follows, to dynamically add any more attributes to error response 
-along with default attributes. 
-The `HttpStatus` for rest api response would be `500` in this case
-```java
-ThrowableProblem problem = Problem.code("3456")
-    .title("Service Error")
-    .detail("Please retry with correct input")
-    .parameter("additional-attribute", "Some additional attribute") // Dynamically add any more attributes to error response
-    .build();
-throw problem;
-```
-
 `HttpStatus` can also be set over custom exception as follows, the same would reflect in error response and 
 other error attributes default would be derived by given `@ResponseStatus`
 ```java
@@ -528,22 +511,6 @@ private static final class MyException extends RuntimeException {
 }
 ```
 
-To throw an unchecked exception with specific `HttpStatus`
-```java
-ApplicationProblem problem = ApplicationProblem.of(HttpStatus.BAD_REQUEST, "234", "Business error",
-        "Please contact administrator if the error persists");
-throw problem;
-```
-
-To throw a checked exception with specific `HttpStatus`, though checked exceptions are not recommended.
-```java
-public void someMethod() throws ApplicationException {
-    ApplicationException problem = ApplicationProblem.of(HttpStatus.BAD_REQUEST, "234", "Business error",
-        "Please contact administrator if the error persists");
-    throw problem;
-}
-```
-
 ### Stack traces
 Set following property to `true` to get the `stacktrace` in error response, 
 should only be used on local for debugging purpose and strictly prohibited elsewhere as it may expose application internals.
@@ -553,14 +520,14 @@ problem.stacktrace-enabled=true
 Example response
 ```json
 {
-  "type":"http://localhost:8080/problems/help.html#500",
+  "type":"http://localhost:8080/problems/help.html#XYZ-001",
   "title":"Internal Server Error",
   "status":500,
   "detail":"A job instance already exists and is complete for parameters={'date':'{value=2023-08-13, type=class java.time.LocalDate, identifying=true}'}.  If you want to run this job again, change the parameters.",
   "instance":"/api/myjob",
   "method":"PUT",
   "timestamp":"2023-08-14T21:01:56.378749+05:30",
-  "code":"500",
+  "code":"XYZ-001",
   "statcktrace":[
     "org.springframework.batch.core.repository.support.SimpleJobRepository.createJobExecution(SimpleJobRepository.java:159)",
     "java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)",
@@ -586,14 +553,14 @@ problem.cause-chains-enabled=true
 Example response
 ```json
 {
-  "type":"http://localhost:8080/problems/help.html#501",
+  "type":"http://localhost:8080/problems/help.html#XYZ-002",
   "title":"Not Implemented",
   "status":501,
   "detail":"expected",
   "instance":"/problems/handler-throwable-annotated-cause",
   "method":"GET",
   "timestamp":"2023-08-14T22:09:56.284473+05:30",
-  "code":"501",
+  "code":"XYZ-002",
   "cause":{
     "code":"501",
     "title":"Not Implemented",
@@ -639,7 +606,7 @@ Any autoconfigured advice can be customized by overriding the same and providing
 Make sure to add annotation `@Order(Ordered.HIGHEST_PRECEDENCE)` over the class, 
 It makes this handler to take precedence over the fallback advice which handles `Throwable` i.e. for all exceptions for which no `ControllerAdvice`s are defined.
 
-For **String Web** (Servlet) applications
+For Spring Web applications
 ```java
 @ControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE) // Important to note
@@ -679,7 +646,7 @@ class CustomMethodArgumentNotValidExceptionHandler implements MethodArgumentNotV
 }
 ```
 
-For **String Webflux** (Reactive) applications
+For Spring Webflux applications
 ```java
 @ControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE) // Important to note
@@ -696,7 +663,7 @@ There should not be any need to create any custom exception hence new advices, b
 custom exception can be created and corresponding custom `ControllerAdvice` can be defined for the same, though not recommended.
 Following example demonstrates a new advice for some custom exception `MyCustomException`.
 
-For **String Web** (Servlet) applications
+For Spring Web applications
 ```java
 @ControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE) // Important to note
@@ -712,7 +679,7 @@ public class MyCustomAdvice implements AdviceTrait<NativeWebRequest, ResponseEnt
 }
 ```
 
-For **String Webflux** (Reactive) applications
+For Spring Webflux applications
 ```java
 @ControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE) // Important to note
@@ -728,14 +695,14 @@ public class MyCustomAdvice implements AdviceTrait<ServerWebExchange, Mono<Respo
 Open source [**`The MIT License`**](http://www.opensource.org/licenses/mit-license.php)
 
 ## Authors and acknowledgment
-**Rajveer Singh**, In case you find any issues or need any support, please email me at raj14.1984@gmail.com
+[**`Rajveer Singh`**](https://www.linkedin.com/in/rajveer-singh-589b3950/), In case you find any issues or need any support, please email me at raj14.1984@gmail.com
 
 ## Credits and references
 Inspired and taken base code from [**`Zalando Problem libraries`**](https://github.com/zalando/problem-spring-web)
 
 Refer to [**`problem-handler-web-demo`**](https://github.com/officiallysingh/problem-handler-web-demo) and 
 [**`problem-handler-webflux-demo`**](https://github.com/officiallysingh/problem-handler-webflux-demo) 
-as examples to see usage in **String Web** (Servlet) and **String Webflux** (Reactive) application respectively.
+as examples to see usage in **Spring Web** and **Spring Webflux** application respectively.
 
 ## Known Issues
 * If an application uses multiple vendor relational databases then the [**`ConstraintNameResolver`**](src/main/java/com/ksoot/problem/spring/advice/dao/ConstraintNameResolver.java) 
