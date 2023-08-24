@@ -244,7 +244,7 @@ While using Dao advices, set database platform as follows.
 ```properties
 spring.jpa.database=POSTGRESQL
 ```
-Refer to [`Database`](https://github.com/spring-projects/spring-framework/blob/main/spring-orm/src/main/java/org/springframework/orm/jpa/vendor/Database.java) for the list of database vendors.
+Refer to [`Database`](src/main/java/com/ksoot/problem/spring/advice/dao/Database.java) for the list of database vendors.
 DB2, DERBY, H2, HANA, HSQL, INFORMIX, MYSQL, ORACLE, POSTGRESQL, SQL_SERVER, SYBASE
 
 **Note**: [**`ConstraintNameResolver`**](src/main/java/com/ksoot/problem/spring/advice/dao/ConstraintNameResolver.java) is implemented for Postgres, SQL Server and MongoDB only as of now.
