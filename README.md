@@ -71,7 +71,7 @@ such as for Handling Security, OpenAPI and Dao related exceptions, which are ela
 #### General advices recommended for Spring Rest services need to handle
 
 These advices are autoconfigured as either bean of type [**`ProblemHandlingWeb`**](src/main/java/com/ksoot/problem/spring/advice/web/ProblemHandlingWeb.java) 
-or [**`ProblemHandlingWebflux`**](src/main/java/com/ksoot/problem/spring/advice/webflux/ProblemHandlingWebflux.java) depending on whether application is type **String Web** or **String Webflux** respectively.
+or [**`ProblemHandlingWebflux`**](src/main/java/com/ksoot/problem/spring/advice/webflux/ProblemHandlingWebflux.java) depending on whether application is type **Spring Web** or **Spring Webflux** respectively.
 
 | General Advice Traits                                                                                                                                         | Produces                                                    | Error Key                                                           |
 |---------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------|---------------------------------------------------------------------|
@@ -155,7 +155,7 @@ These advices are autoconfigured as a bean `SecurityExceptionHandler` if followi
 * `spring-security-config` jar is detected in classpath
 * `problem.security-advice-enabled` is not set to `false`. Its default value is `true`
 
-**For String Web applications** 
+**For Spring Web applications** 
 [**`ProblemAuthenticationEntryPoint`**](src/main/java/com/ksoot/problem/spring/advice/security/ProblemAuthenticationEntryPoint.java)
 and [**`ProblemAccessDeniedHandler`**](src/main/java/com/ksoot/problem/spring/advice/security/ProblemAccessDeniedHandler.java) 
 are autoconfigured as `authenticationEntryPoint` and `accessDeniedHandler` beans respectively. 
@@ -187,7 +187,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 }
 ```
 
-**For String Webflux applications** 
+**For Spring Webflux applications** 
 [**`ServerAuthenticationEntryPoint`**](src/main/java/com/ksoot/problem/spring/advice/security/ProblemServerAccessDeniedHandler.java)
 and [**`ServerAccessDeniedHandler`**](src/main/java/com/ksoot/problem/spring/advice/security/ProblemServerAuthenticationEntryPoint.java)
 are autoconfigured as `authenticationEntryPoint` and `accessDeniedHandler` beans respectively.
