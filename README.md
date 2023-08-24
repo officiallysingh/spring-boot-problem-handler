@@ -2,7 +2,7 @@
 
 A Generic library for handling exceptions in **Spring Web** (Servlet) and **Spring Webflux** (Reactive) applications, 
 implementing specification [**`Problem Details (RFC7807) for HTTP APIs`**](https://datatracker.ietf.org/doc/html/rfc7807).
-Requires Java 17, Spring boot 3+ and Jakarta EE 10
+Requires Java 17+, Spring boot 3+ and Jakarta EE 10
 
 ## Introduction
 
