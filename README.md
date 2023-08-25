@@ -32,7 +32,7 @@ all can be done with zero custom code but specifying error details in `propertie
 ```
 
 Add the `spring-boot-problem-handler` jar to application dependencies. That is all it takes to get a default working 
-exception handling mechanism in an application
+exception handling mechanism in a Spring boot application.
 ```xml
 <dependency>
     <groupId>io.github.officiallysingh</groupId>
@@ -53,7 +53,7 @@ their own custom `ControllerAdvice`s,
 Any existing advice can be referred to weave the custom advice into the framework.
 
 A default set of `ControllerAdvice`s are always configured irrespective of the fact that whether 
-the application is Spring Web and Spring Webflux, but few advices are conditional 
+the application is Spring Web or Spring Webflux, but few advices are conditional 
 such as for Handling Security, OpenAPI and Dao related exceptions, which are elaborated in their respective sections.
 
 ## Features
@@ -132,9 +132,8 @@ or [**`ProblemHandlingWebflux`**](src/main/java/com/ksoot/problem/spring/advice/
 | `└──`[**`DuplicateKeyExceptionAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/dao/DuplicateKeyExceptionAdviceTrait.java)   | [`500 Internal Server Error`](https://httpstatus.es/500)  | data.integrity.violation.\<Failed DB constraint name\> |
 
 These advices are autoconfigured as a bean `DaoExceptionHandler` if following conditions are true
-* `spring-data-jpa` or `spring-data-mongodb` jar is detected in classpath 
 * `problem.dao-advice-enabled` is not set to `false`. Its default value is `true`
-* If using relation databases then `spring-data-jpa` jar is detected in classpath and Either `spring.datasource.url` or `spring.r2dbc.url` is configured
+* If using relation databases then `spring-data-jpa` jar is detected in classpath and either `spring.datasource.url` or `spring.r2dbc.url` is configured
 * If using MongoDB then `spring-data-mongodb` jar is detected in classpath and `spring.data.mongodb.uri` is configured
 
 **Note**: Database type must be specified in `application.properties` in case application is using some relational database, 
