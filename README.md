@@ -1,4 +1,4 @@
-# Spting boot Problem Handler
+# Spting Boot Problem Handler
 
 **A Generic library for handling exceptions in Spring Boot applications**, 
 implementing specification [**`Problem Details (RFC7807) for HTTP APIs`**](https://datatracker.ietf.org/doc/html/rfc7807).
