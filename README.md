@@ -1,6 +1,6 @@
 # Spting boot Problem Handler
 
-A Generic library for handling exceptions in **Spring Web** (Servlet) and **Spring Webflux** (Reactive) applications, 
+**A Generic library for handling exceptions in Spring Boot applications**, 
 implementing specification [**`Problem Details (RFC7807) for HTTP APIs`**](https://datatracker.ietf.org/doc/html/rfc7807).
 Requires Java 17+, Spring boot 3+ and Jakarta EE 10
 
@@ -17,9 +17,9 @@ limited checked exceptions can be created and thrown from methods where calling 
 
 Standard way of handling exceptions in Spring is `@ControllerAdvice` using AOP, 
 following the same principles **spring-boot-problem-handler** makes available everything related to exception handling 
-for both Spring Web and Spring Webflux Spring boot Rest applications, 
+for both Spring Web and Spring Webflux Rest applications, 
 so there is no need to define any custom exceptions or custom `ControllerAdvice` advices into consumer application, 
-all can be done with zero custom code but specifying error details in `properties` file.
+all can be done with zero custom code but by specifying error details in `properties` file.
 
 ## Installation
 
@@ -41,15 +41,14 @@ exception handling mechanism in a Spring boot application.
 </dependency>
 ```
 
-Having `spring-boot-problem-handler` jar in classpath does all hard part, A lot of advices are out of box available 
-which are autoconfigures as `ControllerAdvice`s 
+It does all hard part, A lot of advices are out of box available which are autoconfigured as `ControllerAdvice`s 
 depending on the jars in classpath of consumer application. 
 **Even for exceptions for which no advices are defined**, respective error response can be specified by 
 messages in `properties` file, elaborated in *Usage* section.
 New custom advices could be required only in cases where it is required to take some data from exception instance 
 to dynamically derive **Error key** (Elaborated later)
 or to use this data to resolve any placeholders in error message. In such cases consumer application can define 
-their own custom `ControllerAdvice`s,
+their own custom `ControllerAdvice`'s,
 Any existing advice can be referred to weave the custom advice into the framework.
 
 A default set of `ControllerAdvice`s are always configured irrespective of the fact that whether 
@@ -58,7 +57,7 @@ such as for Handling Security, OpenAPI and Dao related exceptions, which are ela
 
 ## Features
 
-* A lot of inbuilt `ControllerAdvice`s out of box available to handle most common exceptions.
+* A lot of inbuilt `ControllerAdvice`'s out of box available to handle most common exceptions.
 * Extendable to add more advices or override existing advices in consumer applications, weaving them into aligned framework for exception handling.
 * Customizable Error response structure.
 * Provides mechanism to specify error response for any kind of exception without defining any `ControllerAdvice`.
@@ -139,7 +138,7 @@ These advices are autoconfigured as a bean `DaoExceptionHandler` if following co
 **Note**: Database type must be specified in `application.properties` in case application is using some relational database, 
 it is used to autoconfigure [**`ConstraintNameResolver`**](src/main/java/com/ksoot/problem/spring/advice/dao/ConstraintNameResolver.java) 
 to extract database constraint name from exception message to derive error key 
-when `DataIntegrityViolationException` is thrown
+when database constraint violation exceptions are thrown.
 
 #### Security advices
 
@@ -159,7 +158,7 @@ These advices are autoconfigured as a bean `SecurityExceptionHandler` if followi
 and [**`ProblemAccessDeniedHandler`**](src/main/java/com/ksoot/problem/spring/advice/security/ProblemAccessDeniedHandler.java) 
 are autoconfigured as `authenticationEntryPoint` and `accessDeniedHandler` beans respectively. 
 
-But to make it work following needs to be done in application Spring Security configuration. 
+But to make it work following needs to be done in application's Spring Security configuration. 
 Refer to example [**`SecurityConfiguration`**] (https://github.com/officiallysingh/problem-handler-web-demo/blob/main/src/main/java/com/ksoot/problem/demo/config/SecurityConfiguration.java)
 ```java
 @Autowired
@@ -239,12 +238,12 @@ in addition also requires the following configuration:
 spring.mvc.throw-exception-if-no-handler-found=true
 ```
 
-While using Dao advices, set database platform as follows.
+While using Dao advices, set database platform as follows, set value as per the database being used.
 ```properties
 spring.jpa.database=POSTGRESQL
 ```
-Refer to [`Database`](src/main/java/com/ksoot/problem/spring/advice/dao/Database.java) for the list of database vendors.
-DB2, DERBY, H2, HANA, HSQL, INFORMIX, MYSQL, ORACLE, POSTGRESQL, SQL_SERVER, SYBASE
+Refer to [`Database`](src/main/java/com/ksoot/problem/spring/advice/dao/Database.java) for the list of database vendors such as 
+`DB2`, `DERBY`, `H2`, `HANA`, `HSQL`, `INFORMIX`, `MYSQL`, `ORACLE`, `POSTGRESQL`, `SQL_SERVER`, `SYBASE`
 
 **Note**: [**`ConstraintNameResolver`**](src/main/java/com/ksoot/problem/spring/advice/dao/ConstraintNameResolver.java) is implemented for Postgres, SQL Server and MongoDB only as of now.
 If any other relational database is used then respective [**`ConstraintNameResolver`**](src/main/java/com/ksoot/problem/spring/advice/dao/ConstraintNameResolver.java) need to be implemented and defined as a bean.
@@ -259,6 +258,12 @@ or in `application.properties` as follows
 spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
 ```
 
+Enable Spring boot Problem details support to return similar error response in case `spring-boot-problem-handler` 
+throws some exception while handling an exception
+```properties
+spring.mvc.problemdetails.enabled=true
+```
+
 Specify message source bundles as follows. Make sure to include `i18/problems` bundled in the library, as it 
 has default messages for certain exception. And it should be last in the list of `basenames`, 
 so that it has lowest priority and any default messages coming from `problems.properties` can be overridden 
@@ -268,11 +273,11 @@ spring.messages.basename=i18n/errors,i18/problems
 spring.messages.use-code-as-default-message=true
 ```
 if `use-code-as-default-message` is set to `false` and the message is not found in any of the `properties` file 
-then it will throw exception saying message not found with given key. 
+then it will throw `NoSuchMessageException` complaining that no message is found for given code. 
 So if it is intended to enforce all messages for exceptions to be specified in `properties` file, set it to `false`, 
 but not recommended.
 To be on safer side, it's recommended to keep it `true`, in that case if some message is not found, 
-the message key is taken as its value, which can be updated later into property file, once noticed.
+the message key is taken as its value, which can be updated later into `properties` file, once noticed.
 
 ### Problem Properties
 **Following are the configurations** to customize default behaviour of `spring-boot-problem-handler`.
@@ -294,10 +299,10 @@ problem.open-api.res-validation-enabled=false
 * `problem.enabled`:- To enable or disable autoconfigurations, default is `true`. 
   In case consumer applications are interested to avail advices but want full control over configurations, 
   then it can be set to `false` and required advices can be configured as Spring beans similar to how they are autoconfigured.
-* `problem.type-url`:- The base URL for Help page describing errors. For different exceptions respective code for exception is appended to it followed by a `#`
+* `problem.type-url`:- The base `URL` for **Help page** describing errors. For different exceptions respective code for exception is appended to it followed by a `#`
 * `problem.debug-enabled`:- To enable or disable debugging i.e. to get the message resolvers to specify the error messages in `properties` files. 
   Elaborated in Usage section below. Default is `false`.
-* `problem.stacktrace-enabled`: To enable or disable Stacktraces, default is `false`. 
+* `problem.stacktrace-enabled`:- To enable or disable Stacktraces, default is `false`. 
   Should only be set to `true` for debugging purposes only on local or lower environments, otherwise the application internals may be exposed.
 * `problem.cause-chains-enabled`:- To enable or disable cause chains, default is `false`. Elaborated in Usage section below.
 * `problem.jackson-module-enabled`:- To enable or disable Jackson Problem Module autoconfiguration, default is `true`.
@@ -309,7 +314,7 @@ problem.open-api.res-validation-enabled=false
   Set it to `false` in case consumer application need to define Security advice configurations explicitly.
 * `problem.open-api.path`:- OpenAPI Specification path. Ideally should be in classpath and start with`/`.
   If not specified, OpenAPI Specification validation is not enabled.
-* `problem.open-api.exclude-patterns`:- List of URI Ant patterns to be excluded from OpenAPI specification validation. Default is empty.
+* `problem.open-api.exclude-patterns`:- List of `URI` Ant patterns to be excluded from OpenAPI specification validation. Default is empty.
 * `problem.open-api.req-validation-enabled`:- To enable or disable OpenAPI specification validation for request, default is `false`.
 * `problem.open-api.res-validation-enabled`:- To enable or disable OpenAPI specification validation for response, default is `false`.
 
@@ -317,7 +322,7 @@ problem.open-api.res-validation-enabled=false
 
 ### Error Key
 The main concept behind specifying the error attributes in `properties` file is **Error key**, which is mandatory to be unique for each error scenario.
-It is either derived or specified by application while throwing exception and used to externalize the error attributes in `properties` file. 
+**It is either derived or specified by application** while throwing exception and used to externalize the error attributes in `properties` file. 
 
 For example if error key for some exception is `some.error.key`, then error response attributes can be specified in `properties` file as follows.
 ```properties
@@ -325,12 +330,10 @@ code.some.error.key=some-error
 title.some.error.key=Some Error
 detail.some.error.key=Something has gone wrong, please look into the logs for details
 ```
-In case of exceptions for which advices are not defined, status also need to be specified in `properties` file as follows.
+In case of exceptions for which advices are not defined, status also need to be specified in `properties` file as follows. It is elaborated in below sections.
 ```properties
 status.some.error.key=400
 ```
-
-It is elaborated in below sections.
 
 ### Error response structure
 Following is an example response body for an error.
@@ -359,9 +362,9 @@ content-type: application/problem+xml
 * `type`:- A URI reference that identifies the problem type.  When dereferenced, it provides human-readable documentation for this error.
   If not set `about:blank` is taken as default.
 * `title`:- A short, human-readable summary of the error such as `Bad Request`.
-* `status`:- The HTTP status code, int value such as 500.
+* `status`:- The HTTP status code, int value such as `500`.
 * `detail`:- A human-readable explanation specific to this occurrence of error.
-* `instance`:- The API URI reference where this error has occurred.
+* `instance`:- The API `URI` reference where this error has occurred.
 * `method`:- `HttpMethod` for given `instance` where this error has occurred.
 * `timestamp`:- `OffsetDateTime` of occurrence of this error.
 * `code`:- Unique `String` code for this error, should not contain spaces or special characters except '_' and '-'. 
@@ -374,6 +377,8 @@ To know how to define the error attributes in properties file, enable debugging 
 problem.debug-enabled=true
 ```
 Now the error response itself would contain the resolvers for respective attributes, as follows.
+`codes` in the resolvers could be one or multiple. 
+For example in case of `ConstraintViolationException` `codes` would be multiple in order of most specific towards least specific.
 ```json
 {
   "type":"http://localhost:8080/problems/help.html#XYZ-001",
@@ -428,12 +433,12 @@ detail.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 **This scenario also covers all the exceptions for which advices are not defined**.
 In such cases the **Error key** is derived as fully qualified exception class name. 
 But additionally `HttpStatus` need to be specified in `properties` file as it has not been specified anywhere in code because `ControllerAdvice` is not defined, 
-if not given even in `properties` file `HttpStatus.INTERNAL_SERVER_ERROR` is taken as default
+if not given even in `properties` file `HttpStatus.INTERNAL_SERVER_ERROR` is taken as default.
 
 To minimize the number of properties following defaults are taken if `HttpStatus` is specified as `status.`\<error key\> property.
 * Code is taken as specified `HttpStatus`'s int code e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` then the Code default would be `417`
-* Title is taken as specified `HttpStatus`'s reason phrase e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` like the Title default would be `Expectation Failed`
-* Detail default is taken from thrown exception's `exception.getMessage()`
+* Title is taken as specified `HttpStatus`'s reason phrase e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` then the Title default would be `Expectation Failed`
+* Detail default is taken from thrown exception's `exception.getMessage()`.
 
 **Note**: `status.`\<error key\> property is considered only for exceptions where no explicit advice is defined, 
 otherwise `HttpStatus` is specified in the java code.
@@ -447,7 +452,7 @@ classes are available in the library to throw an unchecked or checked exception 
 
 [**`Problems`**](src/main/java/com/ksoot/problem/Problems.java) **is the central static helper class to create 
 Problem instances and throw either checked or unchecked exceptions**, as demonstrated below.
-It provides fluent methods to build and throw exceptions.
+It provides multiple fluent methods to build and throw exceptions.
 
 The simplistic way is to just specify a unique error key and `HttpStatus`.
 ```java
@@ -469,8 +474,8 @@ If the messages are not found in `properties` files, defaults are taken as follo
 * Title is taken as specified `HttpStatus`'s reason phrase e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` like the Title default would be `Expectation Failed`
 * Detail default is taken as thrown exception's `exception.getMessage()`
 
-There are multiple other methods available while creating exceptions through `Problems` helper class. 
-For better understanding, have a look at java docs for each method in [**`Problems`**](src/main/java/com/ksoot/problem/Problems.java)
+There are multiple other methods available while creating and throwing exceptions in [**`Problems`**](src/main/java/com/ksoot/problem/Problems.java), 
+for details refers to its source code and java docs. 
 ```java
 throw Problems.newInstance("sample.problem")
     .defaultDetail("Default details if not found in properties file with parma1: {0} and param2: {1}")
@@ -497,7 +502,7 @@ throw Problems.throwAble(Status.MULTI_STATUS, problemOne, problemTwo);
 ```
 
 `HttpStatus` can also be set over custom exception as follows, the same would reflect in error response and 
-other error attributes default would be derived by given `@ResponseStatus`
+other error attributes default would be derived by given `HttpStatus` attribute in `@ResponseStatus`
 ```java
 @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
 private static final class MyException extends RuntimeException {
@@ -576,7 +581,7 @@ Example response
 ### Customize error response
 The error response is totally customizable by defining a bean of type [**`ErrorResponseBuilder`**](src/main/java/com/ksoot/problem/core/ErrorResponseBuilder.java) demonstrated as follows.
 * If it is required to customize the error response attribute names, it can be done by implementing custom serialization for `ProblemDetail` using Jackson Mixin.
-* Define custom error response class as follows.
+* Or define custom error response class as follows.
 ```java
 @Getter
 @AllArgsConstructor(staticName = "of")
@@ -585,7 +590,7 @@ public class CustomErrorResponse {
     private String message;
 }
 ```
-* Define custom error response builder class bean to return the custom error response as follows.
+* And define custom error response builder class bean to return the custom error response as follows.
 ```java
 @Component
 class CustomErrorResponseBuilder implements ErrorResponseBuilder<NativeWebRequest, ResponseEntity<CustomErrorResponse>> {
