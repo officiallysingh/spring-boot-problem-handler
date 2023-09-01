@@ -51,7 +51,7 @@ or to use this data to resolve any placeholders in error message. In such cases 
 their own custom `ControllerAdvice`'s,
 Any existing advice can be referred to weave the custom advice into the framework.
 
-A default set of `ControllerAdvice`s are always configured irrespective of the fact that whether 
+> A default set of `ControllerAdvice`s are always configured irrespective of the fact that whether 
 the application is Spring Web or Spring Webflux, but few advices are conditional 
 such as for Handling Security, OpenAPI and Dao related exceptions, which are elaborated in their respective sections.
 
@@ -154,7 +154,7 @@ These advices are autoconfigured as a bean `SecurityExceptionHandler` if followi
 * `spring-security-config` jar is detected in classpath
 * `problem.security-advice-enabled` is not set to `false`. Its default value is `true`
 
-**For Spring Web applications** 
+> **For Spring Web applications** 
 [**`ProblemAuthenticationEntryPoint`**](src/main/java/com/ksoot/problem/spring/advice/security/ProblemAuthenticationEntryPoint.java)
 and [**`ProblemAccessDeniedHandler`**](src/main/java/com/ksoot/problem/spring/advice/security/ProblemAccessDeniedHandler.java) 
 are autoconfigured as `authenticationEntryPoint` and `accessDeniedHandler` beans respectively. 
@@ -186,7 +186,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 }
 ```
 
-**For Spring Webflux applications** 
+> **For Spring Webflux applications** 
 [**`ServerAuthenticationEntryPoint`**](src/main/java/com/ksoot/problem/spring/advice/security/ProblemServerAccessDeniedHandler.java)
 and [**`ServerAccessDeniedHandler`**](src/main/java/com/ksoot/problem/spring/advice/security/ProblemServerAuthenticationEntryPoint.java)
 are autoconfigured as `authenticationEntryPoint` and `accessDeniedHandler` beans respectively.
@@ -338,6 +338,14 @@ In case of exceptions for which advices are not defined, status also need to be 
 status.some.error.key=400
 ```
 
+> [!WARNING]
+> The derived Error keys may change in cases of code refactoring.
+> Because derived Error keys may contain the class names, method names and class property names.
+
+* When OpenAPI Spec is changed, the error keys for OpenAPI spec validation errors may change.
+* When controller method name changes or controller argument Object class name or any of its property name changes then jakarta.validation.* violation error keys may change.
+* When database constraint name or index name changes then any DuplicateKeyException or DataIntegrityViolationException error key may change.
+
 ### Error response structure
 Following is an example response body for an error.
 ```json
@@ -433,12 +441,12 @@ code.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcepti
 title.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException=Some title
 detail.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException=Some message details
 ```
-**This scenario also covers all the exceptions for which advices are not defined**.
+> **This scenario also covers all the exceptions for which advices are not defined**.
 In such cases the **Error key** is derived as fully qualified exception class name. 
 But additionally `HttpStatus` need to be specified in `properties` file as it has not been specified anywhere in code because `ControllerAdvice` is not defined, 
 if not given even in `properties` file `HttpStatus.INTERNAL_SERVER_ERROR` is taken as default.
 
-To minimize the number of properties following defaults are taken if `HttpStatus` is specified as `status.`\<error key\> property.
+To minimize the number of properties following defaults are taken if `HttpStatus` is specified as `status.`(error key) property.
 * Code is taken as specified `HttpStatus`'s int code e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` then the Code default would be `417`
 * Title is taken as specified `HttpStatus`'s reason phrase e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` then the Title default would be `Expectation Failed`
 * Detail default is taken from thrown exception's `exception.getMessage()`.
@@ -454,7 +462,7 @@ Apart from exceptions thrown by frameworks or java, every application need to th
 [**`ApplicationException`**](src/main/java/com/ksoot/problem/core/ApplicationException.java) 
 classes are available in the library to throw an unchecked or checked exception respectively.
 
-[**`Problems`**](src/main/java/com/ksoot/problem/Problems.java) **is the central static helper class to create 
+> [**`Problems`**](src/main/java/com/ksoot/problem/Problems.java) **is the central static helper class to create 
 Problem instances and throw either checked or unchecked exceptions**, as demonstrated below.
 It provides multiple fluent methods to build and throw exceptions.
 
@@ -561,14 +569,14 @@ problem.cause-chains-enabled=true
 Example response
 ```json
 {
-  "type":"http://localhost:8080/problems/help.html#XYZ-002",
+  "type":"http://localhost:8080/problems/help.html#XYZ-001",
   "title":"Not Implemented",
   "status":501,
   "detail":"expected",
   "instance":"/problems/handler-throwable-annotated-cause",
   "method":"GET",
   "timestamp":"2023-08-14T22:09:56.284473+05:30",
-  "code":"XYZ-002",
+  "code":"XYZ-001",
   "cause":{
     "code":"501",
     "title":"Not Implemented",
@@ -595,6 +603,8 @@ public class CustomErrorResponse {
 }
 ```
 * And define custom error response builder class bean to return the custom error response as follows.
+
+> For Spring Web applications
 ```java
 @Component
 class CustomErrorResponseBuilder implements ErrorResponseBuilder<NativeWebRequest, ResponseEntity<CustomErrorResponse>> {
@@ -609,12 +619,29 @@ class CustomErrorResponseBuilder implements ErrorResponseBuilder<NativeWebReques
     }
 }
 ```
+
+> For Spring Webflux applications
+```java
+@Component
+class CustomErrorResponseBuilder implements ErrorResponseBuilder<ServerWebExchange, Mono<ResponseEntity<CustomErrorResponse>>> {
+
+    @Override
+    public Mono<ResponseEntity<CustomErrorResponse>> buildResponse(final Throwable throwable, final ServerWebExchange request,
+                                                           final HttpStatus status, final HttpHeaders headers, final Problem problem) {
+        CustomErrorResponse errorResponse = CustomErrorResponse.of(status, problem.getDetail());
+        ResponseEntity<CustomErrorResponse> responseEntity = ResponseEntity
+            .status(status).headers(headers).contentType(MediaTypes.PROBLEM).body(errorResponse);
+        return Mono.just(responseEntity);
+    }
+}
+```
+
 ### Customize or Override advices
 Any autoconfigured advice can be customized by overriding the same and providing a different implementation. 
 Make sure to add annotation `@Order(Ordered.HIGHEST_PRECEDENCE)` over the class, 
 It makes this handler to take precedence over the fallback advice which handles `Throwable` i.e. for all exceptions for which no `ControllerAdvice`s are defined.
 
-For Spring Web applications
+> For Spring Web applications
 ```java
 @ControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE) // Important to note
@@ -654,7 +681,7 @@ class CustomMethodArgumentNotValidExceptionHandler implements MethodArgumentNotV
 }
 ```
 
-For Spring Webflux applications
+> For Spring Webflux applications
 ```java
 @ControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE) // Important to note
@@ -671,12 +698,13 @@ There should not be any need to create any custom exception hence new advices, b
 custom exception can be created and corresponding custom `ControllerAdvice` can be defined for the same, though not recommended.
 Following example demonstrates a new advice for some custom exception `MyCustomException`.
 
-For Spring Web applications
+> For Spring Web applications
 ```java
 @ControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE) // Important to note
 public class MyCustomAdvice implements AdviceTrait<NativeWebRequest, ResponseEntity<ProblemDetail>> {
 
+    @ExceptionHandler
     public ResponseEntity<ProblemDetail> handleMyCustomException(final MyCustomException exception, final NativeWebRequest request) {
         // Custome logic to set the error response 
         Problem problem = Problem.code(String.valueOf(HttpStatus.BAD_REQUEST.value())).title(HttpStatus.BAD_REQUEST.getReasonPhrase())
@@ -687,12 +715,13 @@ public class MyCustomAdvice implements AdviceTrait<NativeWebRequest, ResponseEnt
 }
 ```
 
-For Spring Webflux applications
+> For Spring Webflux applications
 ```java
 @ControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE) // Important to note
 public class MyCustomAdvice implements AdviceTrait<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> {
-
+    
+    @ExceptionHandler
     public Mono<ResponseEntity<ProblemDetail>> handleMyCustomException(final MyCustomException exception, final ServerWebExchange request) {
         // It remains the same as implemented for Spring web, above
     }
