@@ -435,9 +435,8 @@ Respective codes for corresponding attribute can be copied and message can be sp
 > [!NOTE]
 > `org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException` i.e. fully qualified name of exception is the **Error key** in above case.
 Hence the error response can be specified as follows. **This scenario also covers all the exceptions for which advices are not defined**.
-In such cases the **Error key** is derived as fully qualified exception class name.
 But additionally `HttpStatus` need to be specified in `properties` file as it has not been specified anywhere in code because `ControllerAdvice` is not defined,
-if not given even in `properties` file `HttpStatus.INTERNAL_SERVER_ERROR` is taken as default.
+if status not given even in `properties` file `HttpStatus.INTERNAL_SERVER_ERROR` is taken as default.
 
 ```properties
 status.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException=409
