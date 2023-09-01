@@ -23,7 +23,7 @@ all can be done with zero custom code but by specifying error details in `proper
 
 ## Installation
 
-**Current version: 1.0**
+> **Current version: 1.0**
 
 ```xml
 <properties>
