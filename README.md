@@ -44,7 +44,7 @@ exception handling mechanism in a Spring boot application.
 It does all hard part, A lot of advices are out of box available which are autoconfigured as `ControllerAdvice`s 
 depending on the jars in classpath of consumer application. 
 **Even for exceptions for which no advices are defined**, respective error response can be specified by 
-messages in `properties` file, elaborated in [**Usage**](https://github.com/officiallysingh/spring-boot-problem-handler#usage) section.
+messages in `properties` file, elaborated in [*Usage*](https://github.com/officiallysingh/spring-boot-problem-handler#usage) section.
 New custom advices could be required only in cases where it is required to take some data from exception instance 
 to dynamically derive **Error key** (Elaborated later)
 or to use this data to resolve any placeholders in error message. In such cases consumer application can define 
