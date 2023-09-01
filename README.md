@@ -344,6 +344,7 @@ status.some.error.key=400
 > [!WARNING]
 > The derived Error keys may change in cases of code refactoring.
 > Because derived Error keys may contain the class names, method names and class property names or database constraint or index name.
+> So in such case verify and do necessary updates in error message `properties` file.
 
 * When OpenAPI Spec is changed, the error keys for OpenAPI spec validation errors may change.
 * When controller method name changes or controller argument Object class name or any of its property name changes then `jakarta.validation.*` violation error keys may change.
