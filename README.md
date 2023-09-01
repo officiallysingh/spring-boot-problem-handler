@@ -160,7 +160,7 @@ and [**`ProblemAccessDeniedHandler`**](src/main/java/com/ksoot/problem/spring/ad
 are autoconfigured as `authenticationEntryPoint` and `accessDeniedHandler` beans respectively. 
 
 But to make it work following needs to be done in application's Spring Security configuration. 
-Refer to example [**`SecurityConfiguration`**] (https://github.com/officiallysingh/problem-handler-web-demo/blob/main/src/main/java/com/ksoot/problem/demo/config/SecurityConfiguration.java)
+Refer to example [**`SecurityConfiguration`**](https://github.com/officiallysingh/problem-handler-web-demo/blob/main/src/main/java/com/ksoot/problem/demo/config/SecurityConfiguration.java)
 ```java
 @Autowired
 private AuthenticationEntryPoint authenticationEntryPoint;
@@ -192,7 +192,7 @@ and [**`ServerAccessDeniedHandler`**](src/main/java/com/ksoot/problem/spring/adv
 are autoconfigured as `authenticationEntryPoint` and `accessDeniedHandler` beans respectively.
 
 But to make it work following needs to be done in application Spring Security configuration. 
-Refer to example [**`SecurityConfiguration`**] (https://github.com/officiallysingh/problem-handler-webflux-demo/blob/main/src/main/java/com/ksoot/problem/demo/config/SecurityConfiguration.java)
+Refer to example [**`SecurityConfiguration`**](https://github.com/officiallysingh/problem-handler-webflux-demo/blob/main/src/main/java/com/ksoot/problem/demo/config/SecurityConfiguration.java)
 ```java
 @Autowired
 private ServerAuthenticationEntryPoint authenticationEntryPoint;
