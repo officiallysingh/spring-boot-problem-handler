@@ -4,6 +4,8 @@
 implementing specification [**`Problem Details (RFC7807) for HTTP APIs`**](https://datatracker.ietf.org/doc/html/rfc7807).
 Requires Java 17+, Spring boot 3+ and Jakarta EE 10
 
+![Exception Handling](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*6zpmR0mAylEMTt_beZr6BQ.png)
+
 ## Introduction
 
 Exception handling is a cross-cutting concern, should be kept separate from business logic and applied declaratively. 
