@@ -304,10 +304,11 @@ problem.open-api.res-validation-enabled=false
   then it can be set to `false` and required advices can be configured as Spring beans similar to how they are autoconfigured.
 * `problem.type-url`:- The base `URL` for **Help page** describing errors. For different exceptions respective code for exception is appended to it followed by a `#`
 * `problem.debug-enabled`:- To enable or disable debugging i.e. to get the message resolvers to specify the error messages in `properties` files. 
-  Elaborated in Usage section below. Default is `false`.
+  Elaborated in [*Usage*](https://github.com/officiallysingh/spring-boot-problem-handler#usage) section below. Default is `false`.
 * `problem.stacktrace-enabled`:- To enable or disable Stacktraces, default is `false`. 
   Should only be set to `true` for debugging purposes only on local or lower environments, otherwise the application internals may be exposed.
-* `problem.cause-chains-enabled`:- To enable or disable cause chains, default is `false`. Elaborated in Usage section below.
+* `problem.cause-chains-enabled`:- To enable or disable cause chains, default is `false`. 
+  Elaborated in [*Usage*](https://github.com/officiallysingh/spring-boot-problem-handler#usage) section below.
 * `problem.jackson-module-enabled`:- To enable or disable Jackson Problem Module autoconfiguration, default is `true`.
   Set it to `false` in case consumer application need to define Serialization/Deserialization explicitly. 
   Or if `Gson` is to be used instead of `Jackson`. If disabled the required serializers need to be defined by consumer application.
