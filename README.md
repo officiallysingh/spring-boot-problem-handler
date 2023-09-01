@@ -432,8 +432,9 @@ For example in case of `ConstraintViolationException` `codes` would be multiple 
 ```
 Respective codes for corresponding attribute can be copied and message can be specified for same in `properties` file.
 
-So in above case the **Error key** is `org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException` i.e. fully qualified name of exception
-Hence the error response can be specified as follows.
+> [!NOTE]
+> In above case the **Error key** is `org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException` i.e. fully qualified name of exception
+Hence the error response can be specified as follows. **This scenario also covers all the exceptions for which advices are not defined**.
 
 ```properties
 status.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException=409
@@ -441,7 +442,7 @@ code.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcepti
 title.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException=Some title
 detail.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException=Some message details
 ```
-> **This scenario also covers all the exceptions for which advices are not defined**.
+
 In such cases the **Error key** is derived as fully qualified exception class name. 
 But additionally `HttpStatus` need to be specified in `properties` file as it has not been specified anywhere in code because `ControllerAdvice` is not defined, 
 if not given even in `properties` file `HttpStatus.INTERNAL_SERVER_ERROR` is taken as default.
