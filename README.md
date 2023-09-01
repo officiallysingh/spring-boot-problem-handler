@@ -135,7 +135,8 @@ These advices are autoconfigured as a bean `DaoExceptionHandler` if following co
 * If using relation databases then `spring-data-jpa` jar is detected in classpath and either `spring.datasource.url` or `spring.r2dbc.url` is configured
 * If using MongoDB then `spring-data-mongodb` jar is detected in classpath and `spring.data.mongodb.uri` is configured
 
-**Note**: Database type must be specified in `application.properties` in case application is using some relational database, 
+> [!NOTE]
+> Database type must be specified in `application.properties` in case application is using some relational database, 
 it is used to autoconfigure [**`ConstraintNameResolver`**](src/main/java/com/ksoot/problem/spring/advice/dao/ConstraintNameResolver.java) 
 to extract database constraint name from exception message to derive error key 
 when database constraint violation exceptions are thrown.
@@ -227,7 +228,8 @@ These advices are autoconfigured as bean
 * At least one of `problem.open-api.req-validation-enabled` or `problem.open-api.res-validation-enabled` is set as `true`
 * A valid OpenAPI Spec is provided as config `problem.open-api.path`
 
-**Note**: It is available for Spring Web applications only, not for Spring Webflux application
+> [!NOTE]
+> It is available for Spring Web applications only, not for Spring Webflux application
 
 ## Configurations
 
@@ -245,7 +247,8 @@ spring.jpa.database=POSTGRESQL
 Refer to [`Database`](src/main/java/com/ksoot/problem/spring/advice/dao/Database.java) for the list of database vendors such as 
 `DB2`, `DERBY`, `H2`, `HANA`, `HSQL`, `INFORMIX`, `MYSQL`, `ORACLE`, `POSTGRESQL`, `SQL_SERVER`, `SYBASE`
 
-**Note**: [**`ConstraintNameResolver`**](src/main/java/com/ksoot/problem/spring/advice/dao/ConstraintNameResolver.java) is implemented for Postgres, SQL Server and MongoDB only as of now.
+> [!NOTE]
+> [**`ConstraintNameResolver`**](src/main/java/com/ksoot/problem/spring/advice/dao/ConstraintNameResolver.java) is implemented for Postgres, SQL Server and MongoDB only as of now.
 If any other relational database is used then respective [**`ConstraintNameResolver`**](src/main/java/com/ksoot/problem/spring/advice/dao/ConstraintNameResolver.java) need to be implemented and defined as a bean.
 
 Make sure to disable the `ErrorMvcAutoConfiguration` as follows
@@ -440,7 +443,8 @@ To minimize the number of properties following defaults are taken if `HttpStatus
 * Title is taken as specified `HttpStatus`'s reason phrase e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` then the Title default would be `Expectation Failed`
 * Detail default is taken from thrown exception's `exception.getMessage()`.
 
-**Note**: `status.`\<error key\> property is considered only for exceptions where no explicit advice is defined, 
+> [!NOTE]
+> `status.`(error key) property is considered only for exceptions where no explicit advice is defined, 
 otherwise `HttpStatus` is specified in the java code.
 
 ### Creating and throwing exceptions
