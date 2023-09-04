@@ -327,7 +327,7 @@ problem.open-api.res-validation-enabled=false
 ## Usage
 
 ### Error Key
-The main concept behind specifying the error attributes in `properties` file is [*Error key*](https://github.com/officiallysingh/spring-boot-problem-handler#error-key), which is mandatory to be unique for each error scenario.
+The main concept behind specifying the error attributes in `properties` file is **Error key**, which is mandatory to be unique for each error scenario.
 **It is either derived or specified by application** while throwing exception and used to externalize the error attributes in `properties` file. 
 
 For example if error key for some exception is `some.error.key`, then error response attributes can be specified in `properties` file as follows.
