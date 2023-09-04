@@ -48,7 +48,7 @@ depending on the jars in classpath of consumer application.
 **Even for exceptions for which no advices are defined**, respective error response can be specified by 
 messages in `properties` file, elaborated in [*Usage*](https://github.com/officiallysingh/spring-boot-problem-handler#usage) section.
 New custom advices could be required only in cases where it is required to take some data from exception instance 
-to dynamically derive **Error key** (Elaborated later)
+to dynamically derive [*Error key*](https://github.com/officiallysingh/spring-boot-problem-handler#error-key) 
 or to use this data to resolve any placeholders in error message. In such cases consumer application can define 
 their own custom `ControllerAdvice`'s,
 Any existing advice can be referred to weave the custom advice into the framework.
@@ -327,7 +327,7 @@ problem.open-api.res-validation-enabled=false
 ## Usage
 
 ### Error Key
-The main concept behind specifying the error attributes in `properties` file is **Error key**, which is mandatory to be unique for each error scenario.
+The main concept behind specifying the error attributes in `properties` file is [*Error key*](https://github.com/officiallysingh/spring-boot-problem-handler#error-key), which is mandatory to be unique for each error scenario.
 **It is either derived or specified by application** while throwing exception and used to externalize the error attributes in `properties` file. 
 
 For example if error key for some exception is `some.error.key`, then error response attributes can be specified in `properties` file as follows.
@@ -437,7 +437,7 @@ For example in case of `ConstraintViolationException` `codes` would be multiple 
 Respective codes for corresponding attribute can be copied and message can be specified for same in `properties` file.
 
 > [!NOTE]
-> `org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException` i.e. fully qualified name of exception is the **Error key** in above case.
+> `org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException` i.e. fully qualified name of exception is the [*Error key*](https://github.com/officiallysingh/spring-boot-problem-handler#error-key) in above case.
  **This scenario also covers all the exceptions for which advices are not defined**.
 But additionally `HttpStatus` need to be specified in `properties` file as it has not been specified anywhere in code because `ControllerAdvice` is not defined,
 if status not given even in `properties` file `HttpStatus.INTERNAL_SERVER_ERROR` is taken as default.
@@ -475,7 +475,7 @@ The simplistic way is to just specify a unique error key and `HttpStatus`.
 throw Problems.newInstance("sample.problem").throwAble(HttpStatus.EXPECTATION_FAILED);
 ```
 Error response attributes `code`, `title` and `detail` are expected from the message source (`properties` file) available as follows.
-Notice the Error key **sample.problem** in following properties
+Notice the [*Error key*](https://github.com/officiallysingh/spring-boot-problem-handler#error-key) **sample.problem** in following properties
 
 ```properties
 code.sample.problem=AYX123
