@@ -69,7 +69,7 @@ such as for Handling Security, OpenAPI and Dao related exceptions, which are ela
 
 ## Controller Advices
 
-#### General advices recommended for Spring Rest services need to handle
+#### General advices recommended for all Spring Rest services
 
 These advices are autoconfigured as either bean of type [**`ProblemHandlingWeb`**](src/main/java/com/ksoot/problem/spring/advice/web/ProblemHandlingWeb.java) 
 or [**`ProblemHandlingWebflux`**](src/main/java/com/ksoot/problem/spring/advice/webflux/ProblemHandlingWebflux.java) depending on whether application is type **Spring Web** or **Spring Webflux** respectively.
@@ -140,7 +140,7 @@ These advices are autoconfigured as a bean `DaoExceptionHandler` if following co
 > [!NOTE]
 > Database type must be specified in `application.properties` in case application is using some relational database, 
 it is used to autoconfigure [**`ConstraintNameResolver`**](src/main/java/com/ksoot/problem/spring/advice/dao/ConstraintNameResolver.java) 
-to extract database constraint name from exception message to derive error key 
+to extract database constraint name from exception message to derive [*Error key*](https://github.com/officiallysingh/spring-boot-problem-handler#error-key) 
 when database constraint violation exceptions are thrown.
 
 #### Security advices
@@ -189,8 +189,8 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 ```
 
 > **For Spring Webflux applications** 
-[**`ServerAuthenticationEntryPoint`**](src/main/java/com/ksoot/problem/spring/advice/security/ProblemServerAccessDeniedHandler.java)
-and [**`ServerAccessDeniedHandler`**](src/main/java/com/ksoot/problem/spring/advice/security/ProblemServerAuthenticationEntryPoint.java)
+[**`ServerAuthenticationEntryPoint`**](src/main/java/com/ksoot/problem/spring/advice/security/ProblemServerAuthenticationEntryPoint.java)
+and [**`ServerAccessDeniedHandler`**](src/main/java/com/ksoot/problem/spring/advice/security/ProblemServerAccessDeniedHandler.java)
 are autoconfigured as `authenticationEntryPoint` and `accessDeniedHandler` beans respectively.
 
 But to make it work following needs to be done in application Spring Security configuration. 
