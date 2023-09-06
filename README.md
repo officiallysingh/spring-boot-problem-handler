@@ -385,7 +385,7 @@ content-type: application/problem+xml
   Used in `type`. Commonly used to set unique codes for different business error scenarios.
 
 
-## Problem Message resolvers
+## Message resolvers
 To know how to define the error attributes in properties file, enable debugging as follows.
 ```properties
 problem.debug-enabled=true
@@ -496,7 +496,7 @@ throw Problems.newInstance("sample.problem")
     .defaultDetail("Default details if not found in properties file with parma1: {0} and param2: {1}")
     .detailArgs("P1", "P2")
     .cause(new IllegalStateException("Artificially induced illegal state"))
-    .throwAble(Status.EXPECTATION_FAILED); // .throwAbleChecked(Status.EXPECTATION_FAILED)
+    .throwAble(HttpStatus.EXPECTATION_FAILED); // .throwAbleChecked(HttpStatus.EXPECTATION_FAILED)
 ```
 The above code snippet would throw unchecked exception, though not recommended but to throw checked exception,
 use `throwAbleChecked` as terminal operation as highlighted in java comment above.
@@ -513,7 +513,7 @@ Or to throw multiple exceptions together.That can be done as follows.
 ```java
 Problem problemOne = Problems.newInstance("sample.problem.one").get();
 Problem problemTwo = Problems.newInstance("sample.problem.two").get();
-throw Problems.throwAble(Status.MULTI_STATUS, problemOne, problemTwo);
+throw Problems.throwAble(HttpStatus.MULTI_STATUS, problemOne, problemTwo);
 ```
 
 `HttpStatus` can also be set over custom exception as follows, the same would reflect in error response and 
