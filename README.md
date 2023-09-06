@@ -140,7 +140,7 @@ These advices are autoconfigured as a bean `DaoExceptionHandler` if following co
 
 > [!NOTE]
 > Database type must be specified in `application.properties` in case application is using some relational database, 
-it is used to autoconfigure [**`ConstraintNameResolver`**](src/main/java/com/ksoot/problem/spring/advice/dao/ConstraintNameResolver.java) [**`ConstraintNameResolver`**](src/main/java/com/ksoot/problem/spring/advice/dao/ConstraintNameResolver.java) 
+it is used to autoconfigure [**`ConstraintNameResolver`**](src/main/java/com/ksoot/problem/spring/advice/dao/ConstraintNameResolver.java)  
 to extract database constraint name from exception message to derive [*Error key*](https://github.com/officiallysingh/spring-boot-problem-handler#error-key) 
 when database constraint violation exceptions are thrown.
 
