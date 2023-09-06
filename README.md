@@ -27,14 +27,15 @@ all can be done with zero custom code but by specifying error details in `proper
 
 > **Current version: 1.0**
 
+Add the `spring-boot-problem-handler` jar to application dependencies. That is all it takes to get a default working 
+exception handling mechanism in a Spring boot application.
+
 ```xml
 <properties>
     <spring-boot-problem-handler.version>1.0</spring-boot-problem-handler.version>
 </properties>
 ```
 
-Add the `spring-boot-problem-handler` jar to application dependencies. That is all it takes to get a default working 
-exception handling mechanism in a Spring boot application.
 ```xml
 <dependency>
     <groupId>io.github.officiallysingh</groupId>
@@ -284,7 +285,7 @@ but not recommended.
 To be on safer side, it's recommended to keep it `true`, in that case if some message is not found, 
 the message key is taken as its value, which can be updated later into `properties` file, once noticed.
 
-### Problem Properties
+## Problem Properties
 **Following are the configurations** to customize default behaviour of `spring-boot-problem-handler`.
 ```properties
 problem.enabled=true
@@ -324,9 +325,8 @@ problem.open-api.res-validation-enabled=false
 * `problem.open-api.req-validation-enabled`:- To enable or disable OpenAPI specification validation for request, default is `false`.
 * `problem.open-api.res-validation-enabled`:- To enable or disable OpenAPI specification validation for response, default is `false`.
 
-## Usage
 
-### Error Key
+## Error Key
 The main concept behind specifying the error attributes in `properties` file is **Error key**, which is mandatory to be unique for each error scenario.
 **It is either derived or specified by application** while throwing exception and used to externalize the error attributes in `properties` file. 
 
@@ -350,7 +350,7 @@ status.some.error.key=400
 * When controller method name changes or controller argument Object class name or any of its property name changes then `jakarta.validation.*` violation error keys may change.
 * When database constraint name or index name changes then any `DuplicateKeyException` or `DataIntegrityViolationException` error key may change.
 
-### Error response structure
+## Error response
 Following is an example response body for an error.
 ```json
 {
@@ -373,8 +373,8 @@ Response Header when service is configured for XML `HttpMessageConverters`
 content-type: application/problem+xml
 ```
 
-**Error Response description**
-* `type`:- A URI reference that identifies the problem type.  When dereferenced, it provides human-readable documentation for this error.
+**Description**
+* `type`:- A `URI` reference that identifies the problem type.  When dereferenced, it provides human-readable documentation for this error.
   If not set `about:blank` is taken as default.
 * `title`:- A short, human-readable summary of the error such as `Bad Request`.
 * `status`:- The HTTP status code, int value such as `500`.
@@ -386,7 +386,7 @@ content-type: application/problem+xml
   Used in `type`. Commonly used to set unique codes for different business error scenarios.
 
 
-### Problem Message resolvers
+## Problem Message resolvers
 To know how to define the error attributes in properties file, enable debugging as follows.
 ```properties
 problem.debug-enabled=true
@@ -451,15 +451,15 @@ detail.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 ```
 
 To minimize the number of properties following defaults are taken if `HttpStatus` is specified as `status.`(error key) property.
-* Code is taken as specified `HttpStatus`'s int code e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` then the Code default would be `417`
-* Title is taken as specified `HttpStatus`'s reason phrase e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` then the Title default would be `Expectation Failed`
-* Detail default is taken from thrown exception's `exception.getMessage()`.
+* **Code** is taken as specified `HttpStatus`'s int code e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` then the Code default would be `417`
+* **Title** is taken as specified `HttpStatus`'s reason phrase e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` then the Title default would be `Expectation Failed`
+* **Detail** default is taken from thrown exception's `exception.getMessage()`.
 
 > [!NOTE]
 > `status.`(error key) property is considered only for exceptions where no explicit advice is defined, 
 otherwise `HttpStatus` is specified in the java code.
 
-### Creating and throwing exceptions
+## Creating and throwing exceptions
 
 Apart from exceptions thrown by frameworks or java, every application need to throw custom exceptions.
 [**`ApplicationProblem`**](src/main/java/com/ksoot/problem/core/ApplicationProblem.java) and
@@ -486,9 +486,9 @@ detail.sample.problem=Some message details
 But exceptions come with some default attributes as follows, to minimize the number of properties required to be defined in `properties` file
 
 If the messages are not found in `properties` files, defaults are taken as follows.
-* Code is taken as specified `HttpStatus`'s int code e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` then the Code default would be `417`
-* Title is taken as specified `HttpStatus`'s reason phrase e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` like the Title default would be `Expectation Failed`
-* Detail default is taken as thrown exception's `exception.getMessage()`
+* **Code** is taken as specified `HttpStatus`'s int code e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` then the Code default would be `417`
+* **Title** is taken as specified `HttpStatus`'s reason phrase e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` like the Title default would be `Expectation Failed`
+* **Detail** default is taken as thrown exception's `exception.getMessage()`
 
 There are multiple other methods available while creating and throwing exceptions in [**`Problems`**](src/main/java/com/ksoot/problem/Problems.java), 
 for details refers to its source code and java docs. 
@@ -531,7 +531,7 @@ private static final class MyException extends RuntimeException {
 }
 ```
 
-### Stack traces
+## Stack traces
 Set following property to `true` to get the `stacktrace` in error response, 
 should only be used on local for debugging purpose and strictly prohibited elsewhere as it may expose application internals.
 ```properties
@@ -563,7 +563,7 @@ Example response
 }
 ```
 
-### Cause chains
+## Cause chains
 An exception may have a cause, which in tern may also have another and so on.
 The complete cause chain can also be viewed in error response, again it should just be used for local debugging purposes only.
 
@@ -697,7 +697,7 @@ class CustomMethodArgumentNotValidExceptionHandler implements MethodArgumentNotV
 }
 ```
 
-### Define new advices
+## Define new advices
 There should not be any need to create any custom exception hence new advices, but if there is a pressing need to do so,
 custom exception can be created and corresponding custom `ControllerAdvice` can be defined for the same, though not recommended.
 Following example demonstrates a new advice for some custom exception `MyCustomException`.
