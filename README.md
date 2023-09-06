@@ -189,8 +189,8 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 ```
 
 > **For Spring Webflux applications** 
-[**`ServerAuthenticationEntryPoint`**](src/main/java/com/ksoot/problem/spring/advice/security/ProblemServerAuthenticationEntryPoint.java)
-and [**`ServerAccessDeniedHandler`**](src/main/java/com/ksoot/problem/spring/advice/security/ProblemServerAccessDeniedHandler.java)
+[**`ProblemServerAuthenticationEntryPoint`**](src/main/java/com/ksoot/problem/spring/advice/security/ProblemServerAuthenticationEntryPoint.java)
+and [**`ProblemServerAccessDeniedHandler`**](src/main/java/com/ksoot/problem/spring/advice/security/ProblemServerAccessDeniedHandler.java)
 are autoconfigured as `authenticationEntryPoint` and `accessDeniedHandler` beans respectively.
 
 But to make it work following needs to be done in application Spring Security configuration. 
