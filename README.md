@@ -486,7 +486,7 @@ But exceptions come with some default attributes as follows, to minimize the num
 
 If the messages are not found in `properties` files, defaults are taken as follows.
 * **Code** is taken as specified `HttpStatus`'s int code e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` then the Code default would be `417`
-* **Title** is taken as specified `HttpStatus`'s reason phrase e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` like the Title default would be `Expectation Failed`
+* **Title** is taken as specified `HttpStatus`'s reason phrase e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` then the Title default would be `Expectation Failed`
 * **Detail** default is taken as thrown exception's `exception.getMessage()`
 
 There are multiple other methods available while creating and throwing exceptions in [**`Problems`**](src/main/java/com/ksoot/problem/Problems.java), 
