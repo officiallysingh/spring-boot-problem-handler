@@ -19,7 +19,7 @@ limited checked exceptions can be created and thrown from methods where calling 
 
 Standard way of handling exceptions in Spring is `@ControllerAdvice` using AOP, 
 following the same principles **spring-boot-problem-handler** makes available everything related to exception handling 
-for both **Spring Web** and **Spring Webflux** Rest applications, 
+for both **Spring Web** (Servlet) and **Spring Webflux** (Reactive) Rest applications, 
 so there is no need to define any custom exceptions or custom `ControllerAdvice` advices into consumer application, 
 all can be done with zero custom code but by specifying error details in `properties` file.
 
