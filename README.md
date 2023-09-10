@@ -263,10 +263,6 @@ or in `application.properties` as follows
 spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
 ```
 
-> [!IMPORTANT]
-Spring boot 3 also provides Problem details support which must not be enabled otherwise it will shadow all `ControllerAdvice`'s provided by this library.
-By default `spring.mvc.problemdetails.enabled` is `false`, so it must not be set to `true`
-
 Specify message source bundles as follows. Make sure to include `i18/problems` bundled in the library, as it 
 has default messages for certain exception. And it should be last in the list of `basenames`, 
 so that it has lowest priority and any default messages coming from `problems.properties` can be overridden 
@@ -281,6 +277,10 @@ So if it is intended to enforce all messages for exceptions to be specified in `
 but not recommended.
 To be on safer side, it's recommended to keep it `true`, in that case if some message is not found, 
 the message key is taken as its value, which can be updated later into `properties` file, once noticed.
+
+> [!IMPORTANT]
+Spring boot 3 also provides Problem details support which must not be enabled otherwise it will shadow all `ControllerAdvice`'s provided by this library.
+By default `spring.mvc.problemdetails.enabled` is `false`, so it must not be set to `true`
 
 ## Problem Properties
 **Following are the configurations** to customize default behaviour of `spring-boot-problem-handler`.
