@@ -264,7 +264,7 @@ spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.web.servlet.
 ```
 
 > [!IMPORTANT]
-Spring boot 3 also provide Problem details support which must not be enabled otherwise it will shadow all `ControllerAdvice`'s provided by this library.
+Spring boot 3 also provides Problem details support which must not be enabled otherwise it will shadow all `ControllerAdvice`'s provided by this library.
 By default `spring.mvc.problemdetails.enabled` is `false`, so it must not be set to `true`
 
 Specify message source bundles as follows. Make sure to include `i18/problems` bundled in the library, as it 
