@@ -2,6 +2,8 @@ package com.ksoot.problem.core;
 
 import com.ksoot.problem.spring.config.ProblemBeanRegistry;
 import jakarta.annotation.Nullable;
+import lombok.experimental.UtilityClass;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -17,11 +19,8 @@ import static org.springframework.core.annotation.AnnotatedElementUtils.findMerg
 /**
  * @author Rajveer Singh
  */
+@UtilityClass
 public class ProblemUtils {
-
-  private ProblemUtils() {
-    throw new IllegalStateException("Just a utility class, not supposed to be instantiated");
-  }
 
   public static String statusCode(final HttpStatusCode httpStatus) {
     return String.valueOf(httpStatus.value());

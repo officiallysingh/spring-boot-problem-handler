@@ -6,7 +6,7 @@
 
     <groupId>io.github.officiallysingh</groupId>
     <artifactId>spring-boot-problem-handler</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
     <name>spring-boot-problem-handler</name>
     <description>Commons exception handler library</description>
     <url>https://github.com/officiallysingh/spring-boot-problem-handler</url>
@@ -90,12 +90,10 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
-            <version>${commons-collections4.version}</version>
         </dependency>
         <dependency>
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
-            <version>${jakarta.annotation-api.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -143,7 +141,6 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>${jakarta.servlet-api.version}</version>
         </dependency>
 
         <dependency>

@@ -1,9 +1,7 @@
 package com.ksoot.problem.spring.advice.security;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -11,7 +9,9 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
-import java.io.IOException;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * A compound {@link AuthenticationEntryPoint} and {@link AccessDeniedHandler}
@@ -24,7 +24,6 @@ public class ProblemAccessDeniedHandler implements AccessDeniedHandler {
 
   private final HandlerExceptionResolver resolver;
 
-  @Autowired
   public ProblemAccessDeniedHandler(@Qualifier("handlerExceptionResolver") final HandlerExceptionResolver resolver) {
     this.resolver = resolver;
   }

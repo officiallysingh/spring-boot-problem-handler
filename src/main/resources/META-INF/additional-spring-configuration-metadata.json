@@ -7,6 +7,11 @@
 			"description": "Default: true, Whether or not to enable Problem handling"
 		},
 		{
+			"name": "type-url",
+			"type": "java.lang.String",
+			"description": "Help page base url"
+		},
+		{
 			"name": "problem.debug-enabled",
 			"type": "java.lang.Boolean",
 			"defaultValue": "false",

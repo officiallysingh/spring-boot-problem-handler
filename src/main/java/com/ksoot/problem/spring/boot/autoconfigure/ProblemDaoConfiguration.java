@@ -33,7 +33,7 @@ class ProblemDaoConfiguration {
   public static class PostgresqlConstraintNameResolverConfiguration {
 
     @Bean
-    public ConstraintNameResolver postgresqlConstraintNameResolver(final Environment env) {
+    ConstraintNameResolver postgresqlConstraintNameResolver(final Environment env) {
       return new PostgresConstraintNameResolver();
     }
   }
@@ -44,7 +44,7 @@ class ProblemDaoConfiguration {
   public static class SQLServerConstraintNameResolverConfiguration {
 
     @Bean
-    public ConstraintNameResolver sqlServerConstraintNameResolver(final Environment env) {
+    ConstraintNameResolver sqlServerConstraintNameResolver(final Environment env) {
       return new SQLServerConstraintNameResolver();
     }
   }
@@ -55,7 +55,7 @@ class ProblemDaoConfiguration {
   public static class MongoConstraintNameResolverConfiguration {
 
     @Bean
-    public ConstraintNameResolver mongoConstraintNameResolver(final Environment env) {
+    ConstraintNameResolver mongoConstraintNameResolver(final Environment env) {
       return new MongoConstraintNameResolver();
     }
   }

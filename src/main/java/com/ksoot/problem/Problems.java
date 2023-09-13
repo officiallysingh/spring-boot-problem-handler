@@ -1,5 +1,21 @@
 package com.ksoot.problem;
 
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.MessageSourceResolvable;
+import org.springframework.http.HttpStatus;
+import org.springframework.util.Assert;
+
 import com.ksoot.problem.core.ApplicationException;
 import com.ksoot.problem.core.ApplicationProblem;
 import com.ksoot.problem.core.GeneralErrorKey;
@@ -11,29 +27,13 @@ import com.ksoot.problem.core.ThrowableProblem;
 import com.ksoot.problem.spring.config.ProblemBeanRegistry;
 import com.ksoot.problem.spring.config.ProblemMessageProvider;
 import com.ksoot.problem.spring.config.ProblemMessageSourceResolver;
+
 import jakarta.annotation.Nullable;
-import org.apache.commons.collections4.MapUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.MessageSourceResolvable;
-import org.springframework.http.HttpStatus;
-import org.springframework.util.Assert;
+import lombok.experimental.UtilityClass;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import static com.ksoot.problem.spring.config.ProblemMessageProvider.getMessage;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-
+@UtilityClass
 public class Problems {
 
-  private Problems() {
-    throw new IllegalStateException("Problems utility class, not supposed to be instantiated");
-  }
 
   // ------------------------------- Factory methods -------------------------------------
 
