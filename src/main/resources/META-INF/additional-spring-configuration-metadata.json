@@ -7,7 +7,7 @@
 			"description": "Default: true, Whether or not to enable Problem handling"
 		},
 		{
-			"name": "type-url",
+			"name": "problem.type-url",
 			"type": "java.lang.String",
 			"description": "Help page base url"
 		},
