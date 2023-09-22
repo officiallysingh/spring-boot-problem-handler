@@ -32,7 +32,7 @@ exception handling mechanism in a Spring boot application.
 
 ```xml
 <properties>
-    <spring-boot-problem-handler.version>1.0</spring-boot-problem-handler.version>
+    <spring-boot-problem-handler.version>1.3</spring-boot-problem-handler.version>
 </properties>
 ```
 
