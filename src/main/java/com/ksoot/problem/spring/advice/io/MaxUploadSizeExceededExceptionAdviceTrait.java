@@ -13,25 +13,33 @@ import org.springframework.util.unit.DataSize;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
-public interface MaxUploadSizeExceededExceptionAdviceTrait<T, R> extends AdviceTrait<T, R> {
+public interface MaxUploadSizeExceededExceptionAdviceTrait<T, R>
+		extends AdviceTrait<T, R> {
 
-  @ExceptionHandler
-  default R handleMaxUploadSizeExceededException(final MaxUploadSizeExceededException exception, final T request) {
-    String errorKey = ClassUtils.getName(exception);
-    String defultMessage = exception.getMessage();
-    long bytes = exception.getMaxUploadSize();
-    if(bytes == -1 && exception.getMostSpecificCause() instanceof FileSizeLimitExceededException e) {
-      defultMessage = e.getMessage();
-      final String byteSizeString = CharMatcher.inRange('0', '9').retainFrom(defultMessage);
-      bytes = StringUtils.isNotBlank(byteSizeString) ? Long.parseLong(byteSizeString) : bytes;
-    }
-    String maxFileSizeAllowed = bytes != -1 ? DataSize.ofBytes(bytes).toString() : "UNKNOWN";
+	@ExceptionHandler
+	default R handleMaxUploadSizeExceededException(
+			final MaxUploadSizeExceededException exception, final T request) {
+		String errorKey = ClassUtils.getName(exception);
+		String defultMessage = exception.getMessage();
+		long bytes = exception.getMaxUploadSize();
+		if (bytes == -1 && exception
+				.getMostSpecificCause() instanceof FileSizeLimitExceededException e) {
+			defultMessage = e.getMessage();
+			final String byteSizeString = CharMatcher.inRange('0', '9')
+					.retainFrom(defultMessage);
+			bytes = StringUtils.isNotBlank(byteSizeString)
+					? Long.parseLong(byteSizeString)
+					: bytes;
+		}
+		String maxFileSizeAllowed = bytes != -1 ? DataSize.ofBytes(bytes).toString()
+				: "UNKNOWN";
 
-    String detailCode = ProblemConstant.DETAIL_CODE_PREFIX + errorKey;
+		String detailCode = ProblemConstant.DETAIL_CODE_PREFIX + errorKey;
 
-    Problem problem = toProblem(exception, HttpStatus.BAD_REQUEST,
-        ProblemMessageSourceResolver.of(detailCode, defultMessage, new Object[] { maxFileSizeAllowed }));
+		Problem problem = toProblem(exception, HttpStatus.BAD_REQUEST,
+				ProblemMessageSourceResolver.of(detailCode, defultMessage,
+						new Object[] { maxFileSizeAllowed }));
 
-    return create(exception, request, HttpStatus.BAD_REQUEST, problem);
-  }
+		return create(exception, request, HttpStatus.BAD_REQUEST, problem);
+	}
 }

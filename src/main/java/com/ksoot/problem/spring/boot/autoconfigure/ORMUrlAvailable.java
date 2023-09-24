@@ -8,15 +8,15 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
  */
 public class ORMUrlAvailable extends AnyNestedCondition {
 
-  public ORMUrlAvailable() {
-    super(ConfigurationPhase.PARSE_CONFIGURATION);
-  }
+	public ORMUrlAvailable() {
+		super(ConfigurationPhase.PARSE_CONFIGURATION);
+	}
 
-  @ConditionalOnProperty(prefix = "spring.datasource", name = "url")
-  static class SpringDatasourceUrlAvailable {
-  }
+	@ConditionalOnProperty(prefix = "spring.datasource", name = "url")
+	static class SpringDatasourceUrlAvailable {
+	}
 
-  @ConditionalOnProperty(prefix = "spring.r2dbc", name = "url")
-  static class SpringR2dbcUrlAvailable {
-  }
+	@ConditionalOnProperty(prefix = "spring.r2dbc", name = "url")
+	static class SpringR2dbcUrlAvailable {
+	}
 }

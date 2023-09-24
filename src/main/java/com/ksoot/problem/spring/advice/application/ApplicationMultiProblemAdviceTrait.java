@@ -23,19 +23,24 @@ import static com.ksoot.problem.core.ProblemConstant.TITLE_CODE_PREFIX;
  */
 public interface ApplicationMultiProblemAdviceTrait<T, R> extends AdviceTrait<T, R> {
 
-  @ExceptionHandler
-  default R handleApplicationProblem(final MultiProblem exception,
-                                     final T request) {
-    List<Problem> problems = exception.getProblems();
-    Map<String, Object> parameters = new LinkedHashMap<>(4);
-    parameters.put(ERRORS_KEY, problems);
+	@ExceptionHandler
+	default R handleApplicationProblem(final MultiProblem exception, final T request) {
+		List<Problem> problems = exception.getProblems();
+		Map<String, Object> parameters = new LinkedHashMap<>(4);
+		parameters.put(ERRORS_KEY, problems);
 
-    HttpStatus status = HttpStatus.MULTI_STATUS;
-    ProblemMessageSourceResolver codeResolver = ProblemMessageSourceResolver.of(CODE_CODE_PREFIX + GeneralErrorKey.MULTIPLE_ERRORS, status.value());
-    ProblemMessageSourceResolver titleResolver = ProblemMessageSourceResolver.of(TITLE_CODE_PREFIX + GeneralErrorKey.MULTIPLE_ERRORS, status.getReasonPhrase());
-    ProblemMessageSourceResolver detailResolver = ProblemMessageSourceResolver.of(DETAIL_CODE_PREFIX + GeneralErrorKey.MULTIPLE_ERRORS, exception.getMessage());
+		HttpStatus status = HttpStatus.MULTI_STATUS;
+		ProblemMessageSourceResolver codeResolver = ProblemMessageSourceResolver
+				.of(CODE_CODE_PREFIX + GeneralErrorKey.MULTIPLE_ERRORS, status.value());
+		ProblemMessageSourceResolver titleResolver = ProblemMessageSourceResolver.of(
+				TITLE_CODE_PREFIX + GeneralErrorKey.MULTIPLE_ERRORS,
+				status.getReasonPhrase());
+		ProblemMessageSourceResolver detailResolver = ProblemMessageSourceResolver.of(
+				DETAIL_CODE_PREFIX + GeneralErrorKey.MULTIPLE_ERRORS,
+				exception.getMessage());
 
-    Problem problem = toProblem(exception, codeResolver, titleResolver, detailResolver, parameters);
-    return create(exception, request, exception.getStatus(), problem);
-  }
+		Problem problem = toProblem(exception, codeResolver, titleResolver,
+				detailResolver, parameters);
+		return create(exception, request, exception.getStatus(), problem);
+	}
 }

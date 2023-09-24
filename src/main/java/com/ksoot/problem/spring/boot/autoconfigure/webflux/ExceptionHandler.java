@@ -18,6 +18,7 @@ import reactor.core.publisher.Mono;
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 @ControllerAdvice
 @RequiredArgsConstructor
-class ExceptionHandler implements ProblemHandlingWebflux<Mono<ResponseEntity<ProblemDetail>>> {
+public class ExceptionHandler
+		implements ProblemHandlingWebflux<Mono<ResponseEntity<ProblemDetail>>> {
 
 }

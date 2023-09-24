@@ -14,24 +14,25 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
- * A compound {@link AuthenticationEntryPoint} and {@link AccessDeniedHandler}
- * that delegates exceptions to Spring WebMVC's {@link HandlerExceptionResolver}
- * as defined in {@link WebMvcConfigurationSupport}.
+ * A compound {@link AuthenticationEntryPoint} and {@link AccessDeniedHandler} that
+ * delegates exceptions to Spring WebMVC's {@link HandlerExceptionResolver} as defined in
+ * {@link WebMvcConfigurationSupport}.
  * <p>
  * Compatible with spring-webmvc 4.3.3.
  */
 public class ProblemAccessDeniedHandler implements AccessDeniedHandler {
 
-  private final HandlerExceptionResolver resolver;
+	private final HandlerExceptionResolver resolver;
 
-  public ProblemAccessDeniedHandler(@Qualifier("handlerExceptionResolver") final HandlerExceptionResolver resolver) {
-    this.resolver = resolver;
-  }
+	public ProblemAccessDeniedHandler(
+			@Qualifier("handlerExceptionResolver") final HandlerExceptionResolver resolver) {
+		this.resolver = resolver;
+	}
 
-  @Override
-  public void handle(final HttpServletRequest request,
-                     final HttpServletResponse response, AccessDeniedException exception)
-      throws IOException, ServletException {
-    this.resolver.resolveException(request, response, null, exception);
-  }
+	@Override
+	public void handle(final HttpServletRequest request,
+			final HttpServletResponse response, AccessDeniedException exception)
+			throws IOException, ServletException {
+		this.resolver.resolveException(request, response, null, exception);
+	}
 }

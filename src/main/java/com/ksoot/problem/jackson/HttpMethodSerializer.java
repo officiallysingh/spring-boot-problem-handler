@@ -10,8 +10,9 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 final class HttpMethodSerializer extends JsonSerializer<HttpMethod> {
 
-  @Override
-  public void serialize(final HttpMethod method, final JsonGenerator json, final SerializerProvider serializers) throws IOException {
-    json.writeString(method.name());
-  }
+	@Override
+	public void serialize(final HttpMethod method, final JsonGenerator json,
+			final SerializerProvider serializers) throws IOException {
+		json.writeString(method.name());
+	}
 }

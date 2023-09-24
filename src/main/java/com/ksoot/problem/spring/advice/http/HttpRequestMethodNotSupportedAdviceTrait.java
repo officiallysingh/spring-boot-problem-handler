@@ -14,19 +14,27 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import static java.util.Objects.requireNonNull;
 
-public interface HttpRequestMethodNotSupportedAdviceTrait<T, R> extends AdviceTrait<T, R> {
+public interface HttpRequestMethodNotSupportedAdviceTrait<T, R>
+		extends AdviceTrait<T, R> {
 
-  @ExceptionHandler
-  default R handleRequestMethodNotSupportedException(final HttpRequestMethodNotSupportedException exception, final T request) {
-    @Nullable final String[] methods = exception.getSupportedMethods();
-    String requestedMethod = exception.getMethod();
-    String allowedMethods = ArrayUtils.isEmpty(methods) ? "None" : String.join(",", methods);
-    Problem problem = toProblem(exception, HttpStatus.METHOD_NOT_ALLOWED,
-        ProblemMessageSourceResolver.of(ProblemConstant.DETAIL_CODE_PREFIX + GeneralErrorKey.REQUEST_METHOD_NOT_SUPPORTED,
-            "Requested Method: {0} not allowed, allowed methods are: {1}", new Object[]{requestedMethod, allowedMethods}));
+	@ExceptionHandler
+	default R handleRequestMethodNotSupportedException(
+			final HttpRequestMethodNotSupportedException exception, final T request) {
+		@Nullable
+		final String[] methods = exception.getSupportedMethods();
+		String requestedMethod = exception.getMethod();
+		String allowedMethods = ArrayUtils.isEmpty(methods) ? "None"
+				: String.join(",", methods);
+		Problem problem = toProblem(exception, HttpStatus.METHOD_NOT_ALLOWED,
+				ProblemMessageSourceResolver.of(
+						ProblemConstant.DETAIL_CODE_PREFIX
+								+ GeneralErrorKey.REQUEST_METHOD_NOT_SUPPORTED,
+						"Requested Method: {0} not allowed, allowed methods are: {1}",
+						new Object[] { requestedMethod, allowedMethods }));
 
-    final HttpHeaders headers = new HttpHeaders();
-    headers.setAllow(requireNonNull(exception.getSupportedHttpMethods()));
-    return create(exception, request, HttpStatus.METHOD_NOT_ALLOWED, headers, problem);
-  }
+		final HttpHeaders headers = new HttpHeaders();
+		headers.setAllow(requireNonNull(exception.getSupportedHttpMethods()));
+		return create(exception, request, HttpStatus.METHOD_NOT_ALLOWED, headers,
+				problem);
+	}
 }

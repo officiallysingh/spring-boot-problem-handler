@@ -13,15 +13,18 @@ import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
-public class ProblemServerAuthenticationEntryPoint implements ServerAuthenticationEntryPoint {
+public class ProblemServerAuthenticationEntryPoint
+		implements ServerAuthenticationEntryPoint {
 
-  private final SecurityAdviceTraits<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> advice;
+	private final SecurityAdviceTraits<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> advice;
 
-  private final ObjectMapper objectMapper;
+	private final ObjectMapper objectMapper;
 
-  @Override
-  public Mono<Void> commence(final ServerWebExchange exchange, final AuthenticationException exception) {
-    return this.advice.handleAuthenticationException(exception, exchange)
-        .flatMap(entity -> SpringWebfluxProblemResponseUtils.writeResponse(entity, exchange, this.objectMapper));
-  }
+	@Override
+	public Mono<Void> commence(final ServerWebExchange exchange,
+			final AuthenticationException exception) {
+		return this.advice.handleAuthenticationException(exception, exchange)
+				.flatMap(entity -> SpringWebfluxProblemResponseUtils.writeResponse(entity,
+						exchange, this.objectMapper));
+	}
 }

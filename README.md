@@ -25,14 +25,14 @@ all can be done with zero custom code but by specifying error details in `proper
 
 ## Installation
 
-> **Current version: 1.3**
+> **Current version: 1.4**
 
 Add the `spring-boot-problem-handler` jar to application dependencies. That is all it takes to get a default working 
 exception handling mechanism in a Spring boot application.
 
 ```xml
 <properties>
-    <spring-boot-problem-handler.version>1.3</spring-boot-problem-handler.version>
+    <spring-boot-problem-handler.version>1.4</spring-boot-problem-handler.version>
 </properties>
 ```
 

@@ -25,26 +25,26 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
-@EnableConfigurationProperties({ProblemProperties.class})
+@EnableConfigurationProperties({ ProblemProperties.class })
 @Conditional(SecurityAdviceEnabled.class)
-@ConditionalOnClass(value = {WebSecurityConfiguration.class})
+@ConditionalOnClass(value = { WebSecurityConfiguration.class })
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 @RequiredArgsConstructor
-class SecurityExceptionHandler implements SecurityAdviceTraits<NativeWebRequest, ResponseEntity<ProblemDetail>> {
+public class SecurityExceptionHandler
+		implements SecurityAdviceTraits<NativeWebRequest, ResponseEntity<ProblemDetail>> {
 
-  @ConditionalOnMissingBean
-  @Bean
-  AuthenticationEntryPoint authenticationEntryPoint(
-      final HandlerExceptionResolver resolver) {
-    return new ProblemAuthenticationEntryPoint(resolver);
-  }
+	@ConditionalOnMissingBean
+	@Bean
+	AuthenticationEntryPoint authenticationEntryPoint(
+			final HandlerExceptionResolver resolver) {
+		return new ProblemAuthenticationEntryPoint(resolver);
+	}
 
-  @ConditionalOnMissingBean
-  @Bean
-  AccessDeniedHandler accessDeniedHandler(
-      final HandlerExceptionResolver resolver) {
-    return new ProblemAccessDeniedHandler(resolver);
-  }
+	@ConditionalOnMissingBean
+	@Bean
+	AccessDeniedHandler accessDeniedHandler(final HandlerExceptionResolver resolver) {
+		return new ProblemAccessDeniedHandler(resolver);
+	}
 }

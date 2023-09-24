@@ -8,15 +8,15 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
  */
 public class ORMAdviceEnabled extends AllNestedConditions {
 
-  public ORMAdviceEnabled() {
-    super(ConfigurationPhase.PARSE_CONFIGURATION);
-  }
+	public ORMAdviceEnabled() {
+		super(ConfigurationPhase.PARSE_CONFIGURATION);
+	}
 
-  @ConditionalOnProperty(prefix = "problem", name = "enabled", havingValue = "true", matchIfMissing = true)
-  static class ProblemEnabled {
-  }
+	@ConditionalOnProperty(prefix = "problem", name = "enabled", havingValue = "true", matchIfMissing = true)
+	static class ProblemEnabled {
+	}
 
-  @ConditionalOnProperty(prefix = "problem", name = "dao-advice-enabled", havingValue = "true", matchIfMissing = true)
-  static class ORMEnabledEnabled {
-  }
+	@ConditionalOnProperty(prefix = "problem", name = "dao-advice-enabled", havingValue = "true", matchIfMissing = true)
+	static class ORMEnabledEnabled {
+	}
 }

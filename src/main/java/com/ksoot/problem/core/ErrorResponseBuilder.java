@@ -25,50 +25,58 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 public interface ErrorResponseBuilder<T, R> {
 
-  ContentNegotiationStrategy DEFAULT_CONTENT_NEGOTIATION_STRATEGY =
-      new FallbackContentNegotiationStrategy(new HeaderContentNegotiationStrategy());
+	ContentNegotiationStrategy DEFAULT_CONTENT_NEGOTIATION_STRATEGY = new FallbackContentNegotiationStrategy(
+			new HeaderContentNegotiationStrategy());
 
-  static Optional<MediaType> getProblemMediaType(final List<MediaType> mediaTypes) {
-    for (final MediaType mediaType : mediaTypes) {
-      if (mediaType.includes(APPLICATION_JSON) || mediaType.includes(MediaTypes.PROBLEM)) {
-        return Optional.of(MediaTypes.PROBLEM);
-      } else if (mediaType.includes(MediaTypes.X_PROBLEM)) {
-        return Optional.of(MediaTypes.X_PROBLEM);
-      }
-    }
+	static Optional<MediaType> getProblemMediaType(final List<MediaType> mediaTypes) {
+		for (final MediaType mediaType : mediaTypes) {
+			if (mediaType.includes(APPLICATION_JSON)
+					|| mediaType.includes(MediaTypes.PROBLEM)) {
+				return Optional.of(MediaTypes.PROBLEM);
+			}
+			else if (mediaType.includes(MediaTypes.X_PROBLEM)) {
+				return Optional.of(MediaTypes.X_PROBLEM);
+			}
+		}
 
-    return Optional.empty();
-  }
+		return Optional.empty();
+	}
 
-  R buildResponse(final Throwable throwable, final T request, final HttpStatus status,
-                  final HttpHeaders headers, final Problem problem);
+	R buildResponse(final Throwable throwable, final T request, final HttpStatus status,
+			final HttpHeaders headers, final Problem problem);
 
-  default ProblemDetail createProblemDetail(final T request, final HttpStatus status, final Problem problem) {
-    ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, problem.getDetail());
-    problemDetail.setTitle(problem.getTitle());
-    problemDetail.setInstance(requestUri(request));
-    if (StringUtils.isNotBlank(ProblemBeanRegistry.problemProperties().getTypeUrl())) {
-      URI type = URI.create(ProblemBeanRegistry.problemProperties().getTypeUrl() + "#" + problem.getCode());
-      problemDetail.setType(type);
-    }
-    problemDetail.setProperty(METHOD_KEY, requestMethod(request));
-    problemDetail.setProperty(TIMESTAMP_KEY, OffsetDateTime.now());
-    problemDetail.setProperty(CODE_KEY, problem.getCode());
+	default ProblemDetail createProblemDetail(final T request, final HttpStatus status,
+			final Problem problem) {
+		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status,
+				problem.getDetail());
+		problemDetail.setTitle(problem.getTitle());
+		problemDetail.setInstance(requestUri(request));
+		if (StringUtils
+				.isNotBlank(ProblemBeanRegistry.problemProperties().getTypeUrl())) {
+			URI type = URI.create(ProblemBeanRegistry.problemProperties().getTypeUrl()
+					+ "#" + problem.getCode());
+			problemDetail.setType(type);
+		}
+		problemDetail.setProperty(METHOD_KEY, requestMethod(request));
+		problemDetail.setProperty(TIMESTAMP_KEY, OffsetDateTime.now());
+		problemDetail.setProperty(CODE_KEY, problem.getCode());
 
-    if (MapUtils.isNotEmpty(problem.getParameters())) {
-      problem.getParameters().forEach((k, v) -> problemDetail.setProperty(k, v));
-    }
-    if (Objects.nonNull(problem.getCause())) {
-      problemDetail.setProperty(CAUSE_KEY, problem.getCause());
-    }
-    return problemDetail;
-  }
+		if (MapUtils.isNotEmpty(problem.getParameters())) {
+			problem.getParameters().forEach((k, v) -> problemDetail.setProperty(k, v));
+		}
+		if (Objects.nonNull(problem.getCause())) {
+			problemDetail.setProperty(CAUSE_KEY, problem.getCause());
+		}
+		return problemDetail;
+	}
 
-  default URI requestUri(final T request) {
-    throw new UnsupportedOperationException("Method need to be implemented in implementation class");
-  }
+	default URI requestUri(final T request) {
+		throw new UnsupportedOperationException(
+				"Method need to be implemented in implementation class");
+	}
 
-  default HttpMethod requestMethod(final T request) {
-    throw new UnsupportedOperationException("Method need to be implemented in implementation class");
-  }
+	default HttpMethod requestMethod(final T request) {
+		throw new UnsupportedOperationException(
+				"Method need to be implemented in implementation class");
+	}
 }

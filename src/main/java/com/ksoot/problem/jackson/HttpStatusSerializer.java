@@ -9,8 +9,9 @@ import java.io.IOException;
 
 final class HttpStatusSerializer extends JsonSerializer<HttpStatusCode> {
 
-  @Override
-  public void serialize(final HttpStatusCode status, final JsonGenerator json, final SerializerProvider serializers) throws IOException {
-    json.writeNumber(status.value());
-  }
+	@Override
+	public void serialize(final HttpStatusCode status, final JsonGenerator json,
+			final SerializerProvider serializers) throws IOException {
+		json.writeNumber(status.value());
+	}
 }

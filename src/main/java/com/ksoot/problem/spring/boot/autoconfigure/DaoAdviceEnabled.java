@@ -12,19 +12,19 @@ import org.springframework.data.mongodb.MongoDatabaseFactory;
  */
 public class DaoAdviceEnabled extends AnyNestedCondition {
 
-  DaoAdviceEnabled() {
-    super(ConfigurationPhase.PARSE_CONFIGURATION);
-  }
+	DaoAdviceEnabled() {
+		super(ConfigurationPhase.PARSE_CONFIGURATION);
+	}
 
-  @Conditional(ORMUrlAvailable.class)
-  @ConditionalOnClass(value = {JpaRepository.class})
-  static class ORMAvailable {
+	@Conditional(ORMUrlAvailable.class)
+	@ConditionalOnClass(value = { JpaRepository.class })
+	static class ORMAvailable {
 
-  }
+	}
 
-  @ConditionalOnClass(value = {MongoDatabaseFactory.class})
-  @ConditionalOnProperty(prefix = "spring.data.mongodb", name = "uri")
-  static class MongoAvailable {
+	@ConditionalOnClass(value = { MongoDatabaseFactory.class })
+	@ConditionalOnProperty(prefix = "spring.data.mongodb", name = "uri")
+	static class MongoAvailable {
 
-  }
+	}
 }

@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  */
 public interface ThrowableAdviceTrait<T, R> extends AdviceTrait<T, R> {
 
-  @ExceptionHandler
-  default R handleThrowable(final Throwable throwable, final T request) {
-    HttpStatus status = HttpStatus.valueOf(ProblemUtils.resolveStatus(throwable).value());
-    return toProblem(throwable, request, GeneralErrorKey.INTERNAL_SERVER_ERROR, status);
-  }
+	@ExceptionHandler
+	default R handleThrowable(final Throwable throwable, final T request) {
+		HttpStatus status = HttpStatus
+				.valueOf(ProblemUtils.resolveStatus(throwable).value());
+		return toProblem(throwable, request, GeneralErrorKey.INTERNAL_SERVER_ERROR,
+				status);
+	}
 }

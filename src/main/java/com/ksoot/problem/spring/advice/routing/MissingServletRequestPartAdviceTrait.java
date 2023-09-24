@@ -13,22 +13,31 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
  * @see MissingServletRequestPartException
  * @see HttpStatus#BAD_REQUEST
  */
-public interface MissingServletRequestPartAdviceTrait<T, R> extends BaseValidationAdviceTrait<T, R> {
+public interface MissingServletRequestPartAdviceTrait<T, R>
+		extends BaseValidationAdviceTrait<T, R> {
 
-  @ExceptionHandler
-  default R handleMissingServletRequestPart(final MissingServletRequestPartException exception, final T request) {
-    String errorKey = exception.getRequestPartName();
+	@ExceptionHandler
+	default R handleMissingServletRequestPart(
+			final MissingServletRequestPartException exception, final T request) {
+		String errorKey = exception.getRequestPartName();
 
-    String codeCode = ProblemConstant.CODE_CODE_PREFIX + GeneralErrorKey.MISSING_SERVLET_REQUEST_PART + ProblemConstant.DOT + errorKey;
-    String titleCode = ProblemConstant.TITLE_CODE_PREFIX + GeneralErrorKey.MISSING_SERVLET_REQUEST_PART + ProblemConstant.DOT + errorKey;
-    String detailCode = ProblemConstant.DETAIL_CODE_PREFIX + GeneralErrorKey.MISSING_SERVLET_REQUEST_PART + ProblemConstant.DOT + errorKey;
+		String codeCode = ProblemConstant.CODE_CODE_PREFIX
+				+ GeneralErrorKey.MISSING_SERVLET_REQUEST_PART + ProblemConstant.DOT
+				+ errorKey;
+		String titleCode = ProblemConstant.TITLE_CODE_PREFIX
+				+ GeneralErrorKey.MISSING_SERVLET_REQUEST_PART + ProblemConstant.DOT
+				+ errorKey;
+		String detailCode = ProblemConstant.DETAIL_CODE_PREFIX
+				+ GeneralErrorKey.MISSING_SERVLET_REQUEST_PART + ProblemConstant.DOT
+				+ errorKey;
 
-    HttpStatus status = defaultConstraintViolationStatus();
+		HttpStatus status = defaultConstraintViolationStatus();
 
-    Problem problem = toProblem(exception, ProblemMessageSourceResolver.of(codeCode, status.value()),
-        ProblemMessageSourceResolver.of(titleCode, status.getReasonPhrase()),
-        ProblemMessageSourceResolver.of(detailCode, exception.getMessage()));
+		Problem problem = toProblem(exception,
+				ProblemMessageSourceResolver.of(codeCode, status.value()),
+				ProblemMessageSourceResolver.of(titleCode, status.getReasonPhrase()),
+				ProblemMessageSourceResolver.of(detailCode, exception.getMessage()));
 
-    return create(exception, request, status, problem);
-  }
+		return create(exception, request, status, problem);
+	}
 }

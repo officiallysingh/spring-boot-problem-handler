@@ -20,18 +20,24 @@ import static java.util.Objects.requireNonNull;
 
 public interface MethodNotAllowedAdviceTrait<T, R> extends AdviceTrait<T, R> {
 
-  @ExceptionHandler
-  default R handleMethodNotAllowedException(final MethodNotAllowedException exception, final T request) {
-    @Nullable final Set<HttpMethod> methods = exception.getSupportedMethods();
-    String requestedMethod = exception.getHttpMethod();
-    String allowedMethods = CollectionUtils.isEmpty(methods) ? "None"
-        : methods.stream().map(HttpMethod::name).collect(Collectors.joining(","));
-    Problem problem = toProblem(exception, HttpStatus.METHOD_NOT_ALLOWED,
-        ProblemMessageSourceResolver.of(ProblemConstant.DETAIL_CODE_PREFIX + GeneralErrorKey.METHOD_NOT_ALLOWED,
-            "Requested Method: {0} not allowed, allowed methods are: {1}", new Object[]{requestedMethod, allowedMethods}));
+	@ExceptionHandler
+	default R handleMethodNotAllowedException(final MethodNotAllowedException exception,
+			final T request) {
+		@Nullable
+		final Set<HttpMethod> methods = exception.getSupportedMethods();
+		String requestedMethod = exception.getHttpMethod();
+		String allowedMethods = CollectionUtils.isEmpty(methods) ? "None"
+				: methods.stream().map(HttpMethod::name).collect(Collectors.joining(","));
+		Problem problem = toProblem(exception, HttpStatus.METHOD_NOT_ALLOWED,
+				ProblemMessageSourceResolver.of(
+						ProblemConstant.DETAIL_CODE_PREFIX
+								+ GeneralErrorKey.METHOD_NOT_ALLOWED,
+						"Requested Method: {0} not allowed, allowed methods are: {1}",
+						new Object[] { requestedMethod, allowedMethods }));
 
-    final HttpHeaders headers = new HttpHeaders();
-    headers.setAllow(requireNonNull(methods));
-    return create(exception, request, HttpStatus.METHOD_NOT_ALLOWED, headers, problem);
-  }
+		final HttpHeaders headers = new HttpHeaders();
+		headers.setAllow(requireNonNull(methods));
+		return create(exception, request, HttpStatus.METHOD_NOT_ALLOWED, headers,
+				problem);
+	}
 }

@@ -11,29 +11,29 @@ import java.util.List;
 
 /**
  * Mimics the new default behavior as of Spring 5 that
- * {@link ContentNegotiationStrategy#resolveMediaTypes(NativeWebRequest)} returns {@link MediaType#ALL} as a fallback
- * compared to an empty list.
+ * {@link ContentNegotiationStrategy#resolveMediaTypes(NativeWebRequest)} returns
+ * {@link MediaType#ALL} as a fallback compared to an empty list.
  */
 final class FallbackContentNegotiationStrategy implements ContentNegotiationStrategy {
 
-  private final List<MediaType> all = Collections.singletonList(MediaType.ALL);
-  private final ContentNegotiationStrategy delegate;
+	private final List<MediaType> all = Collections.singletonList(MediaType.ALL);
+	private final ContentNegotiationStrategy delegate;
 
-  FallbackContentNegotiationStrategy(final ContentNegotiationStrategy delegate) {
-    this.delegate = delegate;
-  }
+	FallbackContentNegotiationStrategy(final ContentNegotiationStrategy delegate) {
+		this.delegate = delegate;
+	}
 
-  @Override
-  @Nonnull
-  public List<MediaType> resolveMediaTypes(final NativeWebRequest request)
-      throws HttpMediaTypeNotAcceptableException {
-    final List<MediaType> mediaTypes = delegate.resolveMediaTypes(request);
+	@Override
+	@Nonnull
+	public List<MediaType> resolveMediaTypes(final NativeWebRequest request)
+			throws HttpMediaTypeNotAcceptableException {
+		final List<MediaType> mediaTypes = delegate.resolveMediaTypes(request);
 
-    if (mediaTypes.isEmpty()) {
-      return all;
-    }
+		if (mediaTypes.isEmpty()) {
+			return all;
+		}
 
-    return mediaTypes;
-  }
+		return mediaTypes;
+	}
 
 }

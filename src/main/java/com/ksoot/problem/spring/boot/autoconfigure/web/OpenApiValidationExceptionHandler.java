@@ -24,30 +24,32 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.NativeWebRequest;
 
 @Configuration(proxyBeanMethods = false)
-@EnableConfigurationProperties(value = {ProblemProperties.class})
+@EnableConfigurationProperties(value = { ProblemProperties.class })
 @ConditionalOnClass(ValidationReportHandler.class)
 @Conditional(OpenAPIValidationAdviceEnabled.class)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 @RequiredArgsConstructor
-class OpenApiValidationExceptionHandler implements OpenApiValidationAdviceTrait<NativeWebRequest, ResponseEntity<ProblemDetail>> {
+public class OpenApiValidationExceptionHandler implements
+		OpenApiValidationAdviceTrait<NativeWebRequest, ResponseEntity<ProblemDetail>> {
 
-  private final ProblemProperties problemProperties;
+	private final ProblemProperties problemProperties;
 
-  @Bean
-  public OpenApiValidationInterceptor validationInterceptor() {
-    if (StringUtils.isBlank(this.problemProperties.getOpenApi().getPath())) {
-      throw new ProblemConfigException(
-          "Invalid OpenAPI Spec file: " + this.problemProperties.getOpenApi().getPath());
-    }
-    OpenApiInteractionValidator validator = OpenApiInteractionValidator
-        .createFor(this.problemProperties.getOpenApi().getPath()).build();
-    return new OpenApiValidationInterceptor(validator);
-  }
+	@Bean
+	public OpenApiValidationInterceptor validationInterceptor() {
+		if (StringUtils.isBlank(this.problemProperties.getOpenApi().getPath())) {
+			throw new ProblemConfigException("Invalid OpenAPI Spec file: "
+					+ this.problemProperties.getOpenApi().getPath());
+		}
+		OpenApiInteractionValidator validator = OpenApiInteractionValidator
+				.createFor(this.problemProperties.getOpenApi().getPath()).build();
+		return new OpenApiValidationInterceptor(validator);
+	}
 
-  @Bean
-  public Filter validationFilter() {
-    return new PathConfigurableOpenApiValidationFilter(this.problemProperties.getOpenApi());
-  }
+	@Bean
+	public Filter validationFilter() {
+		return new PathConfigurableOpenApiValidationFilter(
+				this.problemProperties.getOpenApi());
+	}
 }

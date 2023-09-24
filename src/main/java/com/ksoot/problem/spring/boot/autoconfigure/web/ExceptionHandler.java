@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 @ConditionalOnProperty(prefix = "problem", name = "enabled", havingValue = "true", matchIfMissing = true)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @ControllerAdvice
-class ExceptionHandler implements ProblemHandlingWeb<ResponseEntity<ProblemDetail>> {
+public class ExceptionHandler
+		implements ProblemHandlingWeb<ResponseEntity<ProblemDetail>> {
 
 }

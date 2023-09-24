@@ -6,15 +6,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 interface ExceptionalMixin {
 
-  @JsonIgnore
-  String getLocalizedMessage();
+	@JsonIgnore
+	String getLocalizedMessage();
 
-  @JsonIgnore
-  String getMessage();
+	@JsonIgnore
+	String getMessage();
 
-  @JsonIgnore
-  StackTraceElement[] getStackTrace();
+	@JsonIgnore
+	StackTraceElement[] getStackTrace();
 
-  @JsonIgnore
-  Throwable[] getSuppressed();
+	@JsonIgnore
+	Throwable[] getSuppressed();
 }

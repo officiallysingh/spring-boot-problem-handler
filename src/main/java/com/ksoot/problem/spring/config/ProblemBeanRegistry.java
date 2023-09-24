@@ -13,32 +13,33 @@ import com.ksoot.problem.core.ErrorResponseBuilder;
 @EnableConfigurationProperties(ProblemProperties.class)
 public class ProblemBeanRegistry implements ApplicationContextAware {
 
-  private static ApplicationContext applicationContext;
+	private static ApplicationContext applicationContext;
 
-  public static ApplicationContext getApplicationContext() {
-    return applicationContext;
-  }
+	public static ApplicationContext getApplicationContext() {
+		return applicationContext;
+	}
 
-  @Override
-  @Autowired
-  public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-    ProblemBeanRegistry.applicationContext = applicationContext;
-  }
+	@Override
+	@Autowired
+	public void setApplicationContext(ApplicationContext applicationContext)
+			throws BeansException {
+		ProblemBeanRegistry.applicationContext = applicationContext;
+	}
 
-  public static <T> T getBean(Class<T> requiredType) {
-    return applicationContext.getBean(requiredType);
-  }
+	public static <T> T getBean(Class<T> requiredType) {
+		return applicationContext.getBean(requiredType);
+	}
 
-  public static <T> T getBean(String name, Class<T> requiredType) {
-    return applicationContext.getBean(name, requiredType);
-  }
+	public static <T> T getBean(String name, Class<T> requiredType) {
+		return applicationContext.getBean(name, requiredType);
+	}
 
-  public static ProblemProperties problemProperties() {
-    return applicationContext.getBean(ProblemProperties.class);
-  }
+	public static ProblemProperties problemProperties() {
+		return applicationContext.getBean(ProblemProperties.class);
+	}
 
-  @SuppressWarnings("unchecked")
-  public static <T, R> ErrorResponseBuilder<T, R> errorResponseBuilder() {
-    return applicationContext.getBean(ErrorResponseBuilder.class);
-  }
+	@SuppressWarnings("unchecked")
+	public static <T, R> ErrorResponseBuilder<T, R> errorResponseBuilder() {
+		return applicationContext.getBean(ErrorResponseBuilder.class);
+	}
 }

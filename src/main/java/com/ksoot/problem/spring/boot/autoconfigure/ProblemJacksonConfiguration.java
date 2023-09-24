@@ -16,10 +16,10 @@ import com.ksoot.problem.spring.config.ProblemProperties;
 @AutoConfiguration
 @AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE)
 @Order(value = Ordered.HIGHEST_PRECEDENCE)
-class ProblemJacksonConfiguration {
+public class ProblemJacksonConfiguration {
 
-  @Bean
-  ProblemModule problemModule() {
-    return new ProblemModule();
-  }
+	@Bean
+	ProblemModule problemModule() {
+		return new ProblemModule();
+	}
 }

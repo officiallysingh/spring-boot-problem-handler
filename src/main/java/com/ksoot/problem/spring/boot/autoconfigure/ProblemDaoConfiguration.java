@@ -20,43 +20,43 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 
 @EnableConfigurationProperties(ProblemProperties.class)
-@Conditional(value = {DaoAdviceEnabled.class, ORMAdviceEnabled.class})
+@Conditional(value = { DaoAdviceEnabled.class, ORMAdviceEnabled.class })
 @ConditionalOnWebApplication
 @AutoConfiguration
 @AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE)
 @Order(value = Ordered.HIGHEST_PRECEDENCE)
 class ProblemDaoConfiguration {
 
-  @ConditionalOnMissingBean(name = "postgresqlConstraintNameResolver")
-  @Conditional(ORMUrlAvailable.class)
-  @ConditionalOnProperty(prefix = "spring.jpa", name = "database", havingValue = "POSTGRESQL")
-  public static class PostgresqlConstraintNameResolverConfiguration {
+	@ConditionalOnMissingBean(name = "postgresqlConstraintNameResolver")
+	@Conditional(ORMUrlAvailable.class)
+	@ConditionalOnProperty(prefix = "spring.jpa", name = "database", havingValue = "POSTGRESQL")
+	public static class PostgresqlConstraintNameResolverConfiguration {
 
-    @Bean
-    ConstraintNameResolver postgresqlConstraintNameResolver(final Environment env) {
-      return new PostgresConstraintNameResolver();
-    }
-  }
+		@Bean
+		ConstraintNameResolver postgresqlConstraintNameResolver(final Environment env) {
+			return new PostgresConstraintNameResolver();
+		}
+	}
 
-  @ConditionalOnMissingBean(name = "sqlServerConstraintNameResolver")
-  @Conditional(ORMUrlAvailable.class)
-  @ConditionalOnProperty(prefix = "spring.jpa", name = "database", havingValue = "SQL_SERVER")
-  public static class SQLServerConstraintNameResolverConfiguration {
+	@ConditionalOnMissingBean(name = "sqlServerConstraintNameResolver")
+	@Conditional(ORMUrlAvailable.class)
+	@ConditionalOnProperty(prefix = "spring.jpa", name = "database", havingValue = "SQL_SERVER")
+	public static class SQLServerConstraintNameResolverConfiguration {
 
-    @Bean
-    ConstraintNameResolver sqlServerConstraintNameResolver(final Environment env) {
-      return new SQLServerConstraintNameResolver();
-    }
-  }
+		@Bean
+		ConstraintNameResolver sqlServerConstraintNameResolver(final Environment env) {
+			return new SQLServerConstraintNameResolver();
+		}
+	}
 
-  @ConditionalOnClass(value = {MongoDatabaseFactory.class})
-  @ConditionalOnProperty(prefix = "spring.data.mongodb", name = "uri")
-  @ConditionalOnMissingBean(name = "mongoConstraintNameResolver")
-  public static class MongoConstraintNameResolverConfiguration {
+	@ConditionalOnClass(value = { MongoDatabaseFactory.class })
+	@ConditionalOnProperty(prefix = "spring.data.mongodb", name = "uri")
+	@ConditionalOnMissingBean(name = "mongoConstraintNameResolver")
+	public static class MongoConstraintNameResolverConfiguration {
 
-    @Bean
-    ConstraintNameResolver mongoConstraintNameResolver(final Environment env) {
-      return new MongoConstraintNameResolver();
-    }
-  }
+		@Bean
+		ConstraintNameResolver mongoConstraintNameResolver(final Environment env) {
+			return new MongoConstraintNameResolver();
+		}
+	}
 }

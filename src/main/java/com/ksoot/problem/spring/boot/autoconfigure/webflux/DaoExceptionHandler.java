@@ -29,10 +29,11 @@ import java.util.List;
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
-class DaoExceptionHandler extends AbstractDaoExceptionHandler<NativeWebRequest, ResponseEntity<ProblemDetail>> {
+public class DaoExceptionHandler extends
+		AbstractDaoExceptionHandler<NativeWebRequest, ResponseEntity<ProblemDetail>> {
 
-  DaoExceptionHandler(final List<ConstraintNameResolver> constraintNameResolvers,
-                      final Environment env) {
-    super(constraintNameResolvers, env);
-  }
+	DaoExceptionHandler(final List<ConstraintNameResolver> constraintNameResolvers,
+			final Environment env) {
+		super(constraintNameResolvers, env);
+	}
 }

@@ -19,51 +19,56 @@ import java.util.Optional;
 
 import static jakarta.servlet.RequestDispatcher.ERROR_EXCEPTION;
 
-public class SpringWebfluxErrorResponseBuilder
-    implements ErrorResponseBuilder<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> {
+public class SpringWebfluxErrorResponseBuilder implements
+		ErrorResponseBuilder<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> {
 
-  @Override
-  public Mono<ResponseEntity<ProblemDetail>> buildResponse(final Throwable throwable,
-                                                           final ServerWebExchange request, final HttpStatus status, final HttpHeaders headers,
-                                                           final Problem problem) {
-    if (status == HttpStatus.INTERNAL_SERVER_ERROR) {
-      request.getAttributes().put(ERROR_EXCEPTION, throwable);
-    }
+	@Override
+	public Mono<ResponseEntity<ProblemDetail>> buildResponse(final Throwable throwable,
+			final ServerWebExchange request, final HttpStatus status,
+			final HttpHeaders headers, final Problem problem) {
+		if (status == HttpStatus.INTERNAL_SERVER_ERROR) {
+			request.getAttributes().put(ERROR_EXCEPTION, throwable);
+		}
 
-    ProblemDetail problemDetail = createProblemDetail(request, status, problem);
-    Optional<Mono<ResponseEntity<ProblemDetail>>> responseEntity = negotiate(request).map(contentType -> Mono
-        .just(ResponseEntity.status(status).headers(headers).contentType(contentType).body(problemDetail)));
+		ProblemDetail problemDetail = createProblemDetail(request, status, problem);
+		Optional<Mono<ResponseEntity<ProblemDetail>>> responseEntity = negotiate(request)
+				.map(contentType -> Mono.just(ResponseEntity.status(status)
+						.headers(headers).contentType(contentType).body(problemDetail)));
 
-    if (responseEntity.isPresent()) {
-      return postProcess(responseEntity.get(), request);
-    } else {
-      return fallback(request, status, headers, problem);
-    }
-  }
+		if (responseEntity.isPresent()) {
+			return postProcess(responseEntity.get(), request);
+		}
+		else {
+			return fallback(request, status, headers, problem);
+		}
+	}
 
-  Optional<MediaType> negotiate(final ServerWebExchange request) {
-    final List<MediaType> mediaTypes = new HeaderContentTypeResolver().resolveMediaTypes(request);
-    return ErrorResponseBuilder.getProblemMediaType(mediaTypes);
-  }
+	Optional<MediaType> negotiate(final ServerWebExchange request) {
+		final List<MediaType> mediaTypes = new HeaderContentTypeResolver()
+				.resolveMediaTypes(request);
+		return ErrorResponseBuilder.getProblemMediaType(mediaTypes);
+	}
 
-  private Mono<ResponseEntity<ProblemDetail>> postProcess(final Mono<ResponseEntity<ProblemDetail>> errorResponse,
-                                                          final ServerWebExchange request) {
-    return errorResponse;
-  }
+	private Mono<ResponseEntity<ProblemDetail>> postProcess(
+			final Mono<ResponseEntity<ProblemDetail>> errorResponse,
+			final ServerWebExchange request) {
+		return errorResponse;
+	}
 
-  private Mono<ResponseEntity<ProblemDetail>> fallback(final ServerWebExchange request, final HttpStatus status,
-                                                       final HttpHeaders headers, final Problem problem) {
-    ProblemDetail problemDetail = createProblemDetail(request, status, problem);
-    return Mono.just(ResponseEntity.status(status).headers(headers).contentType(MediaTypes.PROBLEM).body(problemDetail));
-  }
+	private Mono<ResponseEntity<ProblemDetail>> fallback(final ServerWebExchange request,
+			final HttpStatus status, final HttpHeaders headers, final Problem problem) {
+		ProblemDetail problemDetail = createProblemDetail(request, status, problem);
+		return Mono.just(ResponseEntity.status(status).headers(headers)
+				.contentType(MediaTypes.PROBLEM).body(problemDetail));
+	}
 
-  @Override
-  public URI requestUri(final ServerWebExchange request) {
-    return URI.create(request.getRequest().getPath().toString());
-  }
+	@Override
+	public URI requestUri(final ServerWebExchange request) {
+		return URI.create(request.getRequest().getPath().toString());
+	}
 
-  @Override
-  public HttpMethod requestMethod(final ServerWebExchange request) {
-    return request.getRequest().getMethod();
-  }
+	@Override
+	public HttpMethod requestMethod(final ServerWebExchange request) {
+		return request.getRequest().getMethod();
+	}
 }

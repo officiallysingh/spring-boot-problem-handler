@@ -8,15 +8,15 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
  */
 public class SecurityAdviceEnabled extends AllNestedConditions {
 
-  public SecurityAdviceEnabled() {
-    super(ConfigurationPhase.PARSE_CONFIGURATION);
-  }
+	public SecurityAdviceEnabled() {
+		super(ConfigurationPhase.PARSE_CONFIGURATION);
+	}
 
-  @ConditionalOnProperty(prefix = "problem", name = "enabled", havingValue = "true", matchIfMissing = true)
-  static class ProblemEnabled {
-  }
+	@ConditionalOnProperty(prefix = "problem", name = "enabled", havingValue = "true", matchIfMissing = true)
+	static class ProblemEnabled {
+	}
 
-  @ConditionalOnProperty(prefix = "problem", name = "security-advice-enabled", havingValue = "true", matchIfMissing = true)
-  static class SecurityEnabled {
-  }
+	@ConditionalOnProperty(prefix = "problem", name = "security-advice-enabled", havingValue = "true", matchIfMissing = true)
+	static class SecurityEnabled {
+	}
 }
