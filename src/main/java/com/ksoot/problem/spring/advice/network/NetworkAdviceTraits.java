@@ -5,5 +5,4 @@ import com.ksoot.problem.spring.advice.BaseAdviceTrait;
 /**
  * @see BaseAdviceTrait
  */
-public interface NetworkAdviceTraits<T, R> extends CircuitBreakerOpenAdviceTrait<T, R> {
-}
+public interface NetworkAdviceTraits<T, R> extends CircuitBreakerOpenAdviceTrait<T, R> {}

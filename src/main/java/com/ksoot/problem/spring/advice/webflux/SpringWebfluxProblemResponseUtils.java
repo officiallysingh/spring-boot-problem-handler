@@ -11,24 +11,23 @@ import reactor.core.publisher.Mono;
 
 public final class SpringWebfluxProblemResponseUtils {
 
-	private SpringWebfluxProblemResponseUtils() {
-		throw new IllegalStateException(
-				"Just a utility class, not supposed to be instantiated");
-	}
+  private SpringWebfluxProblemResponseUtils() {
+    throw new IllegalStateException("Just a utility class, not supposed to be instantiated");
+  }
 
-	public static <T> Mono<Void> writeResponse(final ResponseEntity<T> entity,
-			final ServerWebExchange exchange, final ObjectMapper mapper) {
-		final ServerHttpResponse response = exchange.getResponse();
-		response.setStatusCode(entity.getStatusCode());
-		response.getHeaders().addAll(entity.getHeaders());
-		try {
-			final DataBuffer buffer = response.bufferFactory()
-					.wrap(mapper.writeValueAsBytes(entity.getBody()));
-			return response.writeWith(Mono.just(buffer))
-					.doOnError(error -> DataBufferUtils.release(buffer));
-		}
-		catch (final JsonProcessingException ex) {
-			return Mono.error(ex);
-		}
-	}
+  public static <T> Mono<Void> writeResponse(
+      final ResponseEntity<T> entity, final ServerWebExchange exchange, final ObjectMapper mapper) {
+    final ServerHttpResponse response = exchange.getResponse();
+    response.setStatusCode(entity.getStatusCode());
+    response.getHeaders().addAll(entity.getHeaders());
+    try {
+      final DataBuffer buffer =
+          response.bufferFactory().wrap(mapper.writeValueAsBytes(entity.getBody()));
+      return response
+          .writeWith(Mono.just(buffer))
+          .doOnError(error -> DataBufferUtils.release(buffer));
+    } catch (final JsonProcessingException ex) {
+      return Mono.error(ex);
+    }
+  }
 }

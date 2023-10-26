@@ -16,20 +16,22 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.NativeWebRequest;
 
-/**
- * Registers Problem Jackson modules when {@link WebMvcAutoConfiguration} is enabled.
- */
+/** Registers Problem Jackson modules when {@link WebMvcAutoConfiguration} is enabled. */
 @EnableConfigurationProperties(ProblemProperties.class)
-@ConditionalOnProperty(prefix = "problem", name = "enabled", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(
+    prefix = "problem",
+    name = "enabled",
+    havingValue = "true",
+    matchIfMissing = true)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @Configuration(proxyBeanMethods = false)
 @AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE)
 @Order(value = Ordered.HIGHEST_PRECEDENCE)
 public class ProblemWebAutoConfiguration {
 
-	@Bean
-	@ConditionalOnMissingBean(ErrorResponseBuilder.class)
-	ErrorResponseBuilder<NativeWebRequest, ResponseEntity<ProblemDetail>> errorResponseBuilder() {
-		return new SpringWebErrorResponseBuilder();
-	}
+  @Bean
+  @ConditionalOnMissingBean(ErrorResponseBuilder.class)
+  ErrorResponseBuilder<NativeWebRequest, ResponseEntity<ProblemDetail>> errorResponseBuilder() {
+    return new SpringWebErrorResponseBuilder();
+  }
 }

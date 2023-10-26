@@ -14,11 +14,13 @@ import reactor.core.publisher.Mono;
 
 @AutoConfiguration
 @EnableConfigurationProperties(ProblemProperties.class)
-@ConditionalOnProperty(prefix = "problem", name = "enabled", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(
+    prefix = "problem",
+    name = "enabled",
+    havingValue = "true",
+    matchIfMissing = true)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 @ControllerAdvice
 @RequiredArgsConstructor
 public class ExceptionHandler
-		implements ProblemHandlingWebflux<Mono<ResponseEntity<ProblemDetail>>> {
-
-}
+    implements ProblemHandlingWebflux<Mono<ResponseEntity<ProblemDetail>>> {}

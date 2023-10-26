@@ -9,13 +9,12 @@ import org.springframework.web.server.NotAcceptableStatusException;
  * @see NotAcceptableStatusException
  * @see HttpStatus#NOT_ACCEPTABLE
  */
-public interface NotAcceptableStatusAdviceTrait<T, R>
-		extends BaseNotAcceptableAdviceTrait<T, R> {
+public interface NotAcceptableStatusAdviceTrait<T, R> extends BaseNotAcceptableAdviceTrait<T, R> {
 
-	@ExceptionHandler
-	default R handleMediaTypeNotAcceptable(final NotAcceptableStatusException exception,
-			final T request) {
-		return toProblem(exception, request, GeneralErrorKey.INTERNAL_SERVER_ERROR,
-				HttpStatus.NOT_ACCEPTABLE);
-	}
+  @ExceptionHandler
+  default R handleMediaTypeNotAcceptable(
+      final NotAcceptableStatusException exception, final T request) {
+    return toProblem(
+        exception, request, GeneralErrorKey.INTERNAL_SERVER_ERROR, HttpStatus.NOT_ACCEPTABLE);
+  }
 }

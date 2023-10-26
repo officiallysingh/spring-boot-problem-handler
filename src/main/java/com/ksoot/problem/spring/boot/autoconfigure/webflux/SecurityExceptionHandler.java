@@ -26,29 +26,29 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @AutoConfiguration
-@EnableConfigurationProperties({ ProblemProperties.class })
+@EnableConfigurationProperties({ProblemProperties.class})
 @Conditional(SecurityAdviceEnabled.class)
-@ConditionalOnClass(value = { WebSecurityConfiguration.class })
+@ConditionalOnClass(value = {WebSecurityConfiguration.class})
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 @RequiredArgsConstructor
-public class SecurityExceptionHandler implements
-		SecurityAdviceTraits<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> {
+public class SecurityExceptionHandler
+    implements SecurityAdviceTraits<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> {
 
-	@ConditionalOnMissingBean
-	@Bean
-	ServerAuthenticationEntryPoint authenticationEntryPoint(
-			final SecurityAdviceTraits<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> advice,
-			final ObjectMapper objectMapper) {
-		return new ProblemServerAuthenticationEntryPoint(advice, objectMapper);
-	}
+  @ConditionalOnMissingBean
+  @Bean
+  ServerAuthenticationEntryPoint authenticationEntryPoint(
+      final SecurityAdviceTraits<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> advice,
+      final ObjectMapper objectMapper) {
+    return new ProblemServerAuthenticationEntryPoint(advice, objectMapper);
+  }
 
-	@ConditionalOnMissingBean
-	@Bean
-	ServerAccessDeniedHandler accessDeniedHandler(
-			final SecurityAdviceTraits<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> advice,
-			final ObjectMapper objectMapper) {
-		return new ProblemServerAccessDeniedHandler(advice, objectMapper);
-	}
+  @ConditionalOnMissingBean
+  @Bean
+  ServerAccessDeniedHandler accessDeniedHandler(
+      final SecurityAdviceTraits<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> advice,
+      final ObjectMapper objectMapper) {
+    return new ProblemServerAccessDeniedHandler(advice, objectMapper);
+  }
 }

@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnMissingBean(value = ProblemMessageProvider.class)
 public class ProblemMessageProviderConfig {
 
-	@Bean
-	ProblemMessageProvider problemMessageProvider(final MessageSource messageSource) {
-		return new ProblemMessageProvider(messageSource);
-	}
+  @Bean
+  ProblemMessageProvider problemMessageProvider(final MessageSource messageSource) {
+    return new ProblemMessageProvider(messageSource);
+  }
 }

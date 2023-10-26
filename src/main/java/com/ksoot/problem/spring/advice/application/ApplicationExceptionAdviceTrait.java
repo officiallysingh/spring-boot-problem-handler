@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  */
 public interface ApplicationExceptionAdviceTrait<T, R> extends AdviceTrait<T, R> {
 
-	@ExceptionHandler
-	default R handleApplicationException(final ApplicationException exception,
-			final T request) {
-		return create(exception, request, exception.status(), exception);
-	}
+  @ExceptionHandler
+  default R handleApplicationException(final ApplicationException exception, final T request) {
+    return create(exception, request, exception.status(), exception);
+  }
 }
