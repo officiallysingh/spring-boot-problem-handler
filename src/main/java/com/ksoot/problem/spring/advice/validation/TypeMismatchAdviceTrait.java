@@ -54,6 +54,6 @@ public interface TypeMismatchAdviceTrait<T, R> extends BaseValidationAdviceTrait
                 detailCode, exception.getMostSpecificCause().toString()),
             parameters);
 
-    return create(exception, request, status, problem);
+    return toResponse(exception, request, status, problem);
   }
 }

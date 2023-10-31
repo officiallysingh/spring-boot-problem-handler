@@ -12,7 +12,7 @@ public interface CircuitBreakerOpenAdviceTrait<T, R> extends AdviceTrait<T, R> {
   default R handleCircuitBreakerOpen(final CircuitBreakerOpenException exception, final T request) {
     final long delay = exception.getCircuitBreaker().getRemainingDelay().getSeconds();
     final HttpHeaders headers = retryAfter(delay);
-    return create(exception, request, HttpStatus.SERVICE_UNAVAILABLE, headers);
+    return toResponse(exception, request, HttpStatus.SERVICE_UNAVAILABLE, headers);
   }
 
   default HttpHeaders retryAfter(final long delay) {

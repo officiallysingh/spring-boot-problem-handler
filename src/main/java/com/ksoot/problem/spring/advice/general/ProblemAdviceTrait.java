@@ -15,11 +15,11 @@ public interface ProblemAdviceTrait<T, R> extends AdviceTrait<T, R> {
 
   @ExceptionHandler
   default R handleProblem(final ThrowableProblem problem, final T request) {
-    return create(problem, request);
+    return toResponse(problem, request);
   }
 
   @ExceptionHandler
   default R handleProblem(final DefaultProblem problem, final T request) {
-    return create(problem, request, HttpStatus.INTERNAL_SERVER_ERROR, problem);
+    return toResponse(problem, request, HttpStatus.INTERNAL_SERVER_ERROR, problem);
   }
 }

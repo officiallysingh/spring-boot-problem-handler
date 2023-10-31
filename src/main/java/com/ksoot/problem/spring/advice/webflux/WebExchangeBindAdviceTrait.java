@@ -32,6 +32,6 @@ interface WebExchangeBindAdviceTrait<T, R> extends BaseBindingResultHandlingAdvi
             ProblemMessageSourceResolver.of(
                 CONSTRAINT_VIOLATION_DETAIL_CODE_PREFIX, exception.getMessage()),
             parameters);
-    return create(exception, request, defaultConstraintViolationStatus(), problem);
+    return toResponse(exception, request, defaultConstraintViolationStatus(), problem);
   }
 }

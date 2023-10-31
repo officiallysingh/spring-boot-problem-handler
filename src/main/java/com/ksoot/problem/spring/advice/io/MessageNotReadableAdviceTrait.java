@@ -28,7 +28,7 @@ public interface MessageNotReadableAdviceTrait<T, R> extends AdviceTrait<T, R> {
     if (exception.getCause() instanceof InvalidFormatException invalidFormatException) {
       return handleInvalidFormatException(invalidFormatException, request);
     }
-    return create(exception, request, HttpStatus.BAD_REQUEST);
+    return toResponse(exception, request, HttpStatus.BAD_REQUEST);
   }
 
   default R handleInvalidFormatException(
@@ -56,7 +56,7 @@ public interface MessageNotReadableAdviceTrait<T, R> extends AdviceTrait<T, R> {
             ProblemMessageSourceResolver.of(titleCodes, HttpStatus.BAD_REQUEST.getReasonPhrase()),
             ProblemMessageSourceResolver.of(detailCodes, invalidFormatException.getMessage()));
 
-    return create(invalidFormatException, request, HttpStatus.BAD_REQUEST, problem);
+    return toResponse(invalidFormatException, request, HttpStatus.BAD_REQUEST, problem);
   }
 
   default String[] deriveInvalidFormatExceptionErrorKeys(

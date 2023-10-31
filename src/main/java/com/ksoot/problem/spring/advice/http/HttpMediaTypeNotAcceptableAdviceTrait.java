@@ -30,6 +30,6 @@ public interface HttpMediaTypeNotAcceptableAdviceTrait<T, R> extends AdviceTrait
                 ProblemConstant.DETAIL_CODE_PREFIX + GeneralErrorKey.MEDIA_TYPE_NOT_ACCEPTABLE,
                 "Media Type Not Acceptable, except: {0}",
                 new Object[] {MimeTypeUtils.toString(supportedMediaTypes)}));
-    return create(exception, request, HttpStatus.NOT_ACCEPTABLE, problem);
+    return toResponse(exception, request, HttpStatus.NOT_ACCEPTABLE, problem);
   }
 }

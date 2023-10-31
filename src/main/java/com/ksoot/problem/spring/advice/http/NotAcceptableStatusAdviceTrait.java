@@ -1,6 +1,7 @@
 package com.ksoot.problem.spring.advice.http;
 
 import com.ksoot.problem.core.GeneralErrorKey;
+import com.ksoot.problem.core.Problem;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.server.NotAcceptableStatusException;
@@ -14,7 +15,8 @@ public interface NotAcceptableStatusAdviceTrait<T, R> extends BaseNotAcceptableA
   @ExceptionHandler
   default R handleMediaTypeNotAcceptable(
       final NotAcceptableStatusException exception, final T request) {
-    return toProblem(
-        exception, request, GeneralErrorKey.INTERNAL_SERVER_ERROR, HttpStatus.NOT_ACCEPTABLE);
+    HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
+    Problem problem = toProblem(exception, GeneralErrorKey.INTERNAL_SERVER_ERROR, status);
+    return toResponse(exception, request, status, problem);
   }
 }

@@ -32,10 +32,10 @@ import org.springframework.web.context.request.NativeWebRequest;
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
-public class DaoExceptionHandler
+public class WebFluxDaoExceptionHandler
     extends AbstractDaoExceptionHandler<NativeWebRequest, ResponseEntity<ProblemDetail>> {
 
-  DaoExceptionHandler(
+  WebFluxDaoExceptionHandler(
       final List<ConstraintNameResolver> constraintNameResolvers, final Environment env) {
     super(constraintNameResolvers, env);
   }

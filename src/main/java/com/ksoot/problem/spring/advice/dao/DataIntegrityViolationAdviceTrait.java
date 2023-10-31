@@ -46,6 +46,6 @@ public interface DataIntegrityViolationAdviceTrait<T, R> extends BaseDataIntegri
             ProblemMessageSourceResolver.of(
                 detailCode, ProblemConstant.DB_CONSTRAINT_VIOLATION_DEFAULT_MESSAGE));
 
-    return create(exception, request, status, problem);
+    return toResponse(exception, request, status, problem);
   }
 }

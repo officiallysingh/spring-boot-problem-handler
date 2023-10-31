@@ -1,98 +1,63 @@
 package com.ksoot.problem.core;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.annotation.Nullable;
 import java.util.Map;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
 
+@Getter
 @SuppressWarnings("serial")
-public final class ApplicationProblem extends ThrowableProblem {
+public final class ApplicationProblem extends RuntimeException implements ProblemSupport {
 
   private final HttpStatus status;
+  private final String errorKey;
+  private final String defaultDetail;
+  private final Object[] detailArgs;
 
-  private final String code;
+  private final ThrowableProblem cause;
+  private final Map<String, Object> parameters;
 
-  private final String title;
+  private final Problem problem;
 
-  private final String detail;
-
-  private Map<String, Object> parameters;
-
-  public ApplicationProblem(
+  private ApplicationProblem(
       final HttpStatus status,
-      final String code,
-      final String title,
-      final String detail,
+      final Problem problem,
+      final String errorKey,
+      @Nullable final String defaultDetail,
+      @Nullable final Object[] detailArgs,
       @Nullable final ThrowableProblem cause,
       @Nullable final Map<String, Object> parameters) {
-    super(cause);
+    super(defaultDetail, cause);
     Assert.notNull(status, "'status' must not be null");
-    Assert.hasText(code, "'code' must not be null or empty");
-    Assert.hasText(title, "'title' must not be null or empty");
-    Assert.hasText(detail, "'detail' must not be null or empty");
     this.status = status;
-    this.code = code;
-    this.title = title;
-    this.detail = detail;
+    this.errorKey = errorKey;
+    this.problem = problem;
+    this.defaultDetail = defaultDetail;
+    this.detailArgs = detailArgs;
+    this.cause = cause;
     this.parameters = parameters;
   }
 
   public static ApplicationProblem of(
-      final HttpStatus status, final String code, final String title, final String detail) {
-    return new ApplicationProblem(status, code, title, detail, null, null);
-  }
-
-  public static ApplicationProblem of(
       final HttpStatus status,
-      final String code,
-      final String title,
-      final String detail,
-      @Nullable final ThrowableProblem cause) {
-    return new ApplicationProblem(status, code, title, detail, cause, null);
-  }
-
-  public static ApplicationProblem of(
-      final HttpStatus status,
-      final String code,
-      final String title,
-      final String detail,
-      @Nullable final Map<String, Object> parameters) {
-    return new ApplicationProblem(status, code, title, detail, null, parameters);
-  }
-
-  public static ApplicationProblem of(
-      final HttpStatus status,
-      final String code,
-      final String title,
-      final String detail,
+      final String errorKey,
+      @Nullable final String defaultDetail,
+      @Nullable final Object[] detailArgs,
       @Nullable final ThrowableProblem cause,
       @Nullable final Map<String, Object> parameters) {
-    return new ApplicationProblem(status, code, title, detail, cause, parameters);
+    Assert.hasText(errorKey, "'errorKey' must not be null or empty");
+    return new ApplicationProblem(
+        status, null, errorKey, defaultDetail, detailArgs, cause, parameters);
   }
 
-  @JsonIgnore
-  public HttpStatus status() {
-    return this.status;
+  public static ApplicationProblem of(final HttpStatus status, final String errorKey) {
+    Assert.hasText(errorKey, "'errorKey' must not be null or empty");
+    return new ApplicationProblem(status, null, errorKey, null, null, null, null);
   }
 
-  @Override
-  public String getCode() {
-    return this.code;
-  }
-
-  @Override
-  public String getTitle() {
-    return this.title;
-  }
-
-  @Override
-  public String getDetail() {
-    return this.detail;
-  }
-
-  @Override
-  public Map<String, Object> getParameters() {
-    return this.parameters;
+  public static ApplicationProblem of(final HttpStatus status, final Problem problem) {
+    Assert.notNull(problem, "'problem' must not be null");
+    return new ApplicationProblem(status, problem, null, problem.getDetail(), null, null, null);
   }
 }

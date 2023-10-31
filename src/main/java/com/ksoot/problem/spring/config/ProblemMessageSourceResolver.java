@@ -49,7 +49,7 @@ public class ProblemMessageSourceResolver implements MessageSourceResolvable, Se
   }
 
   public static ProblemMessageSourceResolver of(final String[] codes, final int status) {
-    return new ProblemMessageSourceResolver(codes, "" + status, null);
+    return new ProblemMessageSourceResolver(codes, String.valueOf(status), null);
   }
 
   public static ProblemMessageSourceResolver of(final String code, final String defaultMessage) {
@@ -57,7 +57,7 @@ public class ProblemMessageSourceResolver implements MessageSourceResolvable, Se
   }
 
   public static ProblemMessageSourceResolver of(final String code, final int statusCode) {
-    return new ProblemMessageSourceResolver(new String[] {code}, "" + statusCode, null);
+    return new ProblemMessageSourceResolver(new String[] {code}, String.valueOf(statusCode), null);
   }
 
   public static ProblemMessageSourceResolver of(

@@ -43,7 +43,7 @@ public interface OpenApiValidationAdviceTrait<T, R> extends BaseValidationAdvice
             ProblemMessageSourceResolver.of(
                 CONSTRAINT_VIOLATION_DETAIL_CODE_PREFIX, exception.getMessage()),
             parameters);
-    return create(exception, request, defaultConstraintViolationStatus(), problem);
+    return toResponse(exception, request, defaultConstraintViolationStatus(), problem);
   }
 
   @ExceptionHandler
@@ -60,7 +60,7 @@ public interface OpenApiValidationAdviceTrait<T, R> extends BaseValidationAdvice
             ProblemMessageSourceResolver.of(
                 CONSTRAINT_VIOLATION_DETAIL_CODE_PREFIX, exception.getMessage()),
             parameters);
-    return create(exception, request, defaultConstraintViolationStatus(), problem);
+    return toResponse(exception, request, defaultConstraintViolationStatus(), problem);
   }
 
   default List<ViolationVM> handleValidationReport(
@@ -75,12 +75,7 @@ public interface OpenApiValidationAdviceTrait<T, R> extends BaseValidationAdvice
       final Message message, final Throwable exception) {
 
     HttpStatus status = defaultConstraintViolationStatus();
-    String propertyPath =
-        message
-            .getContext()
-            .flatMap(MessageContext::getParameter)
-            .map(Parameter::getName)
-            .orElse("");
+    String propertyPath = getOpenApiViolationObjectPath(message);
 
     List<String[]> errorPropertyKeys = deriveOpenApiValidationErrorKeys(message);
 
@@ -115,14 +110,38 @@ public interface OpenApiValidationAdviceTrait<T, R> extends BaseValidationAdvice
         .toList();
   }
 
+  default String getOpenApiViolationObjectPath(final Message message) {
+    return message
+        .getContext()
+        .flatMap(MessageContext::getParameter)
+        .map(Parameter::getName)
+        .orElseGet(
+            () -> {
+              String messageText = message.getMessage();
+              try {
+                int i1 = messageText.lastIndexOf("([");
+                int j1 = messageText.lastIndexOf("])");
+                int i2 = messageText.indexOf("'/");
+                int j2 = messageText.indexOf("']");
+                String objectPath =
+                    (i2 == -1 || j2 == -1)
+                        ? ""
+                        : String.join(
+                            ProblemConstant.DOT,
+                            Arrays.stream(messageText.substring(i2 + 2, j2).split("/"))
+                                .filter(part -> !StringUtils.isNumeric(part))
+                                .toList());
+                return objectPath;
+              } catch (final Exception e) {
+                // Ignored on purpose
+                return "";
+              }
+            });
+  }
+
   default List<String[]> deriveOpenApiValidationErrorKeys(final Message message) {
-    String propertyKey =
-        message
-            .getContext()
-            .flatMap(MessageContext::getParameter)
-            .map(Parameter::getName)
-            .orElse("");
-    Method requestMetod =
+    String propertyKey = getOpenApiViolationObjectPath(message);
+    Method requestMethod =
         message.getContext().flatMap(MessageContext::getRequestMethod).orElse(null);
     String requestPath =
         message
@@ -132,7 +151,7 @@ public interface OpenApiValidationAdviceTrait<T, R> extends BaseValidationAdvice
             .replaceAll("/", ProblemConstant.DOT);
 
     if (isEmpty(propertyKey)) {
-      if (requestMetod == null || requestMetod == Method.GET) {
+      if (requestMethod == null || requestMethod == Method.GET) {
         List<String[]> errorKeys = new ArrayList<>(1);
         errorKeys.add(new String[] {message.getKey()});
         return errorKeys;
@@ -164,7 +183,7 @@ public interface OpenApiValidationAdviceTrait<T, R> extends BaseValidationAdvice
                   message.getKey()
                       + requestPath
                       + ProblemConstant.DOT
-                      + requestMetod.name().toLowerCase()
+                      + requestMethod.name().toLowerCase()
                       + ProblemConstant.DOT
                       + objectPath,
                   message.getKey() + requestPath + ProblemConstant.DOT + objectPath,
@@ -194,21 +213,21 @@ public interface OpenApiValidationAdviceTrait<T, R> extends BaseValidationAdvice
                         message.getKey()
                             + requestPath
                             + ProblemConstant.DOT
-                            + requestMetod.name().toLowerCase()
+                            + requestMethod.name().toLowerCase()
                             + objectPathPart
                             + property,
                         message.getKey() + requestPath + objectPathPart + property,
                         message.getKey() + objectPathPart + property
                       })
               .toList();
-        } catch (Exception e) {
+        } catch (final Exception e) {
           List<String[]> errorKeys = new ArrayList<>(1);
           errorKeys.add(
               new String[] {
                 message.getKey()
                     + requestPath
                     + ProblemConstant.DOT
-                    + requestMetod.name().toLowerCase(),
+                    + requestMethod.name().toLowerCase(),
                 message.getKey() + requestPath,
                 message.getKey()
               });
@@ -222,7 +241,7 @@ public interface OpenApiValidationAdviceTrait<T, R> extends BaseValidationAdvice
             message.getKey()
                 + requestPath
                 + ProblemConstant.DOT
-                + requestMetod.name().toLowerCase()
+                + requestMethod.name().toLowerCase()
                 + ProblemConstant.DOT
                 + propertyKey,
             message.getKey() + requestPath + ProblemConstant.DOT + propertyKey,

@@ -12,7 +12,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
 import org.apache.commons.collections4.MapUtils;
-import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
 
 /**
@@ -61,42 +60,25 @@ public interface Problem {
     return problem.getCode() + "{" + parts.collect(joining(", ")) + "}";
   }
 
-  // ------------- Build Problems ---------------
-  static TitleBuilder code(final String code) {
-    return new Builder(code);
-  }
-
-  static DetailBuilder of(final HttpStatus status) {
-    return new Builder("" + status.value(), status.getReasonPhrase());
-  }
-
-  static CauseBuilder of(final String code, final String title, final String detail) {
-    return new Builder(code, title, detail);
-  }
-
-  interface TitleBuilder {
-    DetailBuilder title(final String title);
-  }
-
+  // ------------- Builder ---------------
   interface DetailBuilder {
     CauseBuilder detail(final String detail);
   }
 
   interface CauseBuilder extends ParameterBuilder {
-    ParameterBuilder cause(@Nullable ThrowableProblem cause);
+    ParameterBuilder cause(@Nullable Throwable cause);
   }
 
   interface ParameterBuilder extends ParametersBuilder {
     ParameterBuilder parameter(final String key, final Object value);
   }
 
-  interface ParametersBuilder
-      extends org.apache.commons.lang3.builder.Builder<ThrowableProblem> {
+  interface ParametersBuilder extends org.apache.commons.lang3.builder.Builder<ThrowableProblem> {
     org.apache.commons.lang3.builder.Builder<ThrowableProblem> parameters(
         @Nullable final Map<String, Object> parameters);
   }
 
-  class Builder implements TitleBuilder, DetailBuilder, CauseBuilder {
+  class ProblemBuilder implements DetailBuilder, CauseBuilder {
 
     private static final Set<String> RESERVED_PROPERTIES =
         new HashSet<>(Arrays.asList("code", "title", "detail", "cause"));
@@ -106,58 +88,27 @@ public interface Problem {
     private ThrowableProblem cause;
     private final Map<String, Object> parameters = new LinkedHashMap<>();
 
-    Builder(final String code) {
+    ProblemBuilder(final String code, final String title) {
+      this(code, title, null);
+    }
+
+    ProblemBuilder(final String code, final String title, final String detail) {
       Assert.hasText(code, "'code' must not be null or empty");
+      Assert.hasText(title, "'title' must not be null or empty");
       this.code = code;
-    }
-
-    Builder(final String code, final String title) {
-      this(code);
-      Assert.hasText(title, "'title' must not be null or empty");
       this.title = title;
-    }
-
-    Builder(final String code, final String title, final String detail) {
-      this(code, title);
-      // Assert.hasText(detail, "'detail' must not be null or empty");
       this.detail = detail;
-    }
-
-    Builder(
-        final String code, final String title, final String detail, final ThrowableProblem cause) {
-      this(code, title, detail);
-      this.cause = cause;
-    }
-
-    Builder(
-        final String code,
-        final String title,
-        final String detail,
-        final ThrowableProblem cause,
-        final Map<String, Object> parameters) {
-      this(code, title, detail, cause);
-      if (MapUtils.isNotEmpty(parameters)) {
-        this.parameters.putAll(parameters);
-      }
-    }
-
-    @Override
-    public DetailBuilder title(final String title) {
-      Assert.hasText(title, "'title' must not be null or empty");
-      this.title = title;
-      return this;
     }
 
     @Override
     public CauseBuilder detail(final String detail) {
-      // Assert.hasText(detail, "'detail' must not be null or empty");
       this.detail = detail;
       return this;
     }
 
     @Override
-    public ParameterBuilder cause(@Nullable final ThrowableProblem cause) {
-      this.cause = cause;
+    public ParameterBuilder cause(@Nullable final Throwable cause) {
+      this.cause = Objects.nonNull(cause) ? ProblemUtils.toProblem(cause) : null;
       return this;
     }
 

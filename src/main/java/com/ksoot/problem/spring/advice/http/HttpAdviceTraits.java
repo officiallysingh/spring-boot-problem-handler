@@ -1,10 +1,5 @@
 package com.ksoot.problem.spring.advice.http;
 
-import com.ksoot.problem.spring.advice.BaseAdviceTrait;
-
-/**
- * @see BaseAdviceTrait
- */
 public interface HttpAdviceTraits<T, R>
     extends HttpMediaTypeNotAcceptableAdviceTrait<T, R>,
         HttpMediaTypeNotSupportedExceptionAdviceTrait<T, R>,

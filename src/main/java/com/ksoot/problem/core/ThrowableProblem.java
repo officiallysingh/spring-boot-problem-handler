@@ -19,7 +19,6 @@ public abstract class ThrowableProblem extends RuntimeException implements Probl
 
   protected ThrowableProblem(@Nullable final ThrowableProblem cause) {
     super(cause);
-
     final Collection<StackTraceElement> stackTrace =
         StackTraceProcessor.COMPOUND.process(asList(getStackTrace()));
     setStackTrace(stackTrace.toArray(new StackTraceElement[0]));

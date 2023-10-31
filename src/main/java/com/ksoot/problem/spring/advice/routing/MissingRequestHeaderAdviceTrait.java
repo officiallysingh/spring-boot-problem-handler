@@ -51,6 +51,6 @@ public interface MissingRequestHeaderAdviceTrait<T, R> extends BaseValidationAdv
             ProblemMessageSourceResolver.of(titleCode, status.getReasonPhrase()),
             ProblemMessageSourceResolver.of(detailCode, exception.getMessage()));
 
-    return create(exception, request, status, problem);
+    return toResponse(exception, request, status, problem);
   }
 }

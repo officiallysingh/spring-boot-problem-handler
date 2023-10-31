@@ -29,6 +29,6 @@ public interface BaseNotAcceptableAdviceTrait<T, R> extends AdviceTrait<T, R> {
                 DETAIL_CODE_PREFIX + GeneralErrorKey.MEDIA_TYPE_NOT_SUPPORTED,
                 "Media Type: {0} Not Acceptable, Supported Media Types are: {1}",
                 new Object[] {causeMediaType, MimeTypeUtils.toString(supportedMediaTypes)}));
-    return create(exception, request, HttpStatus.UNSUPPORTED_MEDIA_TYPE, headers, problem);
+    return buildResponse(exception, request, HttpStatus.UNSUPPORTED_MEDIA_TYPE, headers, problem);
   }
 }

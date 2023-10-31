@@ -1,7 +1,5 @@
 package com.ksoot.problem.spring.advice.validation;
 
-import com.ksoot.problem.spring.advice.BaseAdviceTrait;
-
 /**
  * Advice trait to handle any validation exceptions.
  *
@@ -25,8 +23,6 @@ import com.ksoot.problem.spring.advice.BaseAdviceTrait;
  *      return methodValidationPostProcessor;
  *  }
  * </code></pre>
- *
- * @see BaseAdviceTrait
  */
 public interface ValidationAdviceTraits<T, R>
     extends ConstraintViolationAdviceTrait<T, R>,

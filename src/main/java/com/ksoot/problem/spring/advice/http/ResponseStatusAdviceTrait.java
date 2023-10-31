@@ -14,6 +14,6 @@ public interface ResponseStatusAdviceTrait<T, R>
   @ExceptionHandler
   default R handleResponseStatusException(
       final ResponseStatusException exception, final T request) {
-    return create(exception, request, HttpStatus.valueOf(exception.getStatusCode().value()));
+    return toResponse(exception, request, HttpStatus.valueOf(exception.getStatusCode().value()));
   }
 }

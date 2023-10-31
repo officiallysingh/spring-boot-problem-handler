@@ -26,7 +26,7 @@ public class ProblemUtils {
 
   public static ThrowableProblem toProblem(final Throwable throwable) {
     final HttpStatus status = resolveStatus(throwable);
-    ThrowableProblem problem = Problem.of(status).detail(throwable.getMessage()).build();
+    ThrowableProblem problem = Problems.newInstance(status).detail(throwable.getMessage()).build();
     problem.setStackTrace(createStackTrace(throwable));
     return problem;
   }

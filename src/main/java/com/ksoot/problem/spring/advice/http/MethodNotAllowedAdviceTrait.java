@@ -39,6 +39,6 @@ public interface MethodNotAllowedAdviceTrait<T, R> extends AdviceTrait<T, R> {
 
     final HttpHeaders headers = new HttpHeaders();
     headers.setAllow(requireNonNull(methods));
-    return create(exception, request, HttpStatus.METHOD_NOT_ALLOWED, headers, problem);
+    return buildResponse(exception, request, HttpStatus.METHOD_NOT_ALLOWED, headers, problem);
   }
 }

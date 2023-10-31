@@ -33,6 +33,6 @@ public interface HttpRequestMethodNotSupportedAdviceTrait<T, R> extends AdviceTr
 
     final HttpHeaders headers = new HttpHeaders();
     headers.setAllow(requireNonNull(exception.getSupportedHttpMethods()));
-    return create(exception, request, HttpStatus.METHOD_NOT_ALLOWED, headers, problem);
+    return buildResponse(exception, request, HttpStatus.METHOD_NOT_ALLOWED, headers, problem);
   }
 }

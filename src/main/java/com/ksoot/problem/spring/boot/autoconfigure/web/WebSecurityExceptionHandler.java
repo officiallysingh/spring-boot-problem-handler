@@ -32,7 +32,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 @RequiredArgsConstructor
-public class SecurityExceptionHandler
+public class WebSecurityExceptionHandler
     implements SecurityAdviceTraits<NativeWebRequest, ResponseEntity<ProblemDetail>> {
 
   @ConditionalOnMissingBean

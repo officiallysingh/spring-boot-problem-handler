@@ -19,13 +19,28 @@ public interface MaxUploadSizeExceededExceptionAdviceTrait<T, R> extends AdviceT
   default R handleMaxUploadSizeExceededException(
       final MaxUploadSizeExceededException exception, final T request) {
     String errorKey = ClassUtils.getName(exception);
-    String defultMessage = exception.getMessage();
+    String defaultMessage = exception.getMessage();
     long bytes = exception.getMaxUploadSize();
+    if (bytes == -1 && exception.getCause() instanceof IllegalStateException e) {
+      try {
+        defaultMessage = e.getMessage();
+        final String byteSizeString =
+            defaultMessage.substring(
+                defaultMessage.lastIndexOf("(") + 1, defaultMessage.lastIndexOf(")"));
+        bytes = StringUtils.isNotBlank(byteSizeString) ? Long.parseLong(byteSizeString) : bytes;
+      } catch (final Exception ex) {
+        // Ignore on purpose
+      }
+    }
     if (bytes == -1
         && exception.getMostSpecificCause() instanceof FileSizeLimitExceededException e) {
-      defultMessage = e.getMessage();
-      final String byteSizeString = CharMatcher.inRange('0', '9').retainFrom(defultMessage);
-      bytes = StringUtils.isNotBlank(byteSizeString) ? Long.parseLong(byteSizeString) : bytes;
+      try {
+        defaultMessage = e.getMessage();
+        final String byteSizeString = CharMatcher.inRange('0', '9').retainFrom(defaultMessage);
+        bytes = StringUtils.isNotBlank(byteSizeString) ? Long.parseLong(byteSizeString) : bytes;
+      } catch (final Exception ex) {
+        // Ignore on purpose
+      }
     }
     String maxFileSizeAllowed = bytes != -1 ? DataSize.ofBytes(bytes).toString() : "UNKNOWN";
 
@@ -36,8 +51,8 @@ public interface MaxUploadSizeExceededExceptionAdviceTrait<T, R> extends AdviceT
             exception,
             HttpStatus.BAD_REQUEST,
             ProblemMessageSourceResolver.of(
-                detailCode, defultMessage, new Object[] {maxFileSizeAllowed}));
+                detailCode, defaultMessage, new Object[] {maxFileSizeAllowed}));
 
-    return create(exception, request, HttpStatus.BAD_REQUEST, problem);
+    return toResponse(exception, request, HttpStatus.BAD_REQUEST, problem);
   }
 }

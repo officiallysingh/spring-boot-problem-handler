@@ -46,6 +46,6 @@ public interface MissingServletRequestPartAdviceTrait<T, R>
             ProblemMessageSourceResolver.of(titleCode, status.getReasonPhrase()),
             ProblemMessageSourceResolver.of(detailCode, exception.getMessage()));
 
-    return create(exception, request, status, problem);
+    return toResponse(exception, request, status, problem);
   }
 }

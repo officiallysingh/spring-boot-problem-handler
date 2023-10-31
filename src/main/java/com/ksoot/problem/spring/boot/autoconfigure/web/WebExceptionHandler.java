@@ -1,26 +1,22 @@
-package com.ksoot.problem.spring.boot.autoconfigure.webflux;
+package com.ksoot.problem.spring.boot.autoconfigure.web;
 
-import com.ksoot.problem.spring.advice.webflux.ProblemHandlingWebflux;
+import com.ksoot.problem.spring.advice.web.ProblemHandlingWeb;
 import com.ksoot.problem.spring.config.ProblemProperties;
-import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import reactor.core.publisher.Mono;
 
-@AutoConfiguration
+@Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(ProblemProperties.class)
 @ConditionalOnProperty(
     prefix = "problem",
     name = "enabled",
     havingValue = "true",
     matchIfMissing = true)
-@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @ControllerAdvice
-@RequiredArgsConstructor
-public class ExceptionHandler
-    implements ProblemHandlingWebflux<Mono<ResponseEntity<ProblemDetail>>> {}
+public class WebExceptionHandler implements ProblemHandlingWeb<ResponseEntity<ProblemDetail>> {}

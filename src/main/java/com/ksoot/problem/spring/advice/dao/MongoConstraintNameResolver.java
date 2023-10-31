@@ -19,7 +19,7 @@ public class MongoConstraintNameResolver implements ConstraintNameResolver {
     String exMessage = exceptionMessage.trim();
     try {
       String temp = exMessage.substring(exMessage.indexOf("collection: ") + 12);
-      String collectionName = temp.substring(temp.indexOf("."), temp.indexOf(" index: "));
+      String collectionName = temp.substring(temp.indexOf(".") + 1, temp.indexOf(" index: "));
       temp = exMessage.substring(exMessage.indexOf("index: ") + 7);
       String indexName = temp.substring(0, temp.indexOf(" "));
       return collectionName + ProblemConstant.DOT + indexName;

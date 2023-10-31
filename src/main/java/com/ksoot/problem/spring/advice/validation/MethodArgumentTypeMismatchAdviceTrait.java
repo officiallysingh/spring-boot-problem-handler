@@ -57,6 +57,6 @@ public interface MethodArgumentTypeMismatchAdviceTrait<T, R>
                 detailCode, exception.getMostSpecificCause().toString()),
             parameters);
 
-    return create(exception, request, status, problem);
+    return toResponse(exception, request, status, problem);
   }
 }

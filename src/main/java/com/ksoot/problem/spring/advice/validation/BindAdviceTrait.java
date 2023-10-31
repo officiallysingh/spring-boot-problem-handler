@@ -32,6 +32,6 @@ public interface BindAdviceTrait<T, R> extends BaseBindingResultHandlingAdviceTr
             ProblemMessageSourceResolver.of(CONSTRAINT_VIOLATION_TITLE_CODE_PREFIX),
             ProblemMessageSourceResolver.of(CONSTRAINT_VIOLATION_DETAIL_CODE_PREFIX),
             parameters);
-    return create(exception, request, defaultConstraintViolationStatus(), problem);
+    return toResponse(exception, request, defaultConstraintViolationStatus(), problem);
   }
 }

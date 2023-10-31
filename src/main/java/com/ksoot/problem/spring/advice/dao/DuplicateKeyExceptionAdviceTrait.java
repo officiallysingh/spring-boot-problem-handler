@@ -45,6 +45,6 @@ public interface DuplicateKeyExceptionAdviceTrait<T, R> extends BaseDataIntegrit
             ProblemMessageSourceResolver.of(
                 messageCode, ProblemConstant.DB_CONSTRAINT_VIOLATION_DEFAULT_MESSAGE));
 
-    return create(exception, request, status, problem);
+    return toResponse(exception, request, status, problem);
   }
 }

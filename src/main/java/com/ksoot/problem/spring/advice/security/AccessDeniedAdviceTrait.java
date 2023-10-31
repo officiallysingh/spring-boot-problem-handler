@@ -24,6 +24,6 @@ public interface AccessDeniedAdviceTrait<T, R> extends AdviceTrait<T, R> {
             ProblemMessageSourceResolver.of(
                 ProblemConstant.DETAIL_CODE_PREFIX + GeneralErrorKey.SECURITY_ACCESS_DENIED,
                 exception.getMessage()));
-    return create(exception, request, HttpStatus.FORBIDDEN, problem);
+    return toResponse(exception, request, HttpStatus.FORBIDDEN, problem);
   }
 }

@@ -33,7 +33,7 @@ import reactor.core.publisher.Mono;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 @RequiredArgsConstructor
-public class SecurityExceptionHandler
+public class WebFluxSecurityExceptionHandler
     implements SecurityAdviceTraits<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> {
 
   @ConditionalOnMissingBean

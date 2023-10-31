@@ -1,7 +1,6 @@
 package com.ksoot.problem.spring.config;
 
 import java.util.Locale;
-import lombok.NonNull;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceResolvable;
 

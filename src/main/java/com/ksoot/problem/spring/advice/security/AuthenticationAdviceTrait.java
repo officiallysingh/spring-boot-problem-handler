@@ -25,6 +25,6 @@ public interface AuthenticationAdviceTrait<T, R> extends AdviceTrait<T, R> {
             ProblemMessageSourceResolver.of(
                 ProblemConstant.DETAIL_CODE_PREFIX + GeneralErrorKey.SECURITY_UNAUTHORIZED,
                 exception.getMessage()));
-    return create(exception, request, HttpStatus.UNAUTHORIZED, problem);
+    return toResponse(exception, request, HttpStatus.UNAUTHORIZED, problem);
   }
 }
