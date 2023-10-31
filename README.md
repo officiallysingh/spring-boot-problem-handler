@@ -25,14 +25,14 @@ all can be done with zero custom code but by specifying error details in `proper
 
 ## Installation
 
-> **Current version: 1.5** Refer to [Release notes](https://github.com/officiallysingh/spring-boot-problem-handler/releases/tag/1.4) while upgrading
+> **Current version: 1.5** Refer to [Release notes](https://github.com/officiallysingh/spring-boot-problem-handler/releases/tag/1.5) while upgrading
 
 Add the `spring-boot-problem-handler` jar to application dependencies. That is all it takes to get a default working 
 exception handling mechanism in a Spring boot application.
 
 ```xml
 <properties>
-    <spring-boot-problem-handler.version>1.4</spring-boot-problem-handler.version>
+    <spring-boot-problem-handler.version>1.5</spring-boot-problem-handler.version>
 </properties>
 ```
 
@@ -133,7 +133,9 @@ or [**`ProblemHandlingWebflux`**](src/main/java/com/ksoot/problem/spring/advice/
 | `├──`[**`DataIntegrityViolationAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/dao/DataIntegrityViolationAdviceTrait.java) | [`500 Internal Server Error`](https://httpstatus.es/500)  | data.integrity.violation.\<Failed DB constraint name\> |
 | `└──`[**`DuplicateKeyExceptionAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/dao/DuplicateKeyExceptionAdviceTrait.java)   | [`500 Internal Server Error`](https://httpstatus.es/500)  | data.integrity.violation.\<Failed DB constraint name\> |
 
-These advices are autoconfigured as a bean `DaoExceptionHandler` if following conditions are true
+These advices are autoconfigured as [**`WebDaoExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/web/WebDaoExceptionHandler.java) 
+or [**`WebFluxDaoExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/webflux/WebFluxDaoExceptionHandler.java) 
+for Spring Web and Spring Webflux respectively, if following conditions are true
 * `problem.dao-advice-enabled` is not set to `false`. Its default value is `true`
 * If using relation databases then `spring-data-jpa` jar is detected in classpath and either `spring.datasource.url` or `spring.r2dbc.url` is configured
 * If using MongoDB then `spring-data-mongodb` jar is detected in classpath and `spring.data.mongodb.uri` is configured
@@ -162,7 +164,7 @@ and [**`ProblemAccessDeniedHandler`**](src/main/java/com/ksoot/problem/spring/ad
 are autoconfigured as `authenticationEntryPoint` and `accessDeniedHandler` beans respectively. 
 
 But to make it work following needs to be done in application's Spring Security configuration. 
-Refer to example [**`SecurityConfiguration`**](https://github.com/officiallysingh/problem-handler-web-demo/blob/main/src/main/java/com/ksoot/problem/demo/config/SecurityConfiguration.java)
+Refer to example [**`WebSecurityConfiguration`**](https://github.com/officiallysingh/problem-handler-web-demo/blob/main/src/main/java/com/ksoot/problem/demo/config/WebSecurityConfiguration.java)
 ```java
 @Autowired
 private AuthenticationEntryPoint authenticationEntryPoint;
@@ -194,7 +196,7 @@ and [**`ProblemServerAccessDeniedHandler`**](src/main/java/com/ksoot/problem/spr
 are autoconfigured as `authenticationEntryPoint` and `accessDeniedHandler` beans respectively.
 
 But to make it work following needs to be done in application Spring Security configuration. 
-Refer to example [**`SecurityConfiguration`**](https://github.com/officiallysingh/problem-handler-webflux-demo/blob/main/src/main/java/com/ksoot/problem/demo/config/SecurityConfiguration.java)
+Refer to example [**`WebFluxSecurityConfiguration`**](https://github.com/officiallysingh/problem-handler-webflux-demo/blob/main/src/main/java/com/ksoot/problem/demo/config/WebFluxSecurityConfiguration.java)
 ```java
 @Autowired
 private ServerAuthenticationEntryPoint authenticationEntryPoint;
@@ -322,7 +324,6 @@ problem.open-api.res-validation-enabled=false
 * `problem.open-api.req-validation-enabled`:- To enable or disable OpenAPI specification validation for request, default is `false`.
 * `problem.open-api.res-validation-enabled`:- To enable or disable OpenAPI specification validation for response, default is `false`.
 
-
 ## Error Key
 The main concept behind specifying the error attributes in `properties` file is **Error key**, which is mandatory to be unique for each error scenario.
 **It is either derived or specified by application** while throwing exception and used to externalize the error attributes in `properties` file. 
@@ -381,7 +382,6 @@ content-type: application/problem+xml
 * `timestamp`:- `OffsetDateTime` of occurrence of this error.
 * `code`:- Unique `String` code for this error, should not contain spaces or special characters except '_' and '-'. 
   Used in `type`. Commonly used to set unique codes for different business error scenarios.
-
 
 ## Message resolvers
 To know how to define the error attributes in properties file, enable debugging as follows.
