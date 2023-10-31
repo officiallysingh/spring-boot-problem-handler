@@ -25,14 +25,14 @@ all can be done with zero custom code but by specifying error details in `proper
 
 ## Installation
 
-> **Current version: 1.4**
+> **Current version: 1.5** Refer to [Release notes](https://github.com/officiallysingh/spring-boot-problem-handler/releases/tag/1.5) while upgrading
 
 Add the `spring-boot-problem-handler` jar to application dependencies. That is all it takes to get a default working 
 exception handling mechanism in a Spring boot application.
 
 ```xml
 <properties>
-    <spring-boot-problem-handler.version>1.4</spring-boot-problem-handler.version>
+    <spring-boot-problem-handler.version>1.5</spring-boot-problem-handler.version>
 </properties>
 ```
 
@@ -133,7 +133,9 @@ or [**`ProblemHandlingWebflux`**](src/main/java/com/ksoot/problem/spring/advice/
 | `├──`[**`DataIntegrityViolationAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/dao/DataIntegrityViolationAdviceTrait.java) | [`500 Internal Server Error`](https://httpstatus.es/500)  | data.integrity.violation.\<Failed DB constraint name\> |
 | `└──`[**`DuplicateKeyExceptionAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/dao/DuplicateKeyExceptionAdviceTrait.java)   | [`500 Internal Server Error`](https://httpstatus.es/500)  | data.integrity.violation.\<Failed DB constraint name\> |
 
-These advices are autoconfigured as a bean `DaoExceptionHandler` if following conditions are true
+These advices are autoconfigured as [**`WebDaoExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/web/WebDaoExceptionHandler.java) 
+or [**`WebFluxDaoExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/webflux/WebFluxDaoExceptionHandler.java) 
+for Spring Web and Spring Webflux respectively, if following conditions are true
 * `problem.dao-advice-enabled` is not set to `false`. Its default value is `true`
 * If using relation databases then `spring-data-jpa` jar is detected in classpath and either `spring.datasource.url` or `spring.r2dbc.url` is configured
 * If using MongoDB then `spring-data-mongodb` jar is detected in classpath and `spring.data.mongodb.uri` is configured
@@ -162,7 +164,7 @@ and [**`ProblemAccessDeniedHandler`**](src/main/java/com/ksoot/problem/spring/ad
 are autoconfigured as `authenticationEntryPoint` and `accessDeniedHandler` beans respectively. 
 
 But to make it work following needs to be done in application's Spring Security configuration. 
-Refer to example [**`SecurityConfiguration`**](https://github.com/officiallysingh/problem-handler-web-demo/blob/main/src/main/java/com/ksoot/problem/demo/config/SecurityConfiguration.java)
+Refer to example [**`WebSecurityConfiguration`**](https://github.com/officiallysingh/problem-handler-web-demo/blob/main/src/main/java/com/ksoot/problem/demo/config/WebSecurityConfiguration.java)
 ```java
 @Autowired
 private AuthenticationEntryPoint authenticationEntryPoint;
@@ -194,7 +196,7 @@ and [**`ProblemServerAccessDeniedHandler`**](src/main/java/com/ksoot/problem/spr
 are autoconfigured as `authenticationEntryPoint` and `accessDeniedHandler` beans respectively.
 
 But to make it work following needs to be done in application Spring Security configuration. 
-Refer to example [**`SecurityConfiguration`**](https://github.com/officiallysingh/problem-handler-webflux-demo/blob/main/src/main/java/com/ksoot/problem/demo/config/SecurityConfiguration.java)
+Refer to example [**`WebFluxSecurityConfiguration`**](https://github.com/officiallysingh/problem-handler-webflux-demo/blob/main/src/main/java/com/ksoot/problem/demo/config/WebFluxSecurityConfiguration.java)
 ```java
 @Autowired
 private ServerAuthenticationEntryPoint authenticationEntryPoint;
@@ -322,7 +324,6 @@ problem.open-api.res-validation-enabled=false
 * `problem.open-api.req-validation-enabled`:- To enable or disable OpenAPI specification validation for request, default is `false`.
 * `problem.open-api.res-validation-enabled`:- To enable or disable OpenAPI specification validation for response, default is `false`.
 
-
 ## Error Key
 The main concept behind specifying the error attributes in `properties` file is **Error key**, which is mandatory to be unique for each error scenario.
 **It is either derived or specified by application** while throwing exception and used to externalize the error attributes in `properties` file. 
@@ -381,7 +382,6 @@ content-type: application/problem+xml
 * `timestamp`:- `OffsetDateTime` of occurrence of this error.
 * `code`:- Unique `String` code for this error, should not contain spaces or special characters except '_' and '-'. 
   Used in `type`. Commonly used to set unique codes for different business error scenarios.
-
 
 ## Message resolvers
 To know how to define the error attributes in properties file, enable debugging as follows.
@@ -463,11 +463,11 @@ Apart from exceptions thrown by frameworks or java, every application need to th
 [**`ApplicationException`**](src/main/java/com/ksoot/problem/core/ApplicationException.java) 
 classes are available in the library to throw an unchecked or checked exception respectively.
 
-> [**`Problems`**](src/main/java/com/ksoot/problem/Problems.java) **is the central static helper class to create 
+> [**`Problems`**](src/main/java/com/ksoot/problem/core/Problems.java) **is the central static helper class to create 
 Problem instances and throw either checked or unchecked exceptions**, as demonstrated below.
 It provides multiple fluent methods to build and throw exceptions.
 
-The simplistic way is to just specify a unique error key and `HttpStatus`.
+* The simplistic way is to just specify a unique error key and `HttpStatus`.
 ```java
 throw Problems.newInstance("sample.problem").throwAble(HttpStatus.EXPECTATION_FAILED);
 ```
@@ -487,7 +487,7 @@ If the messages are not found in `properties` files, defaults are taken as follo
 * **Title** is taken as specified `HttpStatus`'s reason phrase e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` then the Title default would be `Expectation Failed`
 * **Detail** default is taken as thrown exception's `exception.getMessage()`
 
-There are multiple other methods available while creating and throwing exceptions in [**`Problems`**](src/main/java/com/ksoot/problem/Problems.java), 
+There are multiple other methods available while creating and throwing exceptions in [**`Problems`**](src/main/java/com/ksoot/problem/core/Problems.java), 
 for details refers to its source code and java docs. 
 ```java
 throw Problems.newInstance("sample.problem")
@@ -506,15 +506,66 @@ title.sample.problem=Some title
 detail.sample.problem=Some details with param one: {0} and param other: {1}
 ```
 
-Sometimes it is not desirable to throw exceptions as they occur, but to collect them to throw at a later point in execution.
-Or to throw multiple exceptions together.That can be done as follows.
+* To throw exception with hardcoded attributes.
 ```java
-Problem problemOne = Problems.newInstance("sample.problem.one").get();
-Problem problemTwo = Problems.newInstance("sample.problem.two").get();
-throw Problems.throwAble(HttpStatus.MULTI_STATUS, problemOne, problemTwo);
+Problem problem = Problems.newInstance("111", "Dummy", "Hardcode attributes broblem").build();
+throw problem;
 ```
 
-`HttpStatus` can also be set over custom exception as follows, the same would reflect in error response and 
+* To programmatically add dynamic attributes to error response at runtime. Notice the method `parameter`
+```java
+Problems.newInstance("3456", "Bad Request", "Invalid request received, Please retry with correct input")
+    .parameter("additional-attribute", "Some additional attribute").build();
+throw problem;
+```
+
+* Applications may also define `enum`s implementing [**`ErrorType`**](src/main/java/com/ksoot/problem/core/ErrorType.java) interface 
+with attributes for error scenarios and creating exceptions as follows. Default error attributes `detail`, `status` etc. can be customized in `properties` file for given `errorKey`, 
+otherwise the enum only is sufficient.
+```java
+@Getter
+public enum AppErrors implements ErrorType {
+
+  REMOTE_HOST_NOT_AVAILABLE("remote.host.not.available",
+      "Looks like something wrong with remote host: {0}", HttpStatus.SERVICE_UNAVAILABLE);
+  // All other error scenarios could be added here
+  
+  private final String errorKey;
+  private final String defaultDetail;
+  private final HttpStatus status;
+
+  AppErrors(final String errorKey, final String defaultDetail, final HttpStatus status) {
+    this.errorKey = errorKey;
+    this.defaultDetail = defaultDetail;
+    this.status = status;
+  }
+}
+```
+```java
+ApplicationProblem problem = Problems.newInstance(AppErrors.REMOTE_HOST_NOT_AVAILABLE)
+        .detailArgs("http://some.remote.host.com").throwAble();
+throw problem;
+```
+
+* Sometimes it is not desirable to throw exceptions as they occur, but to collect them to throw at a later point in execution.
+Or to throw multiple exceptions together.That can be done as follows.
+```java
+ApplicationException exceptionOne = Problems.newInstance("sample.problem.one").throwAbleChecked();
+ApplicationProblem exceptionTwo = Problems.newInstance(AppErrors.REMOTE_HOST_NOT_AVAILABLE)
+        .detailArgs("http://some.remote.host.com").throwAble();
+
+MultiProblem problems = Problems.ofExceptions(HttpStatus.MULTI_STATUS, exceptionOne, exceptionTwo);
+
+Exception exceptionThree = new IllegalStateException("Just for testing exception");
+problems.add(exceptionThree);
+
+Problem problem = Problems.newInstance("111", "Dummy", "Hardcode attributes broblem").build();
+problems.add(problem);
+
+throw problems;
+```
+
+* `HttpStatus` can also be set over custom exception as follows, the same would reflect in error response and 
 other error attributes default would be derived by given `HttpStatus` attribute in `@ResponseStatus`
 ```java
 @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
@@ -696,7 +747,8 @@ class CustomMethodArgumentNotValidExceptionHandler implements MethodArgumentNotV
 
 ## Define new advices
 There should not be any need to create any custom exception hence new advices, but if there is a pressing need to do so,
-custom exception can be created and corresponding custom `ControllerAdvice` can be defined for the same, though not recommended.
+custom exception can be created and corresponding custom `ControllerAdvice` implementing [**`AdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/AdviceTrait.java) 
+can be defined for the same, though not recommended.
 Following example demonstrates a new advice for some custom exception `MyCustomException`.
 
 > For Spring Web applications
@@ -729,18 +781,346 @@ public class MyCustomAdvice implements AdviceTrait<ServerWebExchange, Mono<Respo
 }
 ```
 
+## Testing
+Following beans are [**autoconfigured**](src/main/resources/META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports) for exception handling
+
+| Configuration class                                                                                                                             | Spring Web  | Spring Webflux |
+|-------------------------------------------------------------------------------------------------------------------------------------------------|-------------|----------------|
+| [**`ProblemMessageProviderConfig`**](src/main/java/com/ksoot/problem/spring/config/ProblemMessageProviderConfig.java)                           | Yes         | Yes            |
+| [**`ProblemBeanRegistry`**](src/main/java/com/ksoot/problem/spring/config/ProblemBeanRegistry.java)                                             | Yes         | Yes            |
+| [**`ProblemJacksonConfiguration`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/ProblemJacksonConfiguration.java)                 | Yes         | Yes            |
+| [**`ProblemDaoConfiguration`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/ProblemDaoConfiguration.java)                         | Yes         | Yes            |
+| [**`ProblemWebAutoConfiguration`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/web/ProblemWebAutoConfiguration.java)             | Yes         | No             |
+| [**`WebExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/web/WebExceptionHandler.java)                             | Yes         | No             |
+| [**`WebSecurityExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/web/WebSecurityExceptionHandler.java)             | Yes         | No             |
+| [**`WebDaoExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/web/WebDaoExceptionHandler.java)                       | Yes         | No             |
+| [**`OpenApiValidationExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/web/OpenApiValidationExceptionHandler.java) | Yes         | No             |
+| [**`ProblemWebfluxAutoConfiguration`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/webflux/ProblemWebfluxAutoConfiguration.java) | No          | Yes            |
+| [**`WebFluxExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/webflux/WebFluxExceptionHandler.java)                 | No          | Yes            |
+| [**`WebFluxSecurityExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/webflux/WebFluxSecurityExceptionHandler.java) | No          | Yes            |
+| [**`WebFluxDaoExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/webflux/WebFluxDaoExceptionHandler.java)           | No          | Yes            |
+
+
+The autoconfiguration may not take effect while running Junit test cases, So required configuration classes could be imported for `Controller`s test cases, as follows
+
+> For Spring Web applications
+```java
+@Configuration
+@ImportAutoConfiguration(
+    classes = {
+      ProblemBeanRegistry.class,
+      ProblemMessageProviderConfig.class,
+      ProblemJacksonConfiguration.class,
+      ProblemWebAutoConfiguration.class,
+      WebExceptionHandler.class
+      // WebSecurityExceptionHandler.class // If security is enabled 
+      // OpenApiValidationExceptionHandler.class // If OpenAPI validation is enabled     
+    })
+public class WebTestConfiguration {
+  
+}
+```
+
+> Notice `@ImportAutoConfiguration(classes = {WebTestConfiguration.class})`
+```java
+@WebMvcTest(MyController.class)
+@ImportAutoConfiguration(classes = {WebTestConfiguration.class})
+class StateControllerTest {
+
+  @Autowired
+  private MockMvc mockMvc;
+
+  @MockBean
+  private MyService myService;
+  
+  @Test
+  @DisplayName("Test Create Resource successfully")
+  public void testCreateResource_Success() throws Exception {
+
+  }
+}
+```
+
+> Similarly for Spring Webflux applications, import following configuration class `@ImportAutoConfiguration(classes = {WebFluxTestConfiguration.class})` in `Controller`s test cases
+```java
+@Configuration
+@ImportAutoConfiguration(
+    classes = {
+      ProblemBeanRegistry.class,
+      ProblemMessageProviderConfig.class,
+      ProblemJacksonConfiguration.class,
+      ProblemWebfluxAutoConfiguration.class,
+      WebFluxExceptionHandler.class
+      // WebSecurityExceptionHandler.class // If security is enabled 
+    })
+public class WebFluxTestConfiguration {
+  
+}
+```
+
+## Examples responses
+**Following are example error responses in different scenarios.**
+The error response attributes `code`, `title` and `detail` can be customized for each error by specifying
+the same in `errors.properties` file for different error keys which you can get by setting `problem.debug-enabled=true` in `application.properties` file
+
+### Constraint violations
+#### Jakarta Constraint violations error
+```json
+{
+  "type": "http://localhost:8080/problems/help.html#constraint-violations",
+  "title": "Bad Request",
+  "status": 400,
+  "detail": "Constraint violations has happened, please correct the request and try again",
+  "instance": "/problems/handler-constraint-violation",
+  "method": "POST",
+  "timestamp": "2023-10-29T16:41:59.876471+05:30",
+  "code": "constraint-violations",
+  "violations": [
+    {
+      "code": "400",
+      "detail": "User name length should be between 3 and 10",
+      "propertyPath": "name"
+    },
+    {
+      "code": "400",
+      "detail": "Address state name is required",
+      "propertyPath": "address.state"
+    },
+    {
+      "code": "400",
+      "detail": "User designation length should be between 2 and 5",
+      "propertyPath": "designation"
+    }
+  ]
+}
+```
+
+#### PostgresDB Unique constraint violation error
+```json
+{
+  "type": "http://localhost:8080/problems/help.html#500",
+  "title": "Internal Server Error",
+  "status": 500,
+  "detail": "Employee name must be unique, a record with given name already exists",
+  "instance": "/api/employees",
+  "method": "POST",
+  "timestamp": "2023-10-29T16:44:10.917194+05:30",
+  "code": "500"
+}
+```
+
+#### MongoDB Unique constraint violation error
+```json
+{
+  "type": "http://localhost:8080/problems/help.html#500",
+  "title": "Internal Server Error",
+  "status": 500,
+  "detail": "State name must be unique",
+  "instance": "/api/states",
+  "method": "POST",
+  "timestamp": "2023-10-29T16:44:44.806613+05:30",
+  "code": "500"
+}
+```
+
+#### Invalid Query parameters
+```json
+{
+  "type": "http://localhost:8080/problems/help.html#constraint-violations",
+  "title": "Bad Request",
+  "status": 400,
+  "detail": "Constraint violations has happened, please correct the request and try again",
+  "instance": "/problems/handler-invalid-query-strings",
+  "method": "GET",
+  "timestamp": "2023-10-29T14:51:37.889537+05:30",
+  "code": "constraint-violations",
+  "violations": [
+    {
+      "code": "400",
+      "detail": "must be greater than or equal to 0",
+      "propertyPath": "page"
+    }
+  ]
+}
+```
+
+#### Invalid format error
+```json
+{
+  "type": "http://localhost:8080/problems/help.html#400",
+  "title": "Bad Request",
+  "status": 400,
+  "detail": "Invalid date time value or format. Expected a valid date time in ISO format",
+  "instance": "/problems/handler-datetime-conversion",
+  "method": "GET",
+  "timestamp": "2023-10-29T16:05:09.953099+05:30",
+  "code": "400",
+  "propertyPath": "dateTime"
+}
+```
+
+#### File upload max size exceeds error
+```json
+{
+  "type": "http://localhost:8080/problems/help.html#400",
+  "title": "Bad Request",
+  "status": 400,
+  "detail": "Upload file size exceeded the maximum allowed limit: 10485760B",
+  "instance": "/problems/uploadfile",
+  "method": "POST",
+  "timestamp": "2023-10-29T14:31:33.073971+05:30",
+  "code": "400"
+}
+```
+
+### Spring framework thrown exceptions
+#### Invalid Media type error
+```json
+{
+  "type": "http://localhost:8080/problems/help.html#415",
+  "title": "Unsupported Media Type",
+  "status": 415,
+  "detail": "Media Type: application/xml Not Acceptable, Supported Media Types are: application/json",
+  "instance": "/problems/handler-json-body",
+  "method": "POST",
+  "timestamp": "2023-10-29T14:45:47.467268+05:30",
+  "code": "415"
+}
+```
+
+#### Method not allowed error
+```json
+{
+  "type": "http://localhost:8080/problems/help.html#405",
+  "title": "Method Not Allowed",
+  "status": 405,
+  "detail": "Requested Method: POST not allowed, allowed methods are: GET",
+  "instance": "/problems/handler-datetime-conversion",
+  "method": "POST",
+  "timestamp": "2023-10-29T16:15:08.916369+05:30",
+  "code": "405"
+}
+```
+
+### Programmatically thrown exceptions
+#### Any unhandled Throwable
+```json
+{
+  "type": "http://localhost:8080/problems/help.html#500",
+  "title": "Internal Server Error",
+  "status": 500,
+  "detail": "Expected argument invalid",
+  "instance": "/problems/handler-throwable",
+  "method": "GET",
+  "timestamp": "2023-10-29T14:49:40.998497+05:30",
+  "code": "500"
+}
+```
+
+#### Error with dynamic additional attributes
+```json
+{
+  "type": "http://localhost:8080/problems/help.html#3456",
+  "title": "Bad Request",
+  "status": 400,
+  "detail": "Invalid request received, Please retry with correct input",
+  "instance": "/problems/throw-problem-with-additional-attribute",
+  "method": "GET",
+  "timestamp": "2023-10-29T16:24:37.976724+05:30",
+  "code": "3456",
+  "additional-attribute": "Some additional attribute"
+}
+```
+
+#### Multiple errors
+```json
+{
+  "type": "http://localhost:8080/problems/help.html#207",
+  "title": "Multi-Status",
+  "status": 207,
+  "detail": "Multi-Status",
+  "instance": "/problems/throw-multiple-problems",
+  "method": "GET",
+  "timestamp": "2023-10-29T16:22:53.363785+05:30",
+  "code": "207",
+  "errors": [
+    {
+      "code": "500",
+      "title": "Internal Server Error",
+      "detail": "Sample error message defined in 'errors.properties'"
+    },
+    {
+      "code": "503",
+      "title": "Service Unavailable",
+      "detail": "Looks like something wrong with remote host: http://some.remote.host.com"
+    },
+    {
+      "code": "3456",
+      "title": "Bad Request",
+      "detail": "Invalid request received, Please retry with correct input",
+      "additional-attribute": "Some additional attribute"
+    },
+    {
+      "code": "500",
+      "title": "Internal Server Error",
+      "detail": "Just for testing exception"
+    },
+    {
+      "code": "111",
+      "title": "Dummy",
+      "detail": "Hardcode attributes broblem"
+    }
+  ]
+}
+```
+
+### OpenAPI Specification violation error
+```json
+{
+  "type": "http://localhost:8080/problems/help.html#constraint-violations",
+  "title": "Bad Request",
+  "status": 400,
+  "detail": "Constraint violations has happened, please correct the request and try again",
+  "instance": "/api/pets",
+  "method": "POST",
+  "timestamp": "2023-10-29T16:06:18.335463+05:30",
+  "code": "constraint-violations",
+  "violations": [
+    {
+      "code": "400",
+      "detail": "[Path '/id'] Numeric instance is lower than the required minimum (minimum: 1, found: 0)",
+      "propertyPath": "id"
+    }
+  ]
+}
+```
+
+### Security error
+```json
+{
+  "type": "http://localhost:8080/problems/help.html#401",
+  "title": "Unauthorized",
+  "status": 401,
+  "detail": "Either Authorization header bearer token is missing or invalid",
+  "instance": "/api/employees/1",
+  "method": "GET",
+  "timestamp": "2023-10-29T16:08:40.466566+05:30",
+  "code": "401"
+}
+```
+
 ## Licence
-Open source [**`The MIT License`**](http://www.opensource.org/licenses/mit-license.php)
+Open source [**The MIT License**](http://www.opensource.org/licenses/mit-license.php)
 
 ## Authors and acknowledgment
-[**`Rajveer Singh`**](https://www.linkedin.com/in/rajveer-singh-589b3950/), In case you find any issues or need any support, please email me at raj14.1984@gmail.com
+[**Rajveer Singh**](https://www.linkedin.com/in/rajveer-singh-589b3950/), In case you find any issues or need any support, please email me at raj14.1984@gmail.com
 
 ## Credits and references
-Inspired and taken base code from [**`Zalando Problem libraries`**](https://github.com/zalando/problem-spring-web)
+Inspired and taken base code from [**Zalando Problem libraries**](https://github.com/zalando/problem-spring-web)
 
 Refer to [**`problem-handler-web-demo`**](https://github.com/officiallysingh/problem-handler-web-demo) and 
 [**`problem-handler-webflux-demo`**](https://github.com/officiallysingh/problem-handler-webflux-demo) 
-as examples to see usage in **Spring Web** and **Spring Webflux** application respectively.
+as examples to see usage and **example error responses** for different kind of errors in **Spring Web** and **Spring Webflux** application respectively.
 
 ## Known Issues
 * If an application uses multiple vendor relational databases then the [**`ConstraintNameResolver`**](src/main/java/com/ksoot/problem/spring/advice/dao/ConstraintNameResolver.java) 

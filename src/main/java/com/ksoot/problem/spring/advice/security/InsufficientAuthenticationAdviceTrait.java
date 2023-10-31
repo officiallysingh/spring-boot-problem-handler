@@ -11,14 +11,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 public interface InsufficientAuthenticationAdviceTrait<T, R> extends AdviceTrait<T, R> {
 
-	@ExceptionHandler
-	default R handleInsufficientAuthenticationException(
-			final InsufficientAuthenticationException exception, final T request) {
-		Problem problem = toProblem(exception, HttpStatus.UNAUTHORIZED,
-				ProblemMessageSourceResolver.of(
-						ProblemConstant.DETAIL_CODE_PREFIX
-								+ GeneralErrorKey.SECURITY_UNAUTHORIZED,
-						exception.getMessage()));
-		return create(exception, request, HttpStatus.UNAUTHORIZED, problem);
-	}
+  @ExceptionHandler
+  default R handleInsufficientAuthenticationException(
+      final InsufficientAuthenticationException exception, final T request) {
+    Problem problem =
+        toProblem(
+            exception,
+            HttpStatus.UNAUTHORIZED,
+            ProblemMessageSourceResolver.of(
+                ProblemConstant.DETAIL_CODE_PREFIX + GeneralErrorKey.SECURITY_UNAUTHORIZED,
+                exception.getMessage()));
+    return toResponse(exception, request, HttpStatus.UNAUTHORIZED, problem);
+  }
 }

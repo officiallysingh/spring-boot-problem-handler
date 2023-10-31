@@ -12,10 +12,11 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(ProblemProperties.class)
-@ConditionalOnProperty(prefix = "problem", name = "enabled", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(
+    prefix = "problem",
+    name = "enabled",
+    havingValue = "true",
+    matchIfMissing = true)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @ControllerAdvice
-public class ExceptionHandler
-		implements ProblemHandlingWeb<ResponseEntity<ProblemDetail>> {
-
-}
+public class WebExceptionHandler implements ProblemHandlingWeb<ResponseEntity<ProblemDetail>> {}

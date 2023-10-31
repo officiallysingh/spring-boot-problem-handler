@@ -17,20 +17,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-/**
- * Registers Problem Jackson modules when {@link WebMvcAutoConfiguration} is enabled.
- */
+/** Registers Problem Jackson modules when {@link WebMvcAutoConfiguration} is enabled. */
 @EnableConfigurationProperties(ProblemProperties.class)
-@ConditionalOnProperty(prefix = "problem", name = "enabled", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(
+    prefix = "problem",
+    name = "enabled",
+    havingValue = "true",
+    matchIfMissing = true)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 @AutoConfiguration
 @AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE)
 @Order(value = Ordered.HIGHEST_PRECEDENCE)
 public class ProblemWebfluxAutoConfiguration {
 
-	@Bean
-	@ConditionalOnMissingBean(ErrorResponseBuilder.class)
-	ErrorResponseBuilder<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> errorResponseBuilder() {
-		return new SpringWebfluxErrorResponseBuilder();
-	}
+  @Bean
+  @ConditionalOnMissingBean(ErrorResponseBuilder.class)
+  ErrorResponseBuilder<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>>
+      errorResponseBuilder() {
+    return new SpringWebfluxErrorResponseBuilder();
+  }
 }

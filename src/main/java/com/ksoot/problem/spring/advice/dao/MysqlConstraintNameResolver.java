@@ -5,19 +5,20 @@ package com.ksoot.problem.spring.advice.dao;
  */
 public class MysqlConstraintNameResolver implements ConstraintNameResolver {
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.ksoot.framework.common.spring.config.error.db.ConstraintNameResolver#
-	 * resolveConstraintName(org.springframework.dao. DataIntegrityViolationException)
-	 */
-	@Override
-	public String resolveConstraintName(final String exceptionMessage) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Auto-generated method stub");
-	}
+  /*
+   * (non-Javadoc)
+   *
+   * @see com.ksoot.framework.common.spring.config.error.db.ConstraintNameResolver#
+   * resolveConstraintName(org.springframework.dao. DataIntegrityViolationException)
+   */
+  @Override
+  public String resolveConstraintName(final String exceptionMessage) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Auto-generated method stub");
+  }
 
-	public DBType dbType() {
-		return DBType.MYSQL;
-	}
+  @Override
+  public DBType dbType() {
+    return DBType.MYSQL;
+  }
 }

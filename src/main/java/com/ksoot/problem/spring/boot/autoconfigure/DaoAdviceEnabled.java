@@ -7,24 +7,18 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 
-/**
- * Condition to register advice for DAO exception handling.
- */
+/** Condition to register advice for DAO exception handling. */
 public class DaoAdviceEnabled extends AnyNestedCondition {
 
-	DaoAdviceEnabled() {
-		super(ConfigurationPhase.PARSE_CONFIGURATION);
-	}
+  DaoAdviceEnabled() {
+    super(ConfigurationPhase.PARSE_CONFIGURATION);
+  }
 
-	@Conditional(ORMUrlAvailable.class)
-	@ConditionalOnClass(value = { JpaRepository.class })
-	static class ORMAvailable {
+  @Conditional(ORMUrlAvailable.class)
+  @ConditionalOnClass(value = {JpaRepository.class})
+  static class ORMAvailable {}
 
-	}
-
-	@ConditionalOnClass(value = { MongoDatabaseFactory.class })
-	@ConditionalOnProperty(prefix = "spring.data.mongodb", name = "uri")
-	static class MongoAvailable {
-
-	}
+  @ConditionalOnClass(value = {MongoDatabaseFactory.class})
+  @ConditionalOnProperty(prefix = "spring.data.mongodb", name = "uri")
+  static class MongoAvailable {}
 }

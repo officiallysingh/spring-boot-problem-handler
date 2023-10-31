@@ -1,42 +1,69 @@
 package com.ksoot.problem.core;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.Validate;
-import org.springframework.http.HttpStatus;
-
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import lombok.Getter;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.util.Assert;
 
+@Getter
 @SuppressWarnings("serial")
 public class MultiProblem extends RuntimeException {
 
-	private final HttpStatus status;
+  private final HttpStatus status;
 
-	private final List<Problem> problems;
+  private final List<Object> errors;
 
-	private MultiProblem(final HttpStatus status, final List<Problem> problems) {
-		super(status.getReasonPhrase());
-		Validate.notNull(status, "'status' must not be null");
-		Validate.isTrue(CollectionUtils.isNotEmpty(problems),
-				"'problems' must not be null or empty");
-		Validate.noNullElements(problems, "'problems' must not contain null elements");
-		this.status = status;
-		this.problems = Collections.unmodifiableList(problems);
-	}
+  private MultiProblem(final HttpStatus status, final List<Problem> problems) {
+    super(status.getReasonPhrase());
+    Assert.isTrue(CollectionUtils.isNotEmpty(problems), "'problems' must not be null or empty");
+    Assert.noNullElements(problems, "'problems' must not contain null");
+    this.status = status;
+    this.errors = new ArrayList<>(problems);
+  }
 
-	public static MultiProblem of(final HttpStatus status, final List<Problem> problems) {
-		return new MultiProblem(status, problems);
-	}
+  private MultiProblem(final List<Throwable> exceptions, final HttpStatus status) {
+    super(status.getReasonPhrase());
+    Assert.isTrue(CollectionUtils.isNotEmpty(exceptions), "'exceptions' must not be null or empty");
+    Assert.noNullElements(exceptions, "'exceptions' must not contain null");
+    this.status = status;
+    this.errors = new ArrayList<>(exceptions);
+  }
 
-	public static MultiProblem of(final List<Problem> problems) {
-		return new MultiProblem(HttpStatus.MULTI_STATUS, problems);
-	}
+  public static MultiProblem ofExceptions(
+      final HttpStatus status, final List<Throwable> exceptions) {
+    Assert.notNull(status, "'status' must not be null");
+    return new MultiProblem(exceptions, status);
+  }
 
-	public HttpStatus getStatus() {
-		return this.status;
-	}
+  public static MultiProblem ofExceptions(final List<Throwable> exceptions) {
+    return ofExceptions(HttpStatus.MULTI_STATUS, exceptions);
+  }
 
-	public List<Problem> getProblems() {
-		return this.problems;
-	}
+  public static MultiProblem ofProblems(final HttpStatus status, final List<Problem> problems) {
+    Assert.notNull(status, "'status' must not be null");
+    return new MultiProblem(status, problems);
+  }
+
+  public static MultiProblem ofProblems(final List<Problem> problems) {
+    return ofProblems(HttpStatus.MULTI_STATUS, problems);
+  }
+
+  public MultiProblem add(final Throwable exception) {
+    Assert.notNull(exception, "'exception' must not be null");
+    this.errors.add(exception);
+    return this;
+  }
+
+  public MultiProblem add(final Problem problem) {
+    Assert.notNull(problem, "'problem' must not be null");
+    this.errors.add(problem);
+    return this;
+  }
+
+  public List<Object> getErrors() {
+    return Collections.unmodifiableList(this.errors);
+  }
 }

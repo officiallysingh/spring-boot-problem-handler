@@ -3,11 +3,11 @@ com.ksoot.problem.spring.config.ProblemBeanRegistry
 com.ksoot.problem.spring.boot.autoconfigure.ProblemJacksonConfiguration
 com.ksoot.problem.spring.boot.autoconfigure.ProblemDaoConfiguration
 com.ksoot.problem.spring.boot.autoconfigure.web.ProblemWebAutoConfiguration
-com.ksoot.problem.spring.boot.autoconfigure.web.SecurityExceptionHandler
-com.ksoot.problem.spring.boot.autoconfigure.web.DaoExceptionHandler
+com.ksoot.problem.spring.boot.autoconfigure.web.WebExceptionHandler
+com.ksoot.problem.spring.boot.autoconfigure.web.WebSecurityExceptionHandler
+com.ksoot.problem.spring.boot.autoconfigure.web.WebDaoExceptionHandler
 com.ksoot.problem.spring.boot.autoconfigure.web.OpenApiValidationExceptionHandler
-com.ksoot.problem.spring.boot.autoconfigure.web.ExceptionHandler
 com.ksoot.problem.spring.boot.autoconfigure.webflux.ProblemWebfluxAutoConfiguration
-com.ksoot.problem.spring.boot.autoconfigure.webflux.SecurityExceptionHandler
-com.ksoot.problem.spring.boot.autoconfigure.webflux.DaoExceptionHandler
-com.ksoot.problem.spring.boot.autoconfigure.webflux.ExceptionHandler
+com.ksoot.problem.spring.boot.autoconfigure.webflux.WebFluxExceptionHandler
+com.ksoot.problem.spring.boot.autoconfigure.webflux.WebFluxSecurityExceptionHandler
+com.ksoot.problem.spring.boot.autoconfigure.webflux.WebFluxDaoExceptionHandler
