@@ -169,22 +169,33 @@ Refer to example [**`WebSecurityConfiguration`**](https://github.com/officiallys
 private AuthenticationEntryPoint authenticationEntryPoint;
 
 @Autowired
-private AccessDeniedHandler accessDeniedHandler
+private AccessDeniedHandler accessDeniedHandler;
 
 @Bean
 public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     // Your security configurations
-    //http.csrf().disable()
-    //.authorizeHttpRequests....
-    // Security configurations......
+    http.csrf(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests((requests) -> requests
+                .requestMatchers("/swagger-resources/**", "/swagger-ui/**", "/swagger-ui.*", "/v3/api-docs", "/v3/api-docs/**", "/webjars/**")
+                .permitAll()
+//                .requestMatchers(
+//                        // Add
+//                )
+                .permitAll()
+                .anyRequest()
+                .authenticated()
+            );
 
-    if(this.authenticationEntryPoint != null) {
-        http.exceptionHandling().authenticationEntryPoint(this.authenticationEntryPoint);
+    if (this.authenticationEntryPoint != null) {
+      http.exceptionHandling(
+              exceptionHandling ->
+                      exceptionHandling.authenticationEntryPoint(this.authenticationEntryPoint));
     }
-    if(this.accessDeniedHandler != null) {
-        http.exceptionHandling().accessDeniedHandler(this.accessDeniedHandler);
+    if (this.accessDeniedHandler != null) {
+      http.exceptionHandling(
+              exceptionHandling -> exceptionHandling.accessDeniedHandler(this.accessDeniedHandler));
     }
-        
+    
     return http.build();
 }
 ```
@@ -201,20 +212,32 @@ Refer to example [**`WebFluxSecurityConfiguration`**](https://github.com/officia
 private ServerAuthenticationEntryPoint authenticationEntryPoint;
 
 @Autowired
-private ServerAccessDeniedHandler accessDeniedHandler
+private ServerAccessDeniedHandler accessDeniedHandler;
 
 @Bean
 SecurityWebFilterChain securityWebFilterChain(final ServerHttpSecurity http) {
     // Your security configurations
-    //http.csrf().disable().authorizeExchange()
-    //.pathMatchers....
-
-    if(this.authenticationEntryPoint != null) {
-        http.exceptionHandling().authenticationEntryPoint(this.authenticationEntryPoint);
+    http.csrf(ServerHttpSecurity.CsrfSpec::disable)
+            .authorizeExchange((exchanges) -> exchanges
+                .pathMatchers("/swagger-resources/**", "/swagger-ui/**", "/swagger-ui.*", "/v3/api-docs", "/v3/api-docs/**", "/webjars/**")
+                .permitAll()
+//                .pathMatchers(
+//                        // Add
+//                )
+                .permitAll()
+                .anyExchange().authenticated()
+            );
+  
+    if (this.authenticationEntryPoint != null) {
+      http.exceptionHandling(
+              exceptionHandling ->
+                      exceptionHandling.authenticationEntryPoint(this.authenticationEntryPoint));
     }
-    if(this.accessDeniedHandler != null) {
-        http.exceptionHandling().accessDeniedHandler(this.accessDeniedHandler);
+    if (this.accessDeniedHandler != null) {
+      http.exceptionHandling(
+              exceptionHandling -> exceptionHandling.accessDeniedHandler(this.accessDeniedHandler));
     }
+  
     return http.build();
 }
 ```
