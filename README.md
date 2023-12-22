@@ -40,7 +40,7 @@ Maven
 ```
 Gradle
 ```groovy
-implementation 'io.github.officiallysingh:spring-boot-problem-handler:1.5'
+implementation 'io.github.officiallysingh:spring-boot-problem-handler:1.6'
 ```
 
 It does all hard part, A lot of advices are out of box available which are autoconfigured as `ControllerAdvice`s 
