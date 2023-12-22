@@ -16,7 +16,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.server.ServerWebExchange;
 
 /**
  * @author Rajveer Singh
@@ -33,7 +33,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 public class WebFluxDaoExceptionHandler
-    extends AbstractDaoExceptionHandler<NativeWebRequest, ResponseEntity<ProblemDetail>> {
+    extends AbstractDaoExceptionHandler<ServerWebExchange, ResponseEntity<ProblemDetail>> {
 
   WebFluxDaoExceptionHandler(
       final List<ConstraintNameResolver> constraintNameResolvers, final Environment env) {
