@@ -2,7 +2,7 @@
 
 **A Generic library for handling exceptions in Spring Boot applications**, 
 implementing specification [**`Problem Details (RFC7807) for HTTP APIs`**](https://datatracker.ietf.org/doc/html/rfc7807).
-Requires Java 17+, Spring boot 3+ and Jakarta EE 10
+Requires Java 21, Spring boot 3+ and Jakarta EE 10
 
 ![Exception Handling](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*0s2E6-iNFqr_xptwrmJTdg.jpeg)
 
@@ -25,23 +25,22 @@ all can be done with zero custom code but by specifying error details in `proper
 
 ## Installation
 
-> **Current version: 1.5** Refer to [Release notes](https://github.com/officiallysingh/spring-boot-problem-handler/releases/tag/1.5) while upgrading
+> **Current version: 1.6** Refer to [Release notes](https://github.com/officiallysingh/spring-boot-problem-handler/releases/tag/1.5) while upgrading
 
 Add the `spring-boot-problem-handler` jar to application dependencies. That is all it takes to get a default working 
 exception handling mechanism in a Spring boot application.
 
-```xml
-<properties>
-    <spring-boot-problem-handler.version>1.5</spring-boot-problem-handler.version>
-</properties>
-```
-
+Maven
 ```xml
 <dependency>
     <groupId>io.github.officiallysingh</groupId>
     <artifactId>spring-boot-problem-handler</artifactId>
-    <version>${spring-boot-problem-handler.version}</version>
+    <version>1.6</version>
 </dependency>
+```
+Gradle
+```groovy
+implementation 'io.github.officiallysingh:spring-boot-problem-handler:1.5'
 ```
 
 It does all hard part, A lot of advices are out of box available which are autoconfigured as `ControllerAdvice`s 
@@ -805,7 +804,7 @@ The autoconfiguration may not take effect while running Junit test cases, So req
 
 > For Spring Web applications
 ```java
-@Configuration
+@TestConfiguration
 @ImportAutoConfiguration(
     classes = {
       ProblemBeanRegistry.class,
@@ -843,7 +842,7 @@ class StateControllerTest {
 
 > Similarly for Spring Webflux applications, import following configuration class `@ImportAutoConfiguration(classes = {WebFluxTestConfiguration.class})` in `Controller`s test cases
 ```java
-@Configuration
+@TestConfiguration
 @ImportAutoConfiguration(
     classes = {
       ProblemBeanRegistry.class,
