@@ -25,7 +25,7 @@ all can be done with zero custom code but by specifying error details in `proper
 
 ## Installation
 
-> **Current version: 1.6** Refer to [Release notes](https://github.com/officiallysingh/spring-boot-problem-handler/releases/tag/1.5) while upgrading
+> **Current version: 1.7** Refer to [Release notes](https://github.com/officiallysingh/spring-boot-problem-handler/releases/tag/1.7) while upgrading
 
 Add the `spring-boot-problem-handler` jar to application dependencies. That is all it takes to get a default working 
 exception handling mechanism in a Spring boot application.
@@ -35,12 +35,12 @@ Maven
 <dependency>
     <groupId>io.github.officiallysingh</groupId>
     <artifactId>spring-boot-problem-handler</artifactId>
-    <version>1.6</version>
+    <version>1.7</version>
 </dependency>
 ```
 Gradle
 ```groovy
-implementation 'io.github.officiallysingh:spring-boot-problem-handler:1.6'
+implementation 'io.github.officiallysingh:spring-boot-problem-handler:1.7'
 ```
 
 It does all hard part, A lot of advices are out of box available which are autoconfigured as `ControllerAdvice`s 

@@ -30,22 +30,27 @@ public interface AdviceTrait<T, R> {
 
   Logger logger = LoggerFactory.getLogger(AdviceTrait.class);
 
-  // ------ Create problem from exceptions ------
-  default Problem toProblem(
-      final Throwable throwable, final String defaultErrorKey, final HttpStatus defaultStatus) {
-
+  default HttpStatus resolveStatus(final Throwable throwable) {
+    HttpStatus defaultStatus = HttpStatus.valueOf(ProblemUtils.resolveStatus(throwable).value());
     String errorKey = ClassUtils.getName(throwable);
-
-    ProblemMessageSourceResolver statusResolver =
+    ProblemMessageSourceResolver defaultStatusResolver =
         ProblemMessageSourceResolver.of(
             ProblemConstant.STATUS_CODE_PREFIX + errorKey, defaultStatus.value());
     HttpStatus status = defaultStatus;
     try {
-      String statusCode = ProblemMessageProvider.getMessage(statusResolver);
+      int statusCode = Integer.parseInt(ProblemMessageProvider.getMessage(defaultStatusResolver));
       status = HttpStatus.valueOf(statusCode);
     } catch (final Exception e) {
       // Ignore on purpose
     }
+    return status;
+  }
+
+  // ------ Create problem from exceptions ------
+  default Problem toProblem(
+      final Throwable throwable, final String defaultErrorKey, final HttpStatus status) {
+
+    String errorKey = ClassUtils.getName(throwable);
 
     ProblemMessageSourceResolver defaultCodeResolver =
         ProblemMessageSourceResolver.of(
@@ -69,6 +74,9 @@ public interface AdviceTrait<T, R> {
         ProblemMessageSourceResolver.of(
             ProblemConstant.DETAIL_CODE_PREFIX + errorKey,
             ProblemMessageProvider.getMessage(defaultDetailResolver));
+    ProblemMessageSourceResolver statusResolver =
+        ProblemMessageSourceResolver.of(
+            ProblemConstant.STATUS_CODE_PREFIX + errorKey, status.value());
 
     Problem problem =
         toProblem(throwable, codeResolver, titleResolver, detailResolver, statusResolver);
@@ -177,7 +185,7 @@ public interface AdviceTrait<T, R> {
       final MessageSourceResolvable codeResolver,
       final MessageSourceResolvable titleResolver,
       final MessageSourceResolvable detailResolver,
-      final ProblemMessageSourceResolver statusResolver) {
+      final MessageSourceResolvable statusResolver) {
     Map<String, Object> parameters = new LinkedHashMap<>();
     if (ProblemBeanRegistry.problemProperties().isDebugEnabled()) {
       parameters.put(CODE_RESOLVER, codeResolver);
