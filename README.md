@@ -873,7 +873,7 @@ class StateControllerTest {
       ProblemJacksonConfiguration.class,
       ProblemWebfluxAutoConfiguration.class,
       WebFluxExceptionHandler.class
-      // WebSecurityExceptionHandler.class // If security is enabled 
+      // WebFluxSecurityExceptionHandler.class // If security is enabled 
     })
 public class WebFluxTestConfiguration {
   
