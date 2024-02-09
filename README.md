@@ -6,6 +6,30 @@ Requires Java 21, Spring boot 3.2.0+ and Jakarta EE 10
 
 ![Exception Handling](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*0s2E6-iNFqr_xptwrmJTdg.jpeg)
 
+## Table of Contents
+1 [Introduction](https://github.com/officiallysingh/spring-boot-problem-handler#introduction)
+2 [Installation](https://github.com/officiallysingh/spring-boot-problem-handler#installation)
+3 [Features](https://github.com/officiallysingh/spring-boot-problem-handler#features)
+4 [Controller Advices](https://github.com/officiallysingh/spring-boot-problem-handler#controller-advices)
+  - [General advices](https://github.com/officiallysingh/spring-boot-problem-handler#general-advices-recommended-for-all-spring-rest-services)
+  - [DAO advices](https://github.com/officiallysingh/spring-boot-problem-handler#dao-advices)
+  - [Security advices](https://github.com/officiallysingh/spring-boot-problem-handler#security-advices)
+  - [OpenAPI validation advice](https://github.com/officiallysingh/spring-boot-problem-handler#openapi-validation-advice)
+5 [Configurations]()(https://github.com/officiallysingh/spring-boot-problem-handler#configurations)
+6 [Problem Properties](https://github.com/officiallysingh/spring-boot-problem-handler#problem-properties)
+7 [Error Key](https://github.com/officiallysingh/spring-boot-problem-handler#error-key)
+8 [Error response](https://github.com/officiallysingh/spring-boot-problem-handler#error-response)
+9 [Message resolvers](https://github.com/officiallysingh/spring-boot-problem-handler#message-resolvers)
+10 [Creating and throwing exceptions](https://github.com/officiallysingh/spring-boot-problem-handler#creating-and-throwing-exceptions)
+11 [Stack traces](https://github.com/officiallysingh/spring-boot-problem-handler#stack-traces)
+12 [Cause chains](https://github.com/officiallysingh/spring-boot-problem-handler#cause-chains)
+13 [Customizations](https://github.com/officiallysingh/spring-boot-problem-handler#customizations)
+  - [Customize error response](https://github.com/officiallysingh/spring-boot-problem-handler#customize-error-response)
+  - [Customize or Override advices](https://github.com/officiallysingh/spring-boot-problem-handler#customize-or-override-advices)
+14 [Define new advices](https://github.com/officiallysingh/spring-boot-problem-handler#define-new-advices)
+15 [Testing](https://github.com/officiallysingh/spring-boot-problem-handler#testing)
+16 [Example error responses](https://github.com/officiallysingh/spring-boot-problem-handler#example-error-responses)
+
 ## Introduction
 
 Exception handling is a cross-cutting concern, should be kept separate from business logic and applied declaratively. 
@@ -124,9 +148,9 @@ or [**`ProblemHandlingWebflux`**](src/main/java/com/ksoot/problem/spring/advice/
 | `└──`[ `ApplicationAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/application/ApplicationAdviceTraits.java) | `└──`[`ApplicationAdviceTraits`](src/main/java/com/ksoot/problem/spring/advice/application/ApplicationAdviceTraits.java)  |
 
 
-#### Dao advices
+#### DAO advices
 
-| Dao Advice Traits                                                                                                                        | Produces                                                  | Error Key                                              |
+| DAO Advice Traits                                                                                                                        | Produces                                                  | Error Key                                              |
 |------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------|--------------------------------------------------------|
 | [**`DaoAdviceTraits`**](src/main/java/com/ksoot/problem/spring/advice/dao/DaoAdviceTraits.java)                                          |                                                           |                                                        | 
 | `├──`[**`DataIntegrityViolationAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/dao/DataIntegrityViolationAdviceTrait.java) | [`500 Internal Server Error`](https://httpstatus.es/500)  | data.integrity.violation.\<Failed DB constraint name\> |
@@ -880,7 +904,7 @@ public class WebFluxTestConfiguration {
 }
 ```
 
-## Examples responses
+## Example error responses
 **Following are example error responses in different scenarios.**
 The error response attributes `code`, `title` and `detail` can be customized for each error by specifying
 the same in `errors.properties` file for different error keys which you can get by setting `problem.debug-enabled=true` in `application.properties` file
