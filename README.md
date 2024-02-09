@@ -21,7 +21,7 @@ Requires Java 21, Spring boot 3.2.0+ and Jakarta EE 10
 8. [Error response characteristics](https://github.com/officiallysingh/spring-boot-problem-handler#error-response)
 9. [Message resolvers to externalize error response in `properties` files](https://github.com/officiallysingh/spring-boot-problem-handler#message-resolvers)
 10. [Creating and throwing exceptions in your applications](https://github.com/officiallysingh/spring-boot-problem-handler#creating-and-throwing-exceptions)
-11. [Stack trace of exceptions embedded in error response](https://github.com/officiallysingh/spring-boot-problem-handler#stack-traces)
+11. [Stack trace embedded in error response](https://github.com/officiallysingh/spring-boot-problem-handler#stack-traces)
 12. [Cause chains embedded in error response](https://github.com/officiallysingh/spring-boot-problem-handler#cause-chains)
 13. [Customizations of default behaviour](https://github.com/officiallysingh/spring-boot-problem-handler#customizations)
     - [Customize error response](https://github.com/officiallysingh/spring-boot-problem-handler#customize-error-response)
