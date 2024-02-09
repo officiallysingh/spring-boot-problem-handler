@@ -8,27 +8,27 @@ Requires Java 21, Spring boot 3.2.0+ and Jakarta EE 10
 
 ## Table of Contents
 1. [Introduction](https://github.com/officiallysingh/spring-boot-problem-handler#introduction)
-2. [Installation](https://github.com/officiallysingh/spring-boot-problem-handler#installation)
-3. [Features](https://github.com/officiallysingh/spring-boot-problem-handler#features)
-4. [Controller Advices](https://github.com/officiallysingh/spring-boot-problem-handler#controller-advices)
-  - [General advices](https://github.com/officiallysingh/spring-boot-problem-handler#general-advices-recommended-for-all-spring-rest-services)
-  - [DAO advices](https://github.com/officiallysingh/spring-boot-problem-handler#dao-advices)
-  - [Security advices](https://github.com/officiallysingh/spring-boot-problem-handler#security-advices)
-  - [OpenAPI validation advice](https://github.com/officiallysingh/spring-boot-problem-handler#openapi-validation-advice)
-5. [Configurations]()(https://github.com/officiallysingh/spring-boot-problem-handler#configurations)
-6. [Problem Properties](https://github.com/officiallysingh/spring-boot-problem-handler#problem-properties)
-7. [Error Key](https://github.com/officiallysingh/spring-boot-problem-handler#error-key)
-8. [Error response](https://github.com/officiallysingh/spring-boot-problem-handler#error-response)
-9. [Message resolvers](https://github.com/officiallysingh/spring-boot-problem-handler#message-resolvers)
-10. [Creating and throwing exceptions](https://github.com/officiallysingh/spring-boot-problem-handler#creating-and-throwing-exceptions)
-11. [Stack traces](https://github.com/officiallysingh/spring-boot-problem-handler#stack-traces)
-12. [Cause chains](https://github.com/officiallysingh/spring-boot-problem-handler#cause-chains)
-13. [Customizations](https://github.com/officiallysingh/spring-boot-problem-handler#customizations)
-  - [Customize error response](https://github.com/officiallysingh/spring-boot-problem-handler#customize-error-response)
-  - [Customize or Override advices](https://github.com/officiallysingh/spring-boot-problem-handler#customize-or-override-advices)
-14. [Define new advices](https://github.com/officiallysingh/spring-boot-problem-handler#define-new-advices)
-15. [Testing](https://github.com/officiallysingh/spring-boot-problem-handler#testing)
-16. [Example error responses](https://github.com/officiallysingh/spring-boot-problem-handler#example-error-responses)
+2. [Installation](https://github.com/officiallysingh/spring-boot-problem-handler#installation) How to avail it
+3. [Features](https://github.com/officiallysingh/spring-boot-problem-handler#features) What it offers
+4. [Controller Advices](https://github.com/officiallysingh/spring-boot-problem-handler#controller-advices) bundled with library
+  - [General advices](https://github.com/officiallysingh/spring-boot-problem-handler#general-advices-recommended-for-all-spring-rest-services) for web applications
+  - [DAO advices](https://github.com/officiallysingh/spring-boot-problem-handler#dao-advices) for relational databases and MongoDB 
+  - [Security advices](https://github.com/officiallysingh/spring-boot-problem-handler#security-advices) for common security exceptions
+  - [OpenAPI validation advice](https://github.com/officiallysingh/spring-boot-problem-handler#openapi-validation-advice) for API specification validations
+5. [Configurations](https://github.com/officiallysingh/spring-boot-problem-handler#configurations)
+6. [Problem Properties](https://github.com/officiallysingh/spring-boot-problem-handler#problem-properties) to customize the behaviour
+7. [Error Key](https://github.com/officiallysingh/spring-boot-problem-handler#error-key) the central concept behind error attribute's externalization
+8. [Error response](https://github.com/officiallysingh/spring-boot-problem-handler#error-response) the error response structure
+9. [Message resolvers](https://github.com/officiallysingh/spring-boot-problem-handler#message-resolvers) how to externalize error response in `properties` files
+10. [Creating and throwing exceptions](https://github.com/officiallysingh/spring-boot-problem-handler#creating-and-throwing-exceptions) to easily create and throw exceptions
+11. [Stack traces](https://github.com/officiallysingh/spring-boot-problem-handler#stack-traces) to get exception stacktrace
+12. [Cause chains](https://github.com/officiallysingh/spring-boot-problem-handler#cause-chains) to get the embedded exception cause chains
+13. [Customizations](https://github.com/officiallysingh/spring-boot-problem-handler#customizations) to customize the behaviour
+  - [Customize error response](https://github.com/officiallysingh/spring-boot-problem-handler#customize-error-response) to customize error response
+  - [Customize or Override advices](https://github.com/officiallysingh/spring-boot-problem-handler#customize-or-override-advices) to customize inbuilt advices
+14. [Define new advices](https://github.com/officiallysingh/spring-boot-problem-handler#define-new-advices) to define new `@ControllerAdvice`s
+15. [Testing](https://github.com/officiallysingh/spring-boot-problem-handler#testing) support
+16. [Example error responses](https://github.com/officiallysingh/spring-boot-problem-handler#example-error-responses) All different kind of error response examples
 
 ## Introduction
 
