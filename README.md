@@ -10,25 +10,25 @@ Requires Java 21, Spring boot 3.2.0+ and Jakarta EE 10
 1. [Introduction](#introduction)
 2. [Installation](#installation)
 3. [Features offered](https://github.com/officiallysingh/spring-boot-problem-handler#features)
-4. [Controller Advices bundled with library](https://github.com/officiallysingh/spring-boot-problem-handler#controller-advices)
-   - [General advices for web applications](https://github.com/officiallysingh/spring-boot-problem-handler#general-advices-recommended-for-all-spring-rest-services)
-   - [DAO advices for relational databases and MongoDB](https://github.com/officiallysingh/spring-boot-problem-handler#dao-advices) 
-   - [Security advices for common security exceptions](https://github.com/officiallysingh/spring-boot-problem-handler#security-advices)
-   - [OpenAPI validation advice for API specification validations](https://github.com/officiallysingh/spring-boot-problem-handler#openapi-validation-advice)
-5. [Spring Configurations](https://github.com/officiallysingh/spring-boot-problem-handler#configurations)
-6. [Problem Properties to customize the behaviour](https://github.com/officiallysingh/spring-boot-problem-handler#problem-properties)
-7. [Error Key, the central concept behind error attribute's externalization](https://github.com/officiallysingh/spring-boot-problem-handler#error-key)
-8. [Error response characteristics](https://github.com/officiallysingh/spring-boot-problem-handler#error-response)
-9. [Message resolvers to externalize error response in `properties` files](https://github.com/officiallysingh/spring-boot-problem-handler#message-resolvers)
-10. [Creating and throwing exceptions in your applications](https://github.com/officiallysingh/spring-boot-problem-handler#creating-and-throwing-exceptions)
-11. [Stack trace embedded in error response](https://github.com/officiallysingh/spring-boot-problem-handler#stack-traces)
-12. [Cause chains embedded in error response](https://github.com/officiallysingh/spring-boot-problem-handler#cause-chains)
-13. [Customizations of default behaviour](https://github.com/officiallysingh/spring-boot-problem-handler#customizations)
-    - [Customize error response](https://github.com/officiallysingh/spring-boot-problem-handler#customize-error-response)
-    - [Customize or Override advices](https://github.com/officiallysingh/spring-boot-problem-handler#customize-or-override-advices)
-14. [Define new advices](https://github.com/officiallysingh/spring-boot-problem-handler#define-new-advices)
-15. [Testing support](https://github.com/officiallysingh/spring-boot-problem-handler#testing)
-16. [Example error responses in different scenarios](https://github.com/officiallysingh/spring-boot-problem-handler#example-error-responses)
+4. [Controller Advices bundled with library](#controller-advices)
+   - [General advices for web applications](#general-advices-recommended-for-all-spring-rest-services)
+   - [DAO advices for relational databases and MongoDB](#dao-advices) 
+   - [Security advices for common security exceptions](#security-advices)
+   - [OpenAPI validation advice for API specification validations](#openapi-validation-advice)
+5. [Spring Configurations](#configurations)
+6. [Problem Properties to customize the behaviour](#problem-properties)
+7. [Error Key, the central concept behind error attribute's externalization](#error-key)
+8. [Error response characteristics](#error-response)
+9. [Message resolvers to externalize error response in `properties` files](#message-resolvers)
+10. [Creating and throwing exceptions in your applications](#creating-and-throwing-exceptions)
+11. [Stack trace embedded in error response](#stack-traces)
+12. [Cause chains embedded in error response](#cause-chains)
+13. [Customizations of default behaviour](#customizations)
+    - [Customize error response](#customize-error-response)
+    - [Customize or Override advices](#customize-or-override-advices)
+14. [Define new advices](#define-new-advices)
+15. [Testing support](#testing)
+16. [Example error responses in different scenarios](#example-error-responses)
 
 ## Introduction
 
@@ -409,11 +409,11 @@ Following is an example response body for an error.
 }
 ```
 Response Header when service is configured for Json `HttpMessageConverters`
-```json
+```text
 content-type: application/problem+json
 ```
 Response Header when service is configured for XML `HttpMessageConverters`
-```json
+```text
 content-type: application/problem+xml
 ```
 
