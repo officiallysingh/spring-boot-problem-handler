@@ -7,8 +7,8 @@ Requires Java 21, Spring boot 3.2.0+ and Jakarta EE 10
 ![Exception Handling](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*0s2E6-iNFqr_xptwrmJTdg.jpeg)
 
 ## Table of Contents
-1. [Introduction](https://github.com/officiallysingh/spring-boot-problem-handler#introduction)
-2. [Installation](https://github.com/officiallysingh/spring-boot-problem-handler#installation)
+1. [Introduction](#introduction)
+2. [Installation](#installation)
 3. [Features offered](https://github.com/officiallysingh/spring-boot-problem-handler#features)
 4. [Controller Advices bundled with library](https://github.com/officiallysingh/spring-boot-problem-handler#controller-advices)
    - [General advices for web applications](https://github.com/officiallysingh/spring-boot-problem-handler#general-advices-recommended-for-all-spring-rest-services)
