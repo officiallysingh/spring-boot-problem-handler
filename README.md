@@ -54,6 +54,9 @@ all can be done with zero custom code but by specifying error details in `proper
 Add the `spring-boot-problem-handler` jar to application dependencies. That is all it takes to get a default working 
 exception handling mechanism in a Spring boot application.
 
+> [!IMPORTANT]
+Jar is built on java 21. For earlier versions of java, please build from source code.
+
 Maven
 ```xml
 <dependency>
