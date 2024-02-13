@@ -27,7 +27,7 @@ Requires Java 21, Spring boot 3.2.0+ and Jakarta EE 10
     - [Customize error response](#customize-error-response)
     - [Customize or Override advices](#customize-or-override-advices)
 14. [Define new advices](#define-new-advices)
-15. [Testing support](#testing)
+15. [Testing support](#testing-support)
 16. [Example error responses in different scenarios](#example-error-responses)
 
 ## Introduction
@@ -830,7 +830,7 @@ public class MyCustomAdvice implements AdviceTrait<ServerWebExchange, Mono<Respo
 }
 ```
 
-## Testing
+## Testing support
 Following beans are [**autoconfigured**](src/main/resources/META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports) for exception handling
 
 | Configuration class                                                                                                                             | Spring Web  | Spring Webflux |
