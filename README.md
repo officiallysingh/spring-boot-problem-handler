@@ -833,21 +833,21 @@ public class MyCustomAdvice implements AdviceTrait<ServerWebExchange, Mono<Respo
 ## Testing support
 Following beans are [**autoconfigured**](src/main/resources/META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports) for exception handling
 
-| Configuration class                                                                                                                             | Spring Web  | Spring Webflux |
-|-------------------------------------------------------------------------------------------------------------------------------------------------|-------------|----------------|
-| [**`ProblemMessageProviderConfig`**](src/main/java/com/ksoot/problem/spring/config/ProblemMessageProviderConfig.java)                           | :white_check_mark:         | :white_check_mark:            |
-| [**`ProblemBeanRegistry`**](src/main/java/com/ksoot/problem/spring/config/ProblemBeanRegistry.java)                                             | :white_check_mark:         | :white_check_mark:            |
-| [**`ProblemJacksonConfiguration`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/ProblemJacksonConfiguration.java)                 | :white_check_mark:         | :white_check_mark:            |
-| [**`ProblemDaoConfiguration`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/ProblemDaoConfiguration.java)                         | :white_check_mark:         | :white_check_mark:            |
-| [**`ProblemWebAutoConfiguration`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/web/ProblemWebAutoConfiguration.java)             | :white_check_mark:         | No             |
-| [**`WebExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/web/WebExceptionHandler.java)                             | :white_check_mark:         | No             |
-| [**`WebSecurityExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/web/WebSecurityExceptionHandler.java)             | :white_check_mark:         | No             |
-| [**`WebDaoExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/web/WebDaoExceptionHandler.java)                       | :white_check_mark:         | No             |
-| [**`OpenApiValidationExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/web/OpenApiValidationExceptionHandler.java) | :white_check_mark:         | No             |
-| [**`ProblemWebfluxAutoConfiguration`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/webflux/ProblemWebfluxAutoConfiguration.java) | No          | :white_check_mark:            |
-| [**`WebFluxExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/webflux/WebFluxExceptionHandler.java)                 | No          | :white_check_mark:            |
-| [**`WebFluxSecurityExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/webflux/WebFluxSecurityExceptionHandler.java) | No          | :white_check_mark:            |
-| [**`WebFluxDaoExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/webflux/WebFluxDaoExceptionHandler.java)           | No          | :white_check_mark:            |
+| Configuration class                                                                                                                             | Spring Web         | Spring Webflux |
+|-------------------------------------------------------------------------------------------------------------------------------------------------|--------------------|----------------|
+| [**`ProblemMessageProviderConfig`**](src/main/java/com/ksoot/problem/spring/config/ProblemMessageProviderConfig.java)                           | :white_check_mark: | :white_check_mark:            |
+| [**`ProblemBeanRegistry`**](src/main/java/com/ksoot/problem/spring/config/ProblemBeanRegistry.java)                                             | :white_check_mark: | :white_check_mark:            |
+| [**`ProblemJacksonConfiguration`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/ProblemJacksonConfiguration.java)                 | :white_check_mark: | :white_check_mark:            |
+| [**`ProblemDaoConfiguration`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/ProblemDaoConfiguration.java)                         | :white_check_mark: | :white_check_mark:            |
+| [**`ProblemWebAutoConfiguration`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/web/ProblemWebAutoConfiguration.java)             | :white_check_mark: | :x:             |
+| [**`WebExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/web/WebExceptionHandler.java)                             | :white_check_mark: | :x:             |
+| [**`WebSecurityExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/web/WebSecurityExceptionHandler.java)             | :white_check_mark: | :x:             |
+| [**`WebDaoExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/web/WebDaoExceptionHandler.java)                       | :white_check_mark: | :x:             |
+| [**`OpenApiValidationExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/web/OpenApiValidationExceptionHandler.java) | :white_check_mark: | :x:             |
+| [**`ProblemWebfluxAutoConfiguration`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/webflux/ProblemWebfluxAutoConfiguration.java) | :x:                | :white_check_mark:            |
+| [**`WebFluxExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/webflux/WebFluxExceptionHandler.java)                 | :x:                | :white_check_mark:            |
+| [**`WebFluxSecurityExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/webflux/WebFluxSecurityExceptionHandler.java) | :x:                | :white_check_mark:            |
+| [**`WebFluxDaoExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/webflux/WebFluxDaoExceptionHandler.java)           | :x:                | :white_check_mark:            |
 
 
 But the autoconfiguration may not take effect while running Junit test cases, So required configuration classes could be imported for `Controller`s test cases, as follows
