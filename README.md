@@ -314,12 +314,12 @@ or in `application.properties` as follows
 spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
 ```
 
-Specify message source bundles as follows. Make sure to include `i18/problems` bundled in the library, as it 
+Specify message source bundles as follows. Make sure to include `i18n/problems` bundled in the library, as it 
 has default messages for certain exception. And it should be last in the list of `basenames`, 
 so that it has lowest priority and any default messages coming from `problems.properties` can be overridden 
 by specifying the property with different value in application's `errors.properties`
 ```properties
-spring.messages.basename=i18n/errors,i18/problems
+spring.messages.basename=i18n/errors,i18n/problems
 spring.messages.use-code-as-default-message=true
 ```
 if `use-code-as-default-message` is set to `false` and the message is not found in any of the `properties` file 
