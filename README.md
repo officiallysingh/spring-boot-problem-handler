@@ -850,7 +850,7 @@ Following beans are [**autoconfigured**](src/main/resources/META-INF/spring/org.
 | [**`WebFluxDaoExceptionHandler`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/webflux/WebFluxDaoExceptionHandler.java)           | No          | Yes            |
 
 
-The autoconfiguration may not take effect while running Junit test cases, So required configuration classes could be imported for `Controller`s test cases, as follows
+But the autoconfiguration may not take effect while running Junit test cases, So required configuration classes could be imported for `Controller`s test cases, as follows
 
 > For Spring Web applications
 ```java
