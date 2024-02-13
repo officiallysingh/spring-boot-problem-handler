@@ -1162,7 +1162,8 @@ the same in `errors.properties` file for different error keys which you can get 
 Open source [**The MIT License**](http://www.opensource.org/licenses/mit-license.php)
 
 ## Authors and acknowledgment
-[**Rajveer Singh**](https://www.linkedin.com/in/rajveer-singh-589b3950/), In case you find any issues or need any support, please email me at raj14.1984@gmail.com
+[**Rajveer Singh**](https://www.linkedin.com/in/rajveer-singh-589b3950/), In case you find any issues or need any support, please email me at raj14.1984@gmail.com.
+Please give me a :star: if you find it helpful.
 
 ## Credits and references
 Inspired and taken base code from [**Zalando Problem libraries**](https://github.com/zalando/problem-spring-web)
