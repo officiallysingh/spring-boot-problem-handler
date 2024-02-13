@@ -1043,7 +1043,7 @@ the same in `errors.properties` file for different error keys which you can get 
   "type": "http://localhost:8080/problems/help.html#405",
   "title": "Method Not Allowed",
   "status": 405,
-  "detail": "Requested Method: POST not allowed, allowed methods are: GET",
+  "detail": "Requested Method: POST not allowed, allowed methods are: GET, PUT",
   "instance": "/problems/handler-datetime-conversion",
   "method": "POST",
   "timestamp": "2023-10-29T16:15:08.916369+05:30",
