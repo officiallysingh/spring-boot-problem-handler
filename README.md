@@ -529,6 +529,12 @@ title.sample.problem=Some title
 detail.sample.problem=Some message details
 ```
 
+> [!WARNING]
+> It uses Spring's `MessageSource` to resolve placeholders in message template. 
+> You should be aware that the single quote character (') fulfils a special purpose inside message patterns. 
+> The single quote is used to represent a section within the message pattern that will not be formatted. 
+> A single quote itself must be escaped by using two single quotes ('').
+
 But exceptions come with some default attributes as follows, to minimize the number of properties required to be defined in `properties` file
 
 If the messages are not found in `properties` files, defaults are taken as follows.
@@ -741,6 +747,9 @@ class CustomErrorResponseBuilder implements ErrorResponseBuilder<ServerWebExchan
 Any autoconfigured advice can be customized by overriding the same and providing a different implementation. 
 Make sure to add annotation `@Order(Ordered.HIGHEST_PRECEDENCE)` over the class, 
 It makes this handler to take precedence over the fallback advice which handles `Throwable` i.e. for all exceptions for which no `ControllerAdvice`s are defined.
+In case of Constraint Violation exceptions, the `errorKey` is derived from the field name, 
+but in cases where field name is customized using `@JsonProperty`, 
+`MethodArgumentNotValidException` may need to be customized to use `@JsonProperty` instead of class's field name in dynamically generated `erroKey` as follows
 
 > For Spring Web applications
 ```java
@@ -748,36 +757,32 @@ It makes this handler to take precedence over the fallback advice which handles 
 @Order(Ordered.HIGHEST_PRECEDENCE) // Important to note
 class CustomMethodArgumentNotValidExceptionHandler implements MethodArgumentNotValidAdviceTrait<NativeWebRequest, ResponseEntity<ProblemDetail>> {
 
-    public ResponseEntity<ProblemDetail> handleMethodArgumentNotValid(final MethodArgumentNotValidException exception, final NativeWebRequest request) {
-        List<String> violations = processBindingResult(exception.getBindingResult());
-        final String errors = violations.stream()
-            .collect(Collectors.joining(", "));
-        Problem problem = Problem.code(ProblemUtils.statusCode(HttpStatus.BAD_REQUEST)).title(HttpStatus.BAD_REQUEST.getReasonPhrase())
-            .detail(errors).build();
-        return create(exception, request, HttpStatus.BAD_REQUEST,
-            problem);
-    }
+    @Override
+    public ViolationVM handleFieldError(final FieldError fieldError, final Throwable exception) {
+        String field = fieldError.getField();
 
-    List<String> processBindingResult(final BindingResult bindingResult) {
-        final List<String> fieldErrors =
-            bindingResult.getFieldErrors().stream()
-                .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
-                .toList();
-        final List<String> globalErrors =
-            bindingResult.getGlobalErrors().stream()
-                .map(
-                    objectError ->
-                        objectError.getObjectName() + ": " + objectError.getDefaultMessage())
-                .toList();
+        try {
+            if (fieldError.contains(ConstraintViolation.class)) {
+                final ConstraintViolation<?> violation = fieldError.unwrap(ConstraintViolation.class);
+                final Field declaredField = violation.getRootBeanClass().getDeclaredField(fieldError.getField());
+                final JsonProperty annotation = declaredField.getAnnotation(JsonProperty.class);
 
-        final List<String> errors = new ArrayList<>();
-        if (CollectionUtils.isNotEmpty(fieldErrors)) {
-            errors.addAll(fieldErrors);
+                if (annotation != null && annotation.value() != null && !annotation.value().isEmpty()) {
+                    field = annotation.value();
+                }
+            }
+        } catch (Exception ignored) {
+            // Ignored
         }
-        if (CollectionUtils.isNotEmpty(globalErrors)) {
-            errors.addAll(globalErrors);
-        }
-        return errors;
+
+        HttpStatus status = defaultConstraintViolationStatus();
+        ProblemMessageSourceResolver codeResolver =
+                ProblemMessageSourceResolver.of(
+                        ProblemConstant.CONSTRAINT_VIOLATION_CODE_CODE_PREFIX, fieldError, status.value());
+        ProblemMessageSourceResolver messageResolver =
+                ProblemMessageSourceResolver.of(
+                        ProblemConstant.CONSTRAINT_VIOLATION_DETAIL_CODE_PREFIX, fieldError);
+        return createViolation(codeResolver, messageResolver, field);
     }
 }
 ```
