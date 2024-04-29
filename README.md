@@ -746,7 +746,7 @@ class CustomErrorResponseBuilder implements ErrorResponseBuilder<ServerWebExchan
 ### Customize or Override advices
 Any autoconfigured advice can be customized by overriding the same and providing a different implementation. 
 Make sure to add annotation `@Order(Ordered.HIGHEST_PRECEDENCE)` over the class, 
-It makes this handler to take precedence over the fallback advice which handles `Throwable` i.e. for all exceptions for which no `ControllerAdvice`s are defined.
+It makes this handler to take precedence over the fallback advice which handles `Throwable` i.e. for all exceptions for which no `ControllerAdvice`s are defined.  
 In case of Constraint Violation exceptions, the `errorKey` is derived from the field name, 
 but in cases where field name is customized using `@JsonProperty`, 
 `MethodArgumentNotValidException` may need to be customized to use `@JsonProperty` instead of class's field name in dynamically generated `erroKey` as follows
