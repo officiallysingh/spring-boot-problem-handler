@@ -3,7 +3,6 @@ package com.ksoot.problem.core;
 import jakarta.annotation.Nullable;
 import java.util.Map;
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
 
@@ -22,6 +21,7 @@ public final class ApplicationException extends Exception implements ProblemSupp
   private final Problem problem;
 
   private ApplicationException(
+      final String message,
       final HttpStatus status,
       final Problem problem,
       final String errorKey,
@@ -29,7 +29,7 @@ public final class ApplicationException extends Exception implements ProblemSupp
       @Nullable final Object[] detailArgs,
       @Nullable final ThrowableProblem cause,
       @Nullable final Map<String, Object> parameters) {
-    super(StringUtils.isNotEmpty(defaultDetail) ? defaultDetail : defaultDetail, cause);
+    super(message, cause);
     this.status = status;
     this.errorKey = errorKey;
     this.problem = problem;
@@ -48,11 +48,26 @@ public final class ApplicationException extends Exception implements ProblemSupp
       @Nullable final Map<String, Object> parameters) {
     Assert.hasText(errorKey, "'errorKey' must not be null or empty");
     return new ApplicationException(
-        status, null, errorKey, defaultDetail, detailArgs, cause, parameters);
+        ProblemUtils.toMessage(errorKey, defaultDetail, null, cause),
+        status,
+        null,
+        errorKey,
+        defaultDetail,
+        detailArgs,
+        cause,
+        parameters);
   }
 
   public static ApplicationException of(final HttpStatus status, final Problem problem) {
     Assert.notNull(problem, "'problem' must not be null");
-    return new ApplicationException(status, problem, null, null, null, null, null);
+    return new ApplicationException(
+        ProblemUtils.toMessage(null, null, problem, null),
+        status,
+        problem,
+        null,
+        null,
+        null,
+        null,
+        null);
   }
 }

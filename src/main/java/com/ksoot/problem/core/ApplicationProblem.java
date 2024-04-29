@@ -21,6 +21,7 @@ public final class ApplicationProblem extends RuntimeException implements Proble
   private final Problem problem;
 
   private ApplicationProblem(
+      final String message,
       final HttpStatus status,
       final Problem problem,
       final String errorKey,
@@ -28,7 +29,7 @@ public final class ApplicationProblem extends RuntimeException implements Proble
       @Nullable final Object[] detailArgs,
       @Nullable final ThrowableProblem cause,
       @Nullable final Map<String, Object> parameters) {
-    super(defaultDetail, cause);
+    super(message, cause);
     Assert.notNull(status, "'status' must not be null");
     this.status = status;
     this.errorKey = errorKey;
@@ -48,16 +49,39 @@ public final class ApplicationProblem extends RuntimeException implements Proble
       @Nullable final Map<String, Object> parameters) {
     Assert.hasText(errorKey, "'errorKey' must not be null or empty");
     return new ApplicationProblem(
-        status, null, errorKey, defaultDetail, detailArgs, cause, parameters);
+        ProblemUtils.toMessage(errorKey, defaultDetail, null, cause),
+        status,
+        null,
+        errorKey,
+        defaultDetail,
+        detailArgs,
+        cause,
+        parameters);
   }
 
   public static ApplicationProblem of(final HttpStatus status, final String errorKey) {
     Assert.hasText(errorKey, "'errorKey' must not be null or empty");
-    return new ApplicationProblem(status, null, errorKey, null, null, null, null);
+    return new ApplicationProblem(
+        ProblemUtils.toMessage(errorKey, null, null, null),
+        status,
+        null,
+        errorKey,
+        null,
+        null,
+        null,
+        null);
   }
 
   public static ApplicationProblem of(final HttpStatus status, final Problem problem) {
     Assert.notNull(problem, "'problem' must not be null");
-    return new ApplicationProblem(status, problem, null, problem.getDetail(), null, null, null);
+    return new ApplicationProblem(
+        ProblemUtils.toMessage(null, null, problem, null),
+        status,
+        problem,
+        null,
+        problem.getDetail(),
+        null,
+        null,
+        null);
   }
 }

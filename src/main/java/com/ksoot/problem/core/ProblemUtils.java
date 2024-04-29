@@ -1,13 +1,16 @@
 package com.ksoot.problem.core;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.joining;
 import static org.springframework.core.annotation.AnnotatedElementUtils.findMergedAnnotation;
 
 import com.ksoot.problem.spring.config.ProblemBeanRegistry;
 import jakarta.annotation.Nullable;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpStatus;
@@ -84,5 +87,21 @@ public class ProblemUtils {
       current = scitr.next();
     }
     return escapedStacktrace.toString();
+  }
+
+  public static String toMessage(
+      @Nullable final String errorKey,
+      @Nullable final String defaultDetail,
+      @Nullable final Problem problem,
+      @Nullable final Problem cause) {
+    final Stream<String> parts =
+        Stream.of(
+                errorKey,
+                defaultDetail,
+                Objects.nonNull(problem) ? Problem.toString(problem) : null,
+                Objects.nonNull(cause) ? Problem.toString(cause) : null)
+            .filter(Objects::nonNull);
+
+    return parts.collect(joining(", "));
   }
 }
