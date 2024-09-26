@@ -39,7 +39,7 @@ wherein each instance of error code enum represents an error scenario.
 An exception class could be either checked or unchecked, but handling of exception is no different. 
 For almost all error scenarios unchecked exception can serve the purpose really well, 
 saving developers from explicitly writing `try` `catch` blocks and `throws` clauses. Though not recommended but 
-limited checked exceptions can be created and thrown from methods where calling programs can take some recovery measures.
+ limited, checked exceptions can be created and thrown from methods where calling programs can take some recovery measures.
 
 Standard way of handling exceptions in Spring is `@ControllerAdvice` using AOP, 
 following the same principles **spring-boot-problem-handler** makes available everything related to exception handling 
@@ -70,26 +70,26 @@ Gradle
 implementation 'io.github.officiallysingh:spring-boot-problem-handler:1.9'
 ```
 
-It does all hard part, A lot of advices are out of box available which are autoconfigured as `ControllerAdvice`s 
+It does all hard part, A lot of advices are out of box available that are autoconfigured as `ControllerAdvice`s 
 depending on the jars in classpath of consumer application. 
 **Even for exceptions for which no advices are defined**, respective error response can be specified by 
 messages in `properties` file, elaborated in [*Usage*](https://github.com/officiallysingh/spring-boot-problem-handler#usage) section.
-New custom advices could be required only in cases where it is required to take some data from exception instance 
+New custom advice could be required only in cases where it is required to take some data from exception instance 
 to dynamically derive [*Error key*](https://github.com/officiallysingh/spring-boot-problem-handler#error-key) 
-or to use this data to resolve any placeholders in error message. In such cases consumer application can define 
+or to use this data to resolve any placeholders in an error message. In such cases consumer application can define 
 their own custom `ControllerAdvice`'s,
 Any existing advice can be referred to weave the custom advice into the framework.
 
 > A default set of `ControllerAdvice`s are always configured irrespective of the fact that whether 
-the application is Spring Web or Spring Webflux, but few advices are conditional 
+the application is Spring Web or Spring Webflux. However, few advices are conditional 
 such as for Handling Security, OpenAPI and Dao related exceptions, which are elaborated in their respective sections.
 
 ## Features
 
 * A lot of inbuilt `ControllerAdvice`'s out of box available to handle most common exceptions.
-* Extendable to add more advices or override existing advices in consumer applications, weaving them into aligned framework for exception handling.
+* Extendable to add more advices or override existing advices in consumer applications, weaving them into an aligned framework for exception handling.
 * Customizable Error response structure.
-* Provides mechanism to specify error response for any kind of exception without defining any `ControllerAdvice`.
+* Provides a mechanism to specify error response for any kind of exception without defining any `ControllerAdvice`.
 * Works with both Spring Web and Spring Webflux applications.
 * Customizable to override the default attributes in error response by overriding the same in `properties` file.
 * The autoconfigured advices can be disabled or overridden or extended as per needs.
@@ -189,7 +189,7 @@ These advices are autoconfigured as a bean `SecurityExceptionHandler` if followi
 and [**`ProblemAccessDeniedHandler`**](src/main/java/com/ksoot/problem/spring/advice/security/ProblemAccessDeniedHandler.java) 
 are autoconfigured as `authenticationEntryPoint` and `accessDeniedHandler` beans respectively. 
 
-But to make it work following needs to be done in application's Spring Security configuration. 
+But to make it work, the following needs to be done in the application's Spring Security configuration. 
 Refer to example [**`WebSecurityConfiguration`**](https://github.com/officiallysingh/problem-handler-web-demo/blob/main/src/main/java/com/ksoot/problem/demo/config/WebSecurityConfiguration.java)
 ```java
 @Autowired
@@ -232,7 +232,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 and [**`ProblemServerAccessDeniedHandler`**](src/main/java/com/ksoot/problem/spring/advice/security/ProblemServerAccessDeniedHandler.java)
 are autoconfigured as `authenticationEntryPoint` and `accessDeniedHandler` beans respectively.
 
-But to make it work following needs to be done in application Spring Security configuration. 
+But to make it work, the following needs to be done in application Spring Security configuration. 
 Refer to example [**`WebFluxSecurityConfiguration`**](https://github.com/officiallysingh/problem-handler-webflux-demo/blob/main/src/main/java/com/ksoot/problem/demo/config/WebFluxSecurityConfiguration.java)
 ```java
 @Autowired
@@ -293,7 +293,7 @@ in addition also requires the following configuration:
 spring.mvc.throw-exception-if-no-handler-found=true
 ```
 
-While using Dao advices, set database platform as follows, set value as per the database being used.
+While using Dao advice, set database platform as follows, set value as per the database being used.
 ```properties
 spring.jpa.database=POSTGRESQL
 ```
@@ -316,7 +316,7 @@ spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.web.servlet.
 
 Specify message source bundles as follows. Make sure to include `i18n/problems` bundled in the library, as it 
 has default messages for certain exception. And it should be last in the list of `basenames`, 
-so that it has lowest priority and any default messages coming from `problems.properties` can be overridden 
+so that it has the lowest priority and any default messages coming from `problems.properties` can be overridden 
 by specifying the property with different value in application's `errors.properties`
 ```properties
 spring.messages.basename=i18n/errors,i18n/problems
@@ -350,7 +350,7 @@ problem.open-api.req-validation-enabled=true
 problem.open-api.res-validation-enabled=false
 ```
 
-* `problem.enabled`:- To enable or disable autoconfigurations, default is `true`. 
+* `problem.enabled`:- To enable or disable autoconfiguration, default is `true`. 
   In case consumer applications are interested to avail advices but want full control over configurations, 
   then it can be set to `false` and required advices can be configured as Spring beans similar to how they are autoconfigured.
 * `problem.type-url`:- The base `URL` for **Help page** describing errors. For different exceptions respective code for exception is appended to it followed by a `#`
@@ -361,12 +361,12 @@ problem.open-api.res-validation-enabled=false
 * `problem.cause-chains-enabled`:- To enable or disable cause chains, default is `false`. 
   Elaborated in [*Usage*](https://github.com/officiallysingh/spring-boot-problem-handler#usage) section.
 * `problem.jackson-module-enabled`:- To enable or disable Jackson Problem Module autoconfiguration, default is `true`.
-  Set it to `false` in case consumer application need to define Serialization/Deserialization explicitly. 
-  Or if `Gson` is to be used instead of `Jackson`. If disabled the required serializers need to be defined by consumer application.
+  Set it to `false` in case consumer application needs to define Serialization/Deserialization explicitly. 
+  Or if `Gson` is to be used instead of `Jackson`. If disabled, the required serializers need to be defined by consumer application.
 * `problem.dao-advice-enabled`:- To enable or disable Dao advice autoconfiguration, default is `true`. 
   Set it to `false` in case consumer application need to define Dao advice configurations explicitly.
 * `problem.security-advice-enabled`:- To enable or disable Security advice autoconfiguration, default is `true`.
-  Set it to `false` in case consumer application need to define Security advice configurations explicitly.
+  Set it to `false` in case a consumer application needs to define Security advice configurations explicitly.
 * `problem.open-api.path`:- OpenAPI Specification path. Ideally should be in classpath and start with`/`.
   If not specified, OpenAPI Specification validation is not enabled.
 * `problem.open-api.exclude-patterns`:- List of `URI` Ant patterns to be excluded from OpenAPI specification validation. Default is empty.
@@ -377,7 +377,7 @@ problem.open-api.res-validation-enabled=false
 The main concept behind specifying the error attributes in `properties` file is **Error key**, which is mandatory to be unique for each error scenario.
 **It is either derived or specified by application** while throwing exception and used to externalize the error attributes in `properties` file. 
 
-For example if error key for some exception is `some.error.key`, then error response attributes can be specified in `properties` file as follows.
+For example, if error key for some exception is `some.error.key`, then error response attributes can be specified in `properties` file as follows.
 ```properties
 code.some.error.key=some-error
 title.some.error.key=Some Error
@@ -433,7 +433,7 @@ content-type: application/problem+xml
   Used in `type`. Commonly used to set unique codes for different business error scenarios.
 
 ## Message resolvers
-To know how to define the error attributes in properties file, enable debugging as follows.
+To know how to define the error attributes in the properties file, enable debugging as follows.
 ```properties
 problem.debug-enabled=true
 ```
@@ -480,7 +480,7 @@ For example in case of `ConstraintViolationException` `codes` would be multiple 
   }
 }
 ```
-Respective codes for corresponding attribute can be copied and message can be specified for same in `properties` file.
+Respective codes for corresponding attribute can be copied, and a message can be specified for the same in `properties` file.
 
 > [!NOTE]
 > `org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException` i.e. fully qualified name of exception is the [*Error key*](https://github.com/officiallysingh/spring-boot-problem-handler#error-key) in above case.
@@ -497,8 +497,8 @@ detail.org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 ```
 
 To minimize the number of properties following defaults are taken if `HttpStatus` is specified as `status.`(error key) property.
-* **Code** is taken as specified `HttpStatus`'s int code e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` then the Code default would be `417`
-* **Title** is taken as specified `HttpStatus`'s reason phrase e.g. if `HttpStatus` is given as `EXPECTATION_FAILED` then the Title default would be `Expectation Failed`
+* **Code** is taken as specified `HttpStatus`'s int code e.g., if `HttpStatus` is given as `EXPECTATION_FAILED` then the Code default would be `417`
+* **Title** is taken as specified `HttpStatus`'s reason phrase e.g., if `HttpStatus` is given as `EXPECTATION_FAILED` then the Title default would be `Expectation Failed`
 * **Detail** default is taken from thrown exception's `exception.getMessage()`.
 
 > [!NOTE]
@@ -521,7 +521,7 @@ It provides multiple fluent methods to build and throw exceptions.
 throw Problems.newInstance("sample.problem").throwAble(HttpStatus.EXPECTATION_FAILED);
 ```
 Error response attributes `code`, `title` and `detail` are expected from the message source (`properties` file) available as follows.
-Notice the [*Error key*](https://github.com/officiallysingh/spring-boot-problem-handler#error-key) **sample.problem** in following properties
+Notice the [*Error key*](https://github.com/officiallysingh/spring-boot-problem-handler#error-key) **sample.problem** in the following properties
 
 ```properties
 code.sample.problem=AYX123
@@ -576,7 +576,7 @@ throw problem;
 
 * Applications may also define `enum`s implementing [**`ErrorType`**](src/main/java/com/ksoot/problem/core/ErrorType.java) interface 
 with attributes for error scenarios and creating exceptions as follows. Default error attributes `detail`, `status` etc. can be customized in `properties` file for given `errorKey`, 
-otherwise the enum only is sufficient.
+otherwise the enum only is enough.
 ```java
 @Getter
 public enum AppErrors implements ErrorType {
@@ -803,7 +803,7 @@ class CustomMethodArgumentNotValidExceptionHandler implements MethodArgumentNotV
 There should not be any need to create any custom exception hence new advices, but if there is a pressing need to do so,
 custom exception can be created and corresponding custom `ControllerAdvice` implementing [**`AdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/AdviceTrait.java) 
 can be defined for the same, though not recommended.
-Following example demonstrates a new advice for some custom exception `MyCustomException`.
+Following example demonstrates new advice for some custom exception `MyCustomException`.
 
 > For Spring Web applications
 ```java
@@ -1179,4 +1179,4 @@ as examples to see usage and **example error responses** for different kind of e
 
 ## Known Issues
 * If an application uses multiple vendor relational databases then the [**`ConstraintNameResolver`**](src/main/java/com/ksoot/problem/spring/advice/dao/ConstraintNameResolver.java) 
-may not work properly, needs further testing. For example if it is using Postgres and SQL Server both.
+may not work properly, needs further testing. For example, if it is using Postgres and SQL Server both.
