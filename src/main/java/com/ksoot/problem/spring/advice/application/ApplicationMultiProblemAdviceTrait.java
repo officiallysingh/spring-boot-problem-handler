@@ -37,37 +37,33 @@ public interface ApplicationMultiProblemAdviceTrait<T, R> extends AdviceTrait<T,
           exception.getErrors().stream()
               .map(
                   ex -> {
-                    switch (ex) {
-                      case Problem problem -> {
-                        return problem;
-                      }
-                      case ProblemSupport problemSupport -> {
-                        if (Objects.nonNull(problemSupport.getProblem())) {
-                          return problemSupport.getProblem();
-                        } else {
-                          String errorKey = problemSupport.getErrorKey();
-                          String detailCode = ProblemConstant.DETAIL_CODE_PREFIX + errorKey;
+                    if (ex instanceof Problem problem) {
+                      return problem;
+                    } else if (ex instanceof ProblemSupport problemSupport) {
+                      if (Objects.nonNull(problemSupport.getProblem())) {
+                        return problemSupport.getProblem();
+                      } else {
+                        String errorKey = problemSupport.getErrorKey();
+                        String detailCode = ProblemConstant.DETAIL_CODE_PREFIX + errorKey;
 
-                          return toProblem(
-                              (Throwable) ex,
-                              problemSupport.getStatus(),
-                              errorKey,
-                              Optional.ofNullable(problemSupport.getDefaultDetail())
-                                  .orElse(detailCode),
-                              problemSupport.getDetailArgs(),
-                              Optional.ofNullable(problemSupport.getParameters())
-                                  .orElse(Collections.emptyMap()));
-                        }
-                      }
-                      case Throwable throwable -> {
                         return toProblem(
-                            throwable,
-                            GeneralErrorKey.INTERNAL_SERVER_ERROR,
-                            HttpStatus.INTERNAL_SERVER_ERROR);
+                            (Throwable) ex,
+                            problemSupport.getStatus(),
+                            errorKey,
+                            Optional.ofNullable(problemSupport.getDefaultDetail())
+                                .orElse(detailCode),
+                            problemSupport.getDetailArgs(),
+                            Optional.ofNullable(problemSupport.getParameters())
+                                .orElse(Collections.emptyMap()));
                       }
-                      case null, default ->
-                          throw new IllegalStateException(
-                              "MultiProblem contain illegal instance: " + ex);
+                    } else if (ex instanceof Throwable throwable) {
+                      return toProblem(
+                          throwable,
+                          GeneralErrorKey.INTERNAL_SERVER_ERROR,
+                          HttpStatus.INTERNAL_SERVER_ERROR);
+                    } else {
+                      throw new IllegalStateException(
+                          "MultiProblem contain illegal instance: " + ex);
                     }
                   })
               .toList());
