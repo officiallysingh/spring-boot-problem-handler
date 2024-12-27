@@ -55,7 +55,7 @@ Add the `spring-boot-problem-handler` jar to application dependencies. That is a
 exception handling mechanism in a Spring boot application.
 
 > [!IMPORTANT]
-Jar is built on java 21. For earlier versions of java, please build from source code.
+Jar is built on java 17. For earlier versions of java, please build from source code.
 
 Maven
 ```xml
