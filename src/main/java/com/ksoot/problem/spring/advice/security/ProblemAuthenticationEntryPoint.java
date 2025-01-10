@@ -2,7 +2,6 @@ package com.ksoot.problem.spring.advice.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -20,8 +19,7 @@ public class ProblemAuthenticationEntryPoint implements AuthenticationEntryPoint
 
   private final HandlerExceptionResolver resolver;
 
-  public ProblemAuthenticationEntryPoint(
-      @Qualifier("handlerExceptionResolver") final HandlerExceptionResolver resolver) {
+  public ProblemAuthenticationEntryPoint(final HandlerExceptionResolver resolver) {
     this.resolver = resolver;
   }
 
