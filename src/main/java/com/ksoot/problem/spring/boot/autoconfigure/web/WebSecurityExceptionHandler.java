@@ -6,6 +6,7 @@ import com.ksoot.problem.spring.advice.security.SecurityAdviceTraits;
 import com.ksoot.problem.spring.boot.autoconfigure.SecurityAdviceEnabled;
 import com.ksoot.problem.spring.config.ProblemProperties;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -37,13 +38,15 @@ public class WebSecurityExceptionHandler
 
   @ConditionalOnMissingBean
   @Bean
-  AuthenticationEntryPoint authenticationEntryPoint(final HandlerExceptionResolver resolver) {
+  AuthenticationEntryPoint authenticationEntryPoint(
+      @Qualifier("handlerExceptionResolver") final HandlerExceptionResolver resolver) {
     return new ProblemAuthenticationEntryPoint(resolver);
   }
 
   @ConditionalOnMissingBean
   @Bean
-  AccessDeniedHandler accessDeniedHandler(final HandlerExceptionResolver resolver) {
+  AccessDeniedHandler accessDeniedHandler(
+      @Qualifier("handlerExceptionResolver") final HandlerExceptionResolver resolver) {
     return new ProblemAccessDeniedHandler(resolver);
   }
 }

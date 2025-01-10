@@ -4,7 +4,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -22,8 +21,7 @@ public class ProblemAccessDeniedHandler implements AccessDeniedHandler {
 
   private final HandlerExceptionResolver resolver;
 
-  public ProblemAccessDeniedHandler(
-      @Qualifier("handlerExceptionResolver") final HandlerExceptionResolver resolver) {
+  public ProblemAccessDeniedHandler(final HandlerExceptionResolver resolver) {
     this.resolver = resolver;
   }
 
