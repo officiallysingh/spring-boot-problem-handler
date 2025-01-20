@@ -62,12 +62,12 @@ Maven
 <dependency>
     <groupId>io.github.officiallysingh</groupId>
     <artifactId>spring-boot-problem-handler</artifactId>
-    <version>1.9</version>
+    <version>1.9.1</version>
 </dependency>
 ```
 Gradle
 ```groovy
-implementation 'io.github.officiallysingh:spring-boot-problem-handler:1.9'
+implementation 'io.github.officiallysingh:spring-boot-problem-handler:1.9.1'
 ```
 
 It does all hard part, A lot of advices are out of box available that are autoconfigured as `ControllerAdvice`s 
