@@ -6,7 +6,7 @@
 
     <groupId>io.github.officiallysingh</groupId>
     <artifactId>spring-boot-problem-handler</artifactId>
-    <version>1.9.1</version>
+    <version>1.9.2</version>
     <name>spring-boot-problem-handler</name>
     <description>Commons exception handler library</description>
     <url>https://github.com/officiallysingh/spring-boot-problem-handler</url>

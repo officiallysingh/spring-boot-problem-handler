@@ -1,8 +1,8 @@
 package com.ksoot.problem.spring.config;
 
-import java.util.Locale;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceResolvable;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 /**
  * @author Rajveer Singh
@@ -16,15 +16,17 @@ public class ProblemMessageProvider {
   }
 
   public static String getMessage(final String messageCode, final String defaultMessage) {
-    return messageSource.getMessage(messageCode, null, defaultMessage, Locale.getDefault());
+    return messageSource.getMessage(
+        messageCode, null, defaultMessage, LocaleContextHolder.getLocale());
   }
 
   public static String getMessage(
       final String messageCode, final String defaultMessage, final Object... params) {
-    return messageSource.getMessage(messageCode, params, defaultMessage, Locale.getDefault());
+    return messageSource.getMessage(
+        messageCode, params, defaultMessage, LocaleContextHolder.getLocale());
   }
 
   public static String getMessage(final MessageSourceResolvable resolvable) {
-    return messageSource.getMessage(resolvable, Locale.getDefault());
+    return messageSource.getMessage(resolvable, LocaleContextHolder.getLocale());
   }
 }
