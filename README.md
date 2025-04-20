@@ -528,7 +528,7 @@ curl --location 'http://localhost:8080/api/states' \
 ```
 
 returns following error message in French language as specified in 
-[**`errors_fr.properties`**]https://github.com/officiallysingh/problem-handler-web-demo/blob/main/src/main/resources/i18n/errors_fr.properties file.
+[**`errors_fr.properties`**](https://github.com/officiallysingh/problem-handler-web-demo/blob/main/src/main/resources/i18n/errors_fr.properties) file.
 ```properties
 ```json
 {
