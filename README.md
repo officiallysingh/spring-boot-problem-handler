@@ -546,7 +546,7 @@ returns following error message in French language as specified in
 > [!IMPORTANT]
 >`LocaleContextHolder.getLocale()` gets the current request `Locale` from `ThreadLocal`, which does not work in case of reactive applications (Webflux) 
 > as each operator in reactive pipeline can execute in a different thread, and the context is not inherited from calling thread, but explicitly need to be propagated.  
-> Similar to [**`ReactiveSecurityContextHolder`**](https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/core/context/ReactiveSecurityContextHolder.html) there is no reactive context holder.
+> Similar to [**`ReactiveSecurityContextHolder`**](https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/core/context/ReactiveSecurityContextHolder.html) there is no reactive context holder for `Locale`.
 
 For demo purpose, defining the following bean serves the purpose, but not recommended in production.
 ```java
