@@ -17,7 +17,12 @@ public interface InsufficientAuthenticationAdviceTrait<T, R> extends AdviceTrait
     Problem problem =
         toProblem(
             exception,
-            HttpStatus.UNAUTHORIZED,
+            ProblemMessageSourceResolver.of(
+                ProblemConstant.CODE_CODE_PREFIX + GeneralErrorKey.SECURITY_UNAUTHORIZED,
+                HttpStatus.UNAUTHORIZED.value()),
+            ProblemMessageSourceResolver.of(
+                ProblemConstant.TITLE_CODE_PREFIX + GeneralErrorKey.SECURITY_UNAUTHORIZED,
+                HttpStatus.UNAUTHORIZED.getReasonPhrase()),
             ProblemMessageSourceResolver.of(
                 ProblemConstant.DETAIL_CODE_PREFIX + GeneralErrorKey.SECURITY_UNAUTHORIZED,
                 exception.getMessage()));

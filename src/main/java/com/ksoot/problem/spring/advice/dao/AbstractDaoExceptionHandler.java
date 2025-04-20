@@ -66,8 +66,8 @@ public abstract class AbstractDaoExceptionHandler<T, R> implements DaoAdviceTrai
           return this.constraintNameResolvers
               .get(DBType.ORACLE)
               .resolveConstraintName(exceptionMessage);
-          // TODO: Add more cases for other databases constraint name resolver
-          // implementations
+        // TODO: Add more cases for other databases constraint name resolver
+        // implementations
         default:
           throw new IllegalStateException(
               "constraintNameResolver bean could not be found, "

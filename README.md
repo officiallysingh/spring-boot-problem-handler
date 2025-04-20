@@ -20,15 +20,16 @@ Requires Java 17+, Spring boot 3.2.0+ and Jakarta EE 10
 7. [Error Key, the central concept behind error attribute's externalization](#error-key)
 8. [Error response characteristics](#error-response)
 9. [Message resolvers to externalize error response in `properties` files](#message-resolvers)
-10. [Creating and throwing exceptions in your applications](#creating-and-throwing-exceptions)
-11. [Stack trace embedded in error response](#stack-traces)
-12. [Cause chains embedded in error response](#cause-chains)
-13. [Customizations of default behaviour](#customizations)
+10. [Message Internalization or i18n](#message-internalization)
+11. [Creating and throwing exceptions in your applications](#creating-and-throwing-exceptions)
+12. [Stack trace embedded in error response](#stack-traces)
+13. [Cause chains embedded in error response](#cause-chains)
+14. [Customizations of default behaviour](#customizations)
     - [Customize error response](#customize-error-response)
     - [Customize or Override advices](#customize-or-override-advices)
-14. [Define new advices](#define-new-advices)
-15. [Testing support](#testing-support)
-16. [Example error responses in different scenarios](#example-error-responses)
+15. [Define new advices](#define-new-advices)
+16. [Testing support](#testing-support)
+17. [Example error responses in different scenarios](#example-error-responses)
 
 ## Introduction
 
@@ -49,7 +50,7 @@ all can be done with zero custom code but by specifying error details in `proper
 
 ## Installation
 
-> **Current version: 1.9.2** Refer to [Release notes](https://github.com/officiallysingh/spring-boot-problem-handler/releases) while upgrading
+> **Current version: 1.9.3** Refer to [Release notes](https://github.com/officiallysingh/spring-boot-problem-handler/releases) while upgrading
 
 Add the `spring-boot-problem-handler` jar to application dependencies. That is all it takes to get a default working 
 exception handling mechanism in a Spring boot application.
@@ -62,12 +63,12 @@ Maven
 <dependency>
     <groupId>io.github.officiallysingh</groupId>
     <artifactId>spring-boot-problem-handler</artifactId>
-    <version>1.9.2</version>
+    <version>1.9.3</version>
 </dependency>
 ```
 Gradle
 ```groovy
-implementation 'io.github.officiallysingh:spring-boot-problem-handler:1.9.2'
+implementation 'io.github.officiallysingh:spring-boot-problem-handler:1.9.3'
 ```
 
 It does all hard part, A lot of advices are out of box available that are autoconfigured as `ControllerAdvice`s 
@@ -505,9 +506,82 @@ To minimize the number of properties following defaults are taken if `HttpStatus
 > `status.`(error key) property is considered only for exceptions where no explicit advice is defined, 
 otherwise `HttpStatus` is specified in the java code.
 
+## Message internalization
+The error messages are read from configured resource bundles, 
+by [ProblemMessageProvider](src/main/java/com/ksoot/problem/spring/config/ProblemMessageProvider.java) 
+for current request `Locale` given by `LocaleContextHolder.getLocale()`.
+By default, spring boot autoconfigures `AcceptHeaderLocaleContextResolver` to get `Locale` from `Accept-Language` request header.
+
+If the `Accept-Language` header is `fr` then the error messages are read from `_fr.properties` file from configured resource bundles.
+Following request in demo project [**`problem-handler-web-demo`**](https://github.com/officiallysingh/problem-handler-web-demo)
+
+```curl
+curl --location 'http://localhost:8080/api/states' \
+--header 'accept: */*' \
+--header 'Content-Type: application/json' \
+--header 'Accept-Language: fr' \
+--header 'Cookie: JSESSIONID=9EF49EB9744759DF7A1EE71BD2154A53' \
+--data '{
+  "name": "Haryana",
+  "gstCode": "6"
+}'
+```
+
+returns following error message in French language as specified in 
+[**`errors_fr.properties`**]https://github.com/officiallysingh/problem-handler-web-demo/blob/main/src/main/resources/i18n/errors_fr.properties file.
+```properties
+```json
+{
+    "type": "http://localhost:8080/problems/help.html#401",
+    "title": "Non autorisé",
+    "status": 401,
+    "detail": "Le jeton d'autorisation de l'en-t�te est manquant ou invalide",
+    "instance": "/api/states",
+    "method": "POST",
+    "timestamp": "2025-04-19T14:53:30.285582+05:30",
+    "code": "401"
+}
+```
+
+> [!IMPORTANT]
+>`LocaleContextHolder.getLocale()` gets the current request `Locale` from `ThreadLocal`, which does not work in case of reactive applications (Webflux) 
+> as each operator in reactive pipeline can execute in a different thread, and the context is not inherited from calling thread, but explicitly need to be propagated.  
+> Similar to [**`ReactiveSecurityContextHolder`**](https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/core/context/ReactiveSecurityContextHolder.html) there is no reactive context holder.
+
+For demo purpose, defining the following bean serves the purpose, but not recommended in production.
+```java
+  @Bean
+public HttpHandler httpHandler(ApplicationContext applicationContext) {
+    LocaleContextHolder.getLocaleContext().getLocale();
+    HttpHandler delegate = WebHttpHandlerBuilder
+            .applicationContext(applicationContext).build();
+    return new HttpWebHandlerAdapter(((HttpWebHandlerAdapter) delegate)) {
+        @Override
+        protected ServerWebExchange createExchange(ServerHttpRequest request,
+                                                   ServerHttpResponse response) {
+            ServerWebExchange serverWebExchange = super
+                    .createExchange(request, response);
+            LocaleContext localeContext = serverWebExchange.getLocaleContext();
+            if (localeContext != null) {
+                LocaleContextHolder.setLocaleContext(localeContext, true);
+            }
+            return serverWebExchange;
+        }
+    };
+}
+```
+
+You can define your own [**`ProblemMessageProvider`**](src/main/java/com/ksoot/problem/spring/config/ProblemMessageProvider.java)  bean as follows, that should be able to find current request `Locale` somehow.
+```java
+@Bean
+ProblemMessageProvider problemMessageProvider(final MessageSource messageSource) {
+    return new YourReactiveProblemMessageProvider(messageSource);
+}
+```
+
 ## Creating and throwing exceptions
 
-Apart from exceptions thrown by frameworks or java, every application need to throw custom exceptions.
+Apart from exceptions thrown by frameworks or java, every application needs to throw custom exceptions.
 [**`ApplicationProblem`**](src/main/java/com/ksoot/problem/core/ApplicationProblem.java) and
 [**`ApplicationException`**](src/main/java/com/ksoot/problem/core/ApplicationException.java) 
 classes are available in the library to throw an unchecked or checked exception respectively.

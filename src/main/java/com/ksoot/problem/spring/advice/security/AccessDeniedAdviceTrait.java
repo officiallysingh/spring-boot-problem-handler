@@ -20,7 +20,12 @@ public interface AccessDeniedAdviceTrait<T, R> extends AdviceTrait<T, R> {
     Problem problem =
         toProblem(
             exception,
-            HttpStatus.FORBIDDEN,
+            ProblemMessageSourceResolver.of(
+                ProblemConstant.CODE_CODE_PREFIX + GeneralErrorKey.SECURITY_ACCESS_DENIED,
+                HttpStatus.FORBIDDEN.value()),
+            ProblemMessageSourceResolver.of(
+                ProblemConstant.TITLE_CODE_PREFIX + GeneralErrorKey.SECURITY_ACCESS_DENIED,
+                HttpStatus.FORBIDDEN.getReasonPhrase()),
             ProblemMessageSourceResolver.of(
                 ProblemConstant.DETAIL_CODE_PREFIX + GeneralErrorKey.SECURITY_ACCESS_DENIED,
                 exception.getMessage()));
