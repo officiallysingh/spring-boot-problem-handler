@@ -2,7 +2,7 @@
 
 **A Generic library for handling exceptions in Spring Boot applications**, 
 implementing specification [**`Problem Details (RFC7807) for HTTP APIs`**](https://datatracker.ietf.org/doc/html/rfc7807).
-Requires Java 17+, Spring boot 3.2.0+ and Jakarta EE 10
+Requires Java 17+, Spring boot 3+ and Jakarta EE 10
 
 ![Exception Handling](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*0s2E6-iNFqr_xptwrmJTdg.jpeg)
 
