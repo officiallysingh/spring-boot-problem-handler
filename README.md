@@ -20,7 +20,7 @@ Requires Java 17+, Spring boot 3.2.0+ and Jakarta EE 10
 7. [Error Key, the central concept behind error attribute's externalization](#error-key)
 8. [Error response characteristics](#error-response)
 9. [Message resolvers to externalize error response in `properties` files](#message-resolvers)
-10. [Message internationalization or i18n](#message-internalization)
+10. [Message internationalization or i18n](#message-internationalization)
 11. [Creating and throwing exceptions in your applications](#creating-and-throwing-exceptions)
 12. [Stack trace embedded in error response](#stack-traces)
 13. [Cause chains embedded in error response](#cause-chains)
