@@ -49,31 +49,27 @@ public abstract class AbstractDaoExceptionHandler<T, R> implements DaoAdviceTrai
           .get(DBType.MONGO_DB)
           .resolveConstraintName(exceptionMessage);
     } else {
-      switch (this.database) {
-        case SQL_SERVER:
-          return this.constraintNameResolvers
-              .get(DBType.SQL_SERVER)
-              .resolveConstraintName(exceptionMessage);
-        case POSTGRESQL:
-          return this.constraintNameResolvers
-              .get(DBType.POSTGRESQL)
-              .resolveConstraintName(exceptionMessage);
-        case MYSQL:
-          return this.constraintNameResolvers
-              .get(DBType.MYSQL)
-              .resolveConstraintName(exceptionMessage);
-        case ORACLE:
-          return this.constraintNameResolvers
-              .get(DBType.ORACLE)
-              .resolveConstraintName(exceptionMessage);
+      return switch (this.database) {
+        case SQL_SERVER ->
+            this.constraintNameResolvers
+                .get(DBType.SQL_SERVER)
+                .resolveConstraintName(exceptionMessage);
+        case POSTGRESQL ->
+            this.constraintNameResolvers
+                .get(DBType.POSTGRESQL)
+                .resolveConstraintName(exceptionMessage);
+        case MYSQL ->
+            this.constraintNameResolvers.get(DBType.MYSQL).resolveConstraintName(exceptionMessage);
+        case ORACLE ->
+            this.constraintNameResolvers.get(DBType.ORACLE).resolveConstraintName(exceptionMessage);
         // TODO: Add more cases for other databases constraint name resolver
         // implementations
-        default:
-          throw new IllegalStateException(
-              "constraintNameResolver bean could not be found, "
-                  + "add ConstraintNameResolver implementation for: "
-                  + this.database);
-      }
+        default ->
+            throw new IllegalStateException(
+                "constraintNameResolver bean could not be found, "
+                    + "add ConstraintNameResolver implementation for: "
+                    + this.database);
+      };
     }
   }
 }

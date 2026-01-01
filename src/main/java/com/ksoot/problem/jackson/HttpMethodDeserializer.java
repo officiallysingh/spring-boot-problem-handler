@@ -1,19 +1,23 @@
 package com.ksoot.problem.jackson;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import java.io.IOException;
 import org.springframework.http.HttpMethod;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.deser.std.StdDeserializer;
 
-final class HttpMethodDeserializer extends JsonDeserializer<HttpMethod> {
+final class HttpMethodDeserializer extends StdDeserializer<HttpMethod> {
 
-  HttpMethodDeserializer() {}
+  HttpMethodDeserializer() {
+    super(HttpMethod.class);
+  }
 
   @Override
-  public HttpMethod deserialize(final JsonParser json, final DeserializationContext context)
-      throws IOException {
+  public HttpMethod deserialize(final JsonParser json, final DeserializationContext context) {
     final String method = json.getValueAsString();
-    return HttpMethod.valueOf(method);
+    if (method == null) {
+      return null;
+    } else {
+      return HttpMethod.valueOf(method);
+    }
   }
 }
