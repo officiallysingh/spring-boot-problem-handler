@@ -1,26 +1,25 @@
 package com.ksoot.problem.jackson;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import java.io.IOException;
 import java.util.Map;
 import org.springframework.http.HttpStatusCode;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.deser.std.StdDeserializer;
 
-final class HttpStatusDeserializer extends JsonDeserializer<HttpStatusCode> {
+final class HttpStatusDeserializer extends StdDeserializer<HttpStatusCode> {
 
   private final Map<Integer, HttpStatusCode> index;
 
   HttpStatusDeserializer(final Map<Integer, HttpStatusCode> index) {
+    super(HttpStatusCode.class);
     this.index = index;
   }
 
   @Override
-  public HttpStatusCode deserialize(final JsonParser json, final DeserializationContext context)
-      throws IOException {
+  public HttpStatusCode deserialize(JsonParser json, DeserializationContext ctxt)
+      throws JacksonException {
     final int statusCode = json.getIntValue();
-    final HttpStatusCode status = index.get(statusCode);
-    // return status == null ? new DefaultHttpStatusCode(statusCode) : status;
-    return status;
+    return this.index.get(statusCode);
   }
 }

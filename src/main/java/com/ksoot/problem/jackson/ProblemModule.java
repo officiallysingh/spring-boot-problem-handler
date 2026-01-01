@@ -1,10 +1,5 @@
 package com.ksoot.problem.jackson;
 
-import com.fasterxml.jackson.core.Version;
-import com.fasterxml.jackson.core.util.VersionUtil;
-import com.fasterxml.jackson.databind.Module;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.ksoot.problem.core.DefaultProblem;
 import com.ksoot.problem.core.Exceptional;
 import com.ksoot.problem.core.Problem;
@@ -14,8 +9,14 @@ import java.util.Map;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import tools.jackson.core.Version;
+import tools.jackson.core.util.VersionUtil;
+import tools.jackson.databind.JacksonModule;
+import tools.jackson.databind.module.SimpleDeserializers;
+import tools.jackson.databind.module.SimpleSerializers;
+import tools.jackson.databind.ser.std.ToStringSerializer;
 
-public final class ProblemModule extends Module {
+public final class ProblemModule extends JacksonModule {
 
   private final Map<Integer, HttpStatusCode> statuses;
 
@@ -80,21 +81,20 @@ public final class ProblemModule extends Module {
 
   @Override
   public void setupModule(final SetupContext context) {
-    final SimpleModule module = new SimpleModule();
+    context.setMixIn(Exceptional.class, mixinClass());
+    context.setMixIn(DefaultProblem.class, AbstractThrowableProblemMixIn.class);
+    context.setMixIn(Problem.class, ProblemMixIn.class);
 
-    module.setMixInAnnotation(Exceptional.class, mixinClass());
+    final SimpleSerializers serializers = new SimpleSerializers();
+    serializers.addSerializer(HttpStatusCode.class, new HttpStatusSerializer());
+    serializers.addSerializer(HttpMethod.class, new HttpMethodSerializer());
+    serializers.addSerializer(
+        StackTraceElement.class, new ToStringSerializer(StackTraceElement.class));
+    context.addSerializers(serializers);
 
-    module.setMixInAnnotation(DefaultProblem.class, AbstractThrowableProblemMixIn.class);
-    module.setMixInAnnotation(Problem.class, ProblemMixIn.class);
-
-    module.addSerializer(HttpStatusCode.class, new HttpStatusSerializer());
-    module.addDeserializer(HttpStatusCode.class, new HttpStatusDeserializer(this.statuses));
-
-    module.addSerializer(HttpMethod.class, new HttpMethodSerializer());
-    module.addDeserializer(HttpMethod.class, new HttpMethodDeserializer());
-
-    module.addSerializer(StackTraceElement.class, new ToStringSerializer());
-
-    module.setupModule(context);
+    final SimpleDeserializers deserializers = new SimpleDeserializers();
+    deserializers.addDeserializer(HttpStatusCode.class, new HttpStatusDeserializer(this.statuses));
+    deserializers.addDeserializer(HttpMethod.class, new HttpMethodDeserializer());
+    context.addDeserializers(deserializers);
   }
 }

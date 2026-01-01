@@ -1,17 +1,24 @@
 package com.ksoot.problem.jackson;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import java.io.IOException;
 import org.springframework.http.HttpStatusCode;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ser.std.StdSerializer;
 
-final class HttpStatusSerializer extends JsonSerializer<HttpStatusCode> {
+final class HttpStatusSerializer extends StdSerializer<HttpStatusCode> {
+
+  HttpStatusSerializer() {
+    super(HttpStatusCode.class);
+  }
 
   @Override
-  public void serialize(
-      final HttpStatusCode status, final JsonGenerator json, final SerializerProvider serializers)
-      throws IOException {
-    json.writeNumber(status.value());
+  public void serialize(HttpStatusCode status, JsonGenerator json, SerializationContext provider)
+      throws JacksonException {
+    if (status == null) {
+      json.writeNull();
+    } else {
+      json.writeNumber(status.value());
+    }
   }
 }
