@@ -6,7 +6,7 @@
 
     <groupId>io.github.officiallysingh</groupId>
     <artifactId>spring-boot-problem-handler</artifactId>
-    <version>1.10.0</version>
+    <version>1.10.2</version>
     <name>spring-boot-problem-handler</name>
     <description>Commons exception handler library</description>
     <url>https://github.com/officiallysingh/spring-boot-problem-handler</url>
@@ -34,6 +34,7 @@
         <java.version>17</java.version>
         <spring-boot.version>4.0.1</spring-boot.version>
         <spring-cloud.version>2025.1.0</spring-cloud.version>
+        <micrometer.version>1.16.2</micrometer.version>
         <jakarta.servlet-api.version>6.1.0</jakarta.servlet-api.version>
         <jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
         <swagger-request-validator-spring-webmvc.version>2.46.0</swagger-request-validator-spring-webmvc.version>
@@ -71,6 +72,13 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-bom</artifactId>
+                <version>${micrometer.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -146,6 +154,10 @@
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -190,6 +202,10 @@
     <profiles>
         <profile>
             <id>publish-artefacts</id>
+            <properties>
+                <http.socket.timeout>600000</http.socket.timeout>
+                <http.connection.timeout>600000</http.connection.timeout>
+            </properties>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>

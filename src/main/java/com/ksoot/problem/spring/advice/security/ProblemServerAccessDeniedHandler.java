@@ -3,6 +3,7 @@ package com.ksoot.problem.spring.advice.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ksoot.problem.spring.advice.webflux.SpringWebfluxProblemResponseUtils;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -18,8 +19,8 @@ public class ProblemServerAccessDeniedHandler implements ServerAccessDeniedHandl
   private final ObjectMapper objectMapper;
 
   @Override
-  public Mono<Void> handle(
-      final ServerWebExchange exchange, final AccessDeniedException exception) {
+  public @NonNull Mono<Void> handle(
+      final @NonNull ServerWebExchange exchange, final @NonNull AccessDeniedException exception) {
     return this.advice
         .handleAccessDeniedException(exception, exchange)
         .flatMap(

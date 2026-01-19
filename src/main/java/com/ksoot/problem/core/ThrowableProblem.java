@@ -4,6 +4,7 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
 
 import jakarta.annotation.Nullable;
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -11,7 +12,7 @@ import java.util.stream.Stream;
 /** {@link Problem} instances are required to be immutable. */
 public abstract class ThrowableProblem extends RuntimeException implements Problem, Exceptional {
 
-  private static final long serialVersionUID = 2893667887362253159L;
+  @Serial private static final long serialVersionUID = 2893667887362253159L;
 
   protected ThrowableProblem() {
     this(null);

@@ -1,9 +1,8 @@
 package com.ksoot.problem.spring.advice.security;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -27,10 +26,9 @@ public class ProblemAccessDeniedHandler implements AccessDeniedHandler {
 
   @Override
   public void handle(
-      final HttpServletRequest request,
-      final HttpServletResponse response,
-      AccessDeniedException exception)
-      throws IOException, ServletException {
+      final @NonNull HttpServletRequest request,
+      final @NonNull HttpServletResponse response,
+      @NonNull AccessDeniedException exception) {
     this.resolver.resolveException(request, response, null, exception);
   }
 }

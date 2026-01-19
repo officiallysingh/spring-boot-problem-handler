@@ -70,6 +70,39 @@
       "type": "java.lang.Boolean",
       "defaultValue": "false",
       "description": "Default: false, Whether or not to enable Open API response validation.</br>While enabling make sure Problem is also enabled."
+    },
+    {
+      "name": "problem.tracing.enabled",
+      "type": "java.lang.Boolean",
+      "defaultValue": "false",
+      "description": "Default: false, Whether to enable Tracing support."
+    },
+    {
+      "name": "problem.tracing.trace-id",
+      "type": "java.lang.String",
+      "defaultValue": "X-trace-id",
+      "description": "Default: X-trace-id, Attribute name in error response body or Header name for Trace Id."
+    },
+    {
+      "name": "problem.tracing.strategy",
+      "type": "java.lang.String",
+      "defaultValue": "HEADER",
+      "description": "Default: HEADER, Whether to add Trace Id in header or body of error response."
+    }
+  ],
+  "hints": [
+    {
+      "name": "problem.tracing.strategy",
+      "values": [
+        {
+          "value": "HEADER",
+          "description": "Adds Trace Id in error response Header."
+        },
+        {
+          "value": "BODY",
+          "description": "Adds Trace Id in error response Body."
+        }
+      ]
     }
   ]
 }

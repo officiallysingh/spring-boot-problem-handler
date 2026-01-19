@@ -3,6 +3,7 @@ package com.ksoot.problem.spring.advice.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ksoot.problem.spring.advice.webflux.SpringWebfluxProblemResponseUtils;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -18,8 +19,8 @@ public class ProblemServerAuthenticationEntryPoint implements ServerAuthenticati
   private final ObjectMapper objectMapper;
 
   @Override
-  public Mono<Void> commence(
-      final ServerWebExchange exchange, final AuthenticationException exception) {
+  public @NonNull Mono<Void> commence(
+      final @NonNull ServerWebExchange exchange, final @NonNull AuthenticationException exception) {
     return this.advice
         .handleAuthenticationException(exception, exchange)
         .flatMap(

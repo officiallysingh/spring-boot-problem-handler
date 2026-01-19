@@ -19,6 +19,6 @@ public class DaoAdviceEnabled extends AnyNestedCondition {
   static class ORMAvailable {}
 
   @ConditionalOnClass(value = {MongoDatabaseFactory.class})
-  @ConditionalOnProperty(prefix = "spring.data.mongodb", name = "uri")
+  @ConditionalOnProperty(prefix = "spring.mongodb", name = "uri")
   static class MongoAvailable {}
 }

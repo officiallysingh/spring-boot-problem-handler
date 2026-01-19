@@ -2,6 +2,7 @@ com.ksoot.problem.spring.config.ProblemMessageProviderConfig
 com.ksoot.problem.spring.config.ProblemBeanRegistry
 com.ksoot.problem.spring.boot.autoconfigure.ProblemJacksonConfiguration
 com.ksoot.problem.spring.boot.autoconfigure.ProblemDaoConfiguration
+com.ksoot.problem.spring.boot.autoconfigure.ProblemTraceProviderConfig
 com.ksoot.problem.spring.boot.autoconfigure.web.ProblemWebAutoConfiguration
 com.ksoot.problem.spring.boot.autoconfigure.web.WebExceptionHandler
 com.ksoot.problem.spring.boot.autoconfigure.web.WebSecurityExceptionHandler

@@ -1,6 +1,7 @@
 package com.ksoot.problem.core;
 
 import jakarta.annotation.Nullable;
+import java.io.Serial;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -8,7 +9,7 @@ import java.util.Optional;
 
 public abstract class AbstractThrowableProblem extends ThrowableProblem {
 
-  private static final long serialVersionUID = 7657146691407810390L;
+  @Serial private static final long serialVersionUID = 7657146691407810390L;
 
   private final String code;
   private final String title;

@@ -1,6 +1,8 @@
 package com.ksoot.problem.spring.config;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -48,6 +50,8 @@ public class ProblemProperties {
 
   private OpenApi openApi = new OpenApi();
 
+  private Tracing tracing = new Tracing();
+
   @Getter
   @Setter
   @NoArgsConstructor
@@ -75,5 +79,35 @@ public class ProblemProperties {
      * make sure Problem is also enabled.
      */
     private boolean resValidationEnabled = false;
+  }
+
+  @Getter
+  @Setter
+  @NoArgsConstructor
+  @ToString
+  @Valid
+  public static class Tracing {
+
+    /** Default: false, Whether to enable Tracing support. */
+    private boolean enabled;
+
+    /** Default: traceparent, Attribute name in error response body or Header name for Trace Id. */
+    @NotEmpty private String traceId = "X-trace-id";
+
+    /** Default: HEADER, Whether to add Trace Id in header or body of error response. */
+    @NotNull private Strategy strategy = Strategy.HEADER;
+
+    public enum Strategy {
+      HEADER,
+      BODY;
+
+      public boolean isHeader() {
+        return this == HEADER;
+      }
+
+      public boolean isBody() {
+        return this == BODY;
+      }
+    }
   }
 }

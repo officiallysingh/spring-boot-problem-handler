@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
 
 @Getter
-@SuppressWarnings("serial")
 public final class ApplicationException extends Exception implements ProblemSupport {
 
   private final HttpStatus status;

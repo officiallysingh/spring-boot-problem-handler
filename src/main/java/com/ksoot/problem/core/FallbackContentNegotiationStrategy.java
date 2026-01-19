@@ -3,6 +3,7 @@ package com.ksoot.problem.core;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.http.MediaType;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.accept.ContentNegotiationStrategy;
@@ -24,7 +25,7 @@ final class FallbackContentNegotiationStrategy implements ContentNegotiationStra
 
   @Override
   @Nonnull
-  public List<MediaType> resolveMediaTypes(final NativeWebRequest request)
+  public List<MediaType> resolveMediaTypes(final @NonNull NativeWebRequest request)
       throws HttpMediaTypeNotAcceptableException {
     final List<MediaType> mediaTypes = delegate.resolveMediaTypes(request);
 

@@ -6,28 +6,27 @@ import static org.springframework.web.context.request.RequestAttributes.SCOPE_RE
 import com.ksoot.problem.core.ErrorResponseBuilder;
 import com.ksoot.problem.core.MediaTypes;
 import com.ksoot.problem.core.Problem;
+import com.ksoot.problem.spring.boot.autoconfigure.TraceProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ProblemDetail;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
-import org.springframework.web.accept.ContentNegotiationStrategy;
 import org.springframework.web.context.request.NativeWebRequest;
 
+@RequiredArgsConstructor
 public class SpringWebErrorResponseBuilder
     implements ErrorResponseBuilder<NativeWebRequest, ResponseEntity<ProblemDetail>> {
 
+  private final TraceProvider traceProvider;
+
   @SneakyThrows(HttpMediaTypeNotAcceptableException.class)
   public static Optional<MediaType> negotiate(final NativeWebRequest request) {
-    final ContentNegotiationStrategy negotiator = DEFAULT_CONTENT_NEGOTIATION_STRATEGY;
-    final List<MediaType> mediaTypes = negotiator.resolveMediaTypes(request);
+    final List<MediaType> mediaTypes =
+        DEFAULT_CONTENT_NEGOTIATION_STRATEGY.resolveMediaTypes(request);
     return ErrorResponseBuilder.getProblemMediaType(mediaTypes);
   }
 
@@ -42,7 +41,7 @@ public class SpringWebErrorResponseBuilder
       request.setAttribute(ERROR_EXCEPTION, throwable, SCOPE_REQUEST);
     }
 
-    ProblemDetail problemDetail = createProblemDetail(request, status, problem);
+    ProblemDetail problemDetail = createProblemDetail(request, status, problem, this.traceProvider);
     Optional<ResponseEntity<ProblemDetail>> responseEntity =
         negotiate(request)
             .map(
@@ -52,11 +51,9 @@ public class SpringWebErrorResponseBuilder
                         .contentType(contentType)
                         .body(problemDetail));
 
-    if (responseEntity.isPresent()) {
-      return postProcess(responseEntity.get(), request);
-    } else {
-      return fallback(request, status, headers, problem);
-    }
+    return responseEntity
+        .map(problemDetailResponseEntity -> postProcess(problemDetailResponseEntity, request))
+        .orElseGet(() -> fallback(request, status, headers, problem));
   }
 
   private ResponseEntity<ProblemDetail> postProcess(
@@ -69,7 +66,7 @@ public class SpringWebErrorResponseBuilder
       final HttpStatus status,
       final HttpHeaders headers,
       final Problem problem) {
-    ProblemDetail problemDetail = createProblemDetail(request, status, problem);
+    ProblemDetail problemDetail = createProblemDetail(request, status, problem, this.traceProvider);
     return ResponseEntity.status(status)
         .headers(headers)
         .contentType(MediaTypes.PROBLEM)

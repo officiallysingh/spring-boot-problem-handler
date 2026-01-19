@@ -78,9 +78,7 @@ public interface AdviceTrait<T, R> {
         ProblemMessageSourceResolver.of(
             ProblemConstant.STATUS_CODE_PREFIX + errorKey, status.value());
 
-    Problem problem =
-        toProblem(throwable, codeResolver, titleResolver, detailResolver, statusResolver);
-    return problem;
+    return toProblem(throwable, codeResolver, titleResolver, detailResolver, statusResolver);
   }
 
   default ThrowableProblem toProblem(final Throwable throwable) {

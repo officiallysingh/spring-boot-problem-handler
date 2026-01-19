@@ -4,8 +4,8 @@ import com.ksoot.problem.core.ProblemConstant;
 import jakarta.validation.ConstraintViolation;
 import java.io.Serializable;
 import java.util.Arrays;
+import org.jspecify.annotations.Nullable;
 import org.springframework.context.MessageSourceResolvable;
-import org.springframework.lang.Nullable;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
@@ -17,12 +17,12 @@ public class ProblemMessageSourceResolver implements MessageSourceResolvable, Se
 
   private final String[] codes;
 
-  @Nullable private String defaultMessage;
+  @Nullable private final String defaultMessage;
 
-  @Nullable private Object[] arguments;
+  @Nullable private final Object[] arguments;
 
   private ProblemMessageSourceResolver(
-      final String[] codes, final String defaultMessage, Object[] arguments) {
+      final String[] codes, final @Nullable String defaultMessage, Object[] arguments) {
     this.codes = codes;
     this.defaultMessage = defaultMessage;
     this.arguments = arguments;
@@ -152,7 +152,7 @@ public class ProblemMessageSourceResolver implements MessageSourceResolvable, Se
   }
 
   @Override
-  public String getDefaultMessage() {
+  public @Nullable String getDefaultMessage() {
     return this.defaultMessage;
   }
 

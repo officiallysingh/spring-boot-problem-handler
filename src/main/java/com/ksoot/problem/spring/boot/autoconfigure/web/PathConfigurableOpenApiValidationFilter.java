@@ -28,9 +28,9 @@ public class PathConfigurableOpenApiValidationFilter extends OpenApiValidationFi
     String requestPath = request.getRequestURI();
     boolean excludedPath =
         CollectionUtils.isNotEmpty(this.excludePatterns)
-            ? this.excludePatterns.stream()
-                .anyMatch(pattern -> pathMatcher.match(pattern, requestPath))
-            : false;
+            && this.excludePatterns.stream()
+                .anyMatch(pattern -> pathMatcher.match(pattern, requestPath));
+
     return this.pathMatcher.match("/**/v3/api-docs", requestPath)
         || this.pathMatcher.match("/v3/api-docs", requestPath)
         || this.pathMatcher.match("/v3/api-docs/*", requestPath)

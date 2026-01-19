@@ -50,7 +50,7 @@ class ProblemDaoConfiguration {
   }
 
   @ConditionalOnClass(value = {MongoDatabaseFactory.class})
-  @ConditionalOnProperty(prefix = "spring.data.mongodb", name = "uri")
+  @ConditionalOnProperty(prefix = "spring.mongodb", name = "uri")
   @ConditionalOnMissingBean(name = "mongoConstraintNameResolver")
   static class MongoConstraintNameResolverConfiguration {
 

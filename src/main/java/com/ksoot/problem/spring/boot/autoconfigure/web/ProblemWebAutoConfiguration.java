@@ -1,6 +1,8 @@
 package com.ksoot.problem.spring.boot.autoconfigure.web;
 
 import com.ksoot.problem.core.ErrorResponseBuilder;
+import com.ksoot.problem.spring.boot.autoconfigure.TraceProvider;
+import com.ksoot.problem.spring.boot.autoconfigure.TracingHeaderEnabledCondition;
 import com.ksoot.problem.spring.config.ProblemProperties;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -8,6 +10,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -29,7 +32,18 @@ public class ProblemWebAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean(ErrorResponseBuilder.class)
-  ErrorResponseBuilder<NativeWebRequest, ResponseEntity<ProblemDetail>> errorResponseBuilder() {
-    return new SpringWebErrorResponseBuilder();
+  ErrorResponseBuilder<NativeWebRequest, ResponseEntity<ProblemDetail>> errorResponseBuilder(
+      final TraceProvider traceProvider) {
+    return new SpringWebErrorResponseBuilder(traceProvider);
+  }
+
+  @Conditional(TracingHeaderEnabledCondition.class)
+  @ConditionalOnMissingBean(name = "problemTracingFilter")
+  static class ProblemTracingWebFilterConfiguration {
+
+    @Bean
+    ProblemTracingWebFilter problemTracingFilter(final TraceProvider traceProvider) {
+      return new ProblemTracingWebFilter(traceProvider);
+    }
   }
 }

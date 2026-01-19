@@ -1,6 +1,7 @@
 package com.ksoot.problem.spring.config;
 
 import com.ksoot.problem.core.ErrorResponseBuilder;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -20,7 +21,8 @@ public class ProblemBeanRegistry implements ApplicationContextAware {
 
   @Override
   @Autowired
-  public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+  public void setApplicationContext(@NonNull ApplicationContext applicationContext)
+      throws BeansException {
     ProblemBeanRegistry.applicationContext = applicationContext;
   }
 

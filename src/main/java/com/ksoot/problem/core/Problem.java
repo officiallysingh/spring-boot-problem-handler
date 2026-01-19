@@ -82,8 +82,8 @@ public interface Problem {
 
     private static final Set<String> RESERVED_PROPERTIES =
         new HashSet<>(Arrays.asList("code", "title", "detail", "cause"));
-    private String code;
-    private String title;
+    private final String code;
+    private final String title;
     private String detail;
     private ThrowableProblem cause;
     private final Map<String, Object> parameters = new LinkedHashMap<>();
@@ -124,8 +124,7 @@ public interface Problem {
     public org.apache.commons.lang3.builder.Builder<ThrowableProblem> parameters(
         @Nullable final Map<String, Object> parameters) {
       if (MapUtils.isNotEmpty(parameters)) {
-        parameters.entrySet().stream()
-            .forEach(entry -> parameter(entry.getKey(), entry.getValue()));
+        parameters.entrySet().forEach(entry -> parameter(entry.getKey(), entry.getValue()));
       }
       return this;
     }

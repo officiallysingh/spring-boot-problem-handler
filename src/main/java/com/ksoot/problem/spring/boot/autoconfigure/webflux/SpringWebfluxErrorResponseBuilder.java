@@ -5,9 +5,11 @@ import static jakarta.servlet.RequestDispatcher.ERROR_EXCEPTION;
 import com.ksoot.problem.core.ErrorResponseBuilder;
 import com.ksoot.problem.core.MediaTypes;
 import com.ksoot.problem.core.Problem;
+import com.ksoot.problem.spring.boot.autoconfigure.TraceProvider;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -18,8 +20,11 @@ import org.springframework.web.reactive.accept.HeaderContentTypeResolver;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+@RequiredArgsConstructor
 public class SpringWebfluxErrorResponseBuilder
     implements ErrorResponseBuilder<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> {
+
+  private final TraceProvider traceProvider;
 
   @Override
   public Mono<ResponseEntity<ProblemDetail>> buildResponse(
@@ -32,7 +37,7 @@ public class SpringWebfluxErrorResponseBuilder
       request.getAttributes().put(ERROR_EXCEPTION, throwable);
     }
 
-    ProblemDetail problemDetail = createProblemDetail(request, status, problem);
+    ProblemDetail problemDetail = createProblemDetail(request, status, problem, this.traceProvider);
     Optional<Mono<ResponseEntity<ProblemDetail>>> responseEntity =
         negotiate(request)
             .map(
@@ -43,11 +48,9 @@ public class SpringWebfluxErrorResponseBuilder
                             .contentType(contentType)
                             .body(problemDetail)));
 
-    if (responseEntity.isPresent()) {
-      return postProcess(responseEntity.get(), request);
-    } else {
-      return fallback(request, status, headers, problem);
-    }
+    return responseEntity
+        .map(responseEntityMono -> postProcess(responseEntityMono, request))
+        .orElseGet(() -> fallback(request, status, headers, problem));
   }
 
   Optional<MediaType> negotiate(final ServerWebExchange request) {
@@ -65,7 +68,7 @@ public class SpringWebfluxErrorResponseBuilder
       final HttpStatus status,
       final HttpHeaders headers,
       final Problem problem) {
-    ProblemDetail problemDetail = createProblemDetail(request, status, problem);
+    ProblemDetail problemDetail = createProblemDetail(request, status, problem, this.traceProvider);
     return Mono.just(
         ResponseEntity.status(status)
             .headers(headers)

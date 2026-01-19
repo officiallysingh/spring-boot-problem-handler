@@ -7,19 +7,14 @@ import com.ksoot.problem.spring.advice.AdviceTrait;
 import com.ksoot.problem.spring.config.ProblemMessageSourceResolver;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 /**
  * Transforms {@link NoHandlerFoundException NoHandlerFoundExceptions} into {@link
  * HttpStatus#NOT_FOUND not-found} {@link Problem problems}.
  *
- * <p><strong>Note</strong>: This requires {@link
- * DispatcherServlet#setThrowExceptionIfNoHandlerFound(boolean)} being set to true.
- *
  * @see NoHandlerFoundException
  * @see HttpStatus#NOT_FOUND
- * @see DispatcherServlet#setThrowExceptionIfNoHandlerFound(boolean)
  */
 public interface NoHandlerFoundAdviceTrait<T, R> extends AdviceTrait<T, R> {
 

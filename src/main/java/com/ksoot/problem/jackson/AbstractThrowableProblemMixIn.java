@@ -8,7 +8,6 @@ import com.ksoot.problem.core.ThrowableProblem;
 
 abstract class AbstractThrowableProblemMixIn {
 
-  @SuppressWarnings("serial")
   @JsonCreator
   AbstractThrowableProblemMixIn(
       @JsonProperty("code") final String code,

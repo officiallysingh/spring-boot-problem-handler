@@ -125,7 +125,7 @@ public class Problems {
                 ProblemConstant.TITLE_RESOLVER,
                 ProblemConstant.DETAIL_RESOLVER));
 
-    private String errorKey;
+    private final String errorKey;
     private String defaultDetail;
     private HttpStatus status;
     private Object[] detailArgs;
@@ -173,8 +173,7 @@ public class Problems {
     @Override
     public ProblemBuildable parameters(@Nullable final Map<String, Object> parameters) {
       if (MapUtils.isNotEmpty(parameters)) {
-        parameters.entrySet().stream()
-            .forEach(entry -> parameter(entry.getKey(), entry.getValue()));
+        parameters.entrySet().forEach(entry -> parameter(entry.getKey(), entry.getValue()));
       }
       return this;
     }

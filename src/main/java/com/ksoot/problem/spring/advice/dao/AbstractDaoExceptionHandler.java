@@ -23,7 +23,7 @@ public abstract class AbstractDaoExceptionHandler<T, R> implements DaoAdviceTrai
           constraintNameResolvers.stream()
               .collect(Collectors.toMap(ConstraintNameResolver::dbType, Function.identity()));
     } else {
-      this.constraintNameResolvers = Collections.EMPTY_MAP;
+      this.constraintNameResolvers = Collections.emptyMap();
     }
 
     String dbPlatform = env.getProperty("spring.jpa.database");

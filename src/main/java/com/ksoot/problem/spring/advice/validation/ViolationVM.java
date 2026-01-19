@@ -45,10 +45,7 @@ public class ViolationVM {
       final String propertyPath,
       MessageSourceResolvable codeResolver,
       MessageSourceResolvable messageResolver) {
-    ViolationVM violationVM = new ViolationVM();
-    violationVM.code = code;
-    violationVM.detail = detail;
-    violationVM.propertyPath = propertyPath;
+    ViolationVM violationVM = of(code, detail, propertyPath);
 
     Map<String, Object> parameters = new LinkedHashMap<>(2);
     parameters.put(CODE_RESOLVER, codeResolver);
@@ -63,10 +60,7 @@ public class ViolationVM {
       final String message,
       final String propertyPath,
       MessageSourceResolvable messageResolver) {
-    ViolationVM violationVM = new ViolationVM();
-    violationVM.code = code;
-    violationVM.detail = message;
-    violationVM.propertyPath = propertyPath;
+    ViolationVM violationVM = of(code, message, propertyPath);
 
     Map<String, Object> parameters = new LinkedHashMap<>(1);
     parameters.put(DETAIL_RESOLVER, messageResolver);

@@ -63,12 +63,12 @@ Maven
 <dependency>
     <groupId>io.github.officiallysingh</groupId>
     <artifactId>spring-boot-problem-handler</artifactId>
-    <version>1.10.0</version>
+    <version>1.10.2</version>
 </dependency>
 ```
 Gradle
 ```groovy
-implementation 'io.github.officiallysingh:spring-boot-problem-handler:1.10.0'
+implementation 'io.github.officiallysingh:spring-boot-problem-handler:1.10.2'
 ```
 
 It does all hard part, A lot of advices are out of box available that are autoconfigured as `ControllerAdvice`s 
@@ -94,6 +94,7 @@ such as for Handling Security, OpenAPI and Dao related exceptions, which are ela
 * Works with both Spring Web and Spring Webflux applications.
 * Customizable to override the default attributes in error response by overriding the same in `properties` file.
 * The autoconfigured advices can be disabled or overridden or extended as per needs.
+* Micrometer tracing support.
 
 ## Controller Advices
 
@@ -349,6 +350,9 @@ problem.open-api.path=/oas/api.json
 problem.open-api.exclude-patterns=/api/states,/api/states/**,/api/employees,/api/employees/**,/problems/**
 problem.open-api.req-validation-enabled=true
 problem.open-api.res-validation-enabled=false
+problem.tracing.enabled=false
+problem.tracing.trace-id=X-trace-id
+problem.tracing.strategy=HEADER
 ```
 
 * `problem.enabled`:- To enable or disable autoconfiguration, default is `true`. 
@@ -373,6 +377,9 @@ problem.open-api.res-validation-enabled=false
 * `problem.open-api.exclude-patterns`:- List of `URI` Ant patterns to be excluded from OpenAPI specification validation. Default is empty.
 * `problem.open-api.req-validation-enabled`:- To enable or disable OpenAPI specification validation for request, default is `false`.
 * `problem.open-api.res-validation-enabled`:- To enable or disable OpenAPI specification validation for response, default is `false`.
+* `problem.tracing.enabled`:- Whether to enable Tracing support, default is `false`.
+* `problem.tracing.trace-id`:- Attribute name in error response body or Header name for Trace Id, default is `X-trace-id`.
+* `problem.tracing.strategy`:- Whether to add Trace Id in header or body of error response, default is `HEADER`.
 
 ## Error Key
 The main concept behind specifying the error attributes in `properties` file is **Error key**, which is mandatory to be unique for each error scenario.

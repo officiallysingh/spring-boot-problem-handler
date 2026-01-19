@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
 
 @Getter
-@SuppressWarnings("serial")
 public class MultiProblem extends RuntimeException {
 
   private final HttpStatus status;

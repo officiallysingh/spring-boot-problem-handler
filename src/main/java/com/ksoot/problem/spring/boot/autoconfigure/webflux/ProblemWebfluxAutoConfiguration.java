@@ -1,6 +1,8 @@
 package com.ksoot.problem.spring.boot.autoconfigure.webflux;
 
 import com.ksoot.problem.core.ErrorResponseBuilder;
+import com.ksoot.problem.spring.boot.autoconfigure.TraceProvider;
+import com.ksoot.problem.spring.boot.autoconfigure.TracingHeaderEnabledCondition;
 import com.ksoot.problem.spring.config.ProblemProperties;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
@@ -9,6 +11,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ProblemDetail;
@@ -30,8 +33,18 @@ public class ProblemWebfluxAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean(ErrorResponseBuilder.class)
-  ErrorResponseBuilder<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>>
-      errorResponseBuilder() {
-    return new SpringWebfluxErrorResponseBuilder();
+  ErrorResponseBuilder<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> errorResponseBuilder(
+      final TraceProvider traceProvider) {
+    return new SpringWebfluxErrorResponseBuilder(traceProvider);
+  }
+
+  @Conditional(TracingHeaderEnabledCondition.class)
+  @ConditionalOnMissingBean(name = "problemTracingFilter")
+  static class ProblemTracingWebFluxFilterConfiguration {
+
+    @Bean
+    ProblemTracingWebFluxFilter problemTracingFilter(final TraceProvider traceProvider) {
+      return new ProblemTracingWebFluxFilter(traceProvider);
+    }
   }
 }
