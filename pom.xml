@@ -6,7 +6,7 @@
 
     <groupId>io.github.officiallysingh</groupId>
     <artifactId>spring-boot-problem-handler</artifactId>
-    <version>1.10.2</version>
+    <version>1.10.3</version>
     <name>spring-boot-problem-handler</name>
     <description>Commons exception handler library</description>
     <url>https://github.com/officiallysingh/spring-boot-problem-handler</url>
@@ -52,7 +52,7 @@
 
         <fmt-maven-plugin.version>2.29</fmt-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
-        <central-publishing-maven-plugin.version>0.9.0</central-publishing-maven-plugin.version>
+        <central-publishing-maven-plugin.version>0.10.0</central-publishing-maven-plugin.version>
 
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>

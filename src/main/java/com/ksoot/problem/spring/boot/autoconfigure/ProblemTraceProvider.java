@@ -19,9 +19,11 @@ public class ProblemTraceProvider implements TraceProvider {
   public ImmutablePair<@NotEmpty String, String> getTraceId() {
     Tracer tracer = this.tracerProvider.getIfAvailable(() -> null);
     if (Objects.nonNull(tracer) && Objects.nonNull(tracer.currentSpan().context())) {
-      return ImmutablePair.of(
-          this.problemProperties.getTracing().getTraceId(),
-          tracer.currentSpan().context().spanId());
+      String traceId =
+          Objects.nonNull(tracer.currentTraceContext().context())
+              ? tracer.currentTraceContext().context().traceId()
+              : null;
+      return ImmutablePair.of(this.problemProperties.getTracing().getTraceId(), traceId);
     } else {
       return null;
     }
