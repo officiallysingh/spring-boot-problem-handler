@@ -6,7 +6,7 @@
 
     <groupId>io.github.officiallysingh</groupId>
     <artifactId>spring-boot-problem-handler</artifactId>
-    <version>1.10.3</version>
+    <version>1.10.4</version>
     <name>spring-boot-problem-handler</name>
     <description>Commons exception handler library</description>
     <url>https://github.com/officiallysingh/spring-boot-problem-handler</url>
@@ -157,6 +157,7 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-tracing</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <dependency>

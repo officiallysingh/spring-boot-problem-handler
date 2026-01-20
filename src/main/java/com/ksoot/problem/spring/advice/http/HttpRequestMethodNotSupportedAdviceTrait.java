@@ -14,8 +14,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+/**
+ * Advice trait to handle {@link HttpRequestMethodNotSupportedException}s.
+ *
+ * @param <T> the request type
+ * @param <R> the response type
+ * @see HttpRequestMethodNotSupportedException
+ * @see HttpStatus#METHOD_NOT_ALLOWED
+ */
 public interface HttpRequestMethodNotSupportedAdviceTrait<T, R> extends AdviceTrait<T, R> {
 
+  /**
+   * Handles {@link HttpRequestMethodNotSupportedException} and converts it into a response.
+   *
+   * @param exception the exception
+   * @param request the request
+   * @return the error response
+   */
   @ExceptionHandler
   default R handleRequestMethodNotSupportedException(
       final HttpRequestMethodNotSupportedException exception, final T request) {

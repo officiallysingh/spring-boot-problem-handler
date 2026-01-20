@@ -2,6 +2,7 @@ package com.ksoot.problem.core;
 
 import java.util.List;
 
+/** Utility class for list operations. */
 final class Lists {
 
   private Lists() {}
@@ -18,7 +19,6 @@ final class Lists {
    * @param target the list to search for as a trailing partial sublist of <tt>source</tt>.
    * @return the length of the last occurrence of trailing partial sublist the specified target list
    *     within the specified source list, or 0 if there is no such occurrence.
-   * @since 1.4
    */
   static int lengthOfTrailingPartialSubList(final List<?> source, final List<?> target) {
     final int s = source.size() - 1;

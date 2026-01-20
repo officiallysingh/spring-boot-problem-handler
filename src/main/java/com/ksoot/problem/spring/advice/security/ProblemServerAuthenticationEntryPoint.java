@@ -11,6 +11,10 @@ import org.springframework.security.web.server.ServerAuthenticationEntryPoint;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+/**
+ * A {@link ServerAuthenticationEntryPoint} for WebFlux applications that uses {@link
+ * SecurityAdviceTraits} to handle authentication exceptions.
+ */
 @RequiredArgsConstructor
 public class ProblemServerAuthenticationEntryPoint implements ServerAuthenticationEntryPoint {
 
@@ -18,6 +22,7 @@ public class ProblemServerAuthenticationEntryPoint implements ServerAuthenticati
 
   private final ObjectMapper objectMapper;
 
+  /** {@inheritDoc} */
   @Override
   public @NonNull Mono<Void> commence(
       final @NonNull ServerWebExchange exchange, final @NonNull AuthenticationException exception) {

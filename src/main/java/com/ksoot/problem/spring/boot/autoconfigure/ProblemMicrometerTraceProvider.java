@@ -8,13 +8,15 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.beans.factory.ObjectProvider;
 
+/** Default implementation of {@link TraceProvider} that uses Micrometer Tracing. */
 @RequiredArgsConstructor
-public class ProblemTraceProvider implements TraceProvider {
+public class ProblemMicrometerTraceProvider implements TraceProvider {
 
   private final ProblemProperties problemProperties;
 
   private final ObjectProvider<Tracer> tracerProvider;
 
+  /** {@inheritDoc} */
   @Override
   public ImmutablePair<@NotEmpty String, String> getTraceId() {
     Tracer tracer = this.tracerProvider.getIfAvailable(() -> null);

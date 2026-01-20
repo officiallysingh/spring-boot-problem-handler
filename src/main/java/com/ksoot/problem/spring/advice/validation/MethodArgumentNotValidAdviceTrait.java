@@ -14,12 +14,23 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
+ * Advice trait to handle {@link MethodArgumentNotValidException}s.
+ *
+ * @param <T> the request type
+ * @param <R> the response type
  * @see MethodArgumentNotValidException
  * @see BaseValidationAdviceTrait#defaultConstraintViolationStatus()
  */
 public interface MethodArgumentNotValidAdviceTrait<T, R>
     extends BaseBindingResultHandlingAdviceTrait<T, R> {
 
+  /**
+   * Handles {@link MethodArgumentNotValidException} and converts it into a response.
+   *
+   * @param exception the method argument not valid exception
+   * @param request the request
+   * @return the error response
+   */
   @ExceptionHandler
   default R handleMethodArgumentNotValid(
       final MethodArgumentNotValidException exception, final T request) {

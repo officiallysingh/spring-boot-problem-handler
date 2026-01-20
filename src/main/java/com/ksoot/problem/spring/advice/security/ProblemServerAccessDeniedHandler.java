@@ -11,6 +11,10 @@ import org.springframework.security.web.server.authorization.ServerAccessDeniedH
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+/**
+ * A {@link ServerAccessDeniedHandler} for WebFlux applications that uses {@link
+ * SecurityAdviceTraits} to handle access denial exceptions.
+ */
 @RequiredArgsConstructor
 public class ProblemServerAccessDeniedHandler implements ServerAccessDeniedHandler {
 
@@ -18,6 +22,7 @@ public class ProblemServerAccessDeniedHandler implements ServerAccessDeniedHandl
 
   private final ObjectMapper objectMapper;
 
+  /** {@inheritDoc} */
   @Override
   public @NonNull Mono<Void> handle(
       final @NonNull ServerWebExchange exchange, final @NonNull AccessDeniedException exception) {

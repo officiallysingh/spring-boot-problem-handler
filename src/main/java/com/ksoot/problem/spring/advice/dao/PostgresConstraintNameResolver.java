@@ -1,17 +1,13 @@
 package com.ksoot.problem.spring.advice.dao;
 
 /**
+ * {@link ConstraintNameResolver} implementation for PostgreSQL.
+ *
  * @author Rajveer Singh
  */
 public class PostgresConstraintNameResolver implements ConstraintNameResolver {
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.ksoot.framework.common.spring.config.error.dbconstraint.
-   * ConstraintNameResolver# resolveConstraintName(org.springframework.dao.
-   * DataIntegrityViolationException)
-   */
+  /** {@inheritDoc} */
   @Override
   public String resolveConstraintName(final String exceptionMessage) {
     String exMessage = exceptionMessage.trim();
@@ -24,6 +20,7 @@ public class PostgresConstraintNameResolver implements ConstraintNameResolver {
     return "postgres.duplicate.key";
   }
 
+  /** {@inheritDoc} */
   @Override
   public DBType dbType() {
     return DBType.POSTGRESQL;

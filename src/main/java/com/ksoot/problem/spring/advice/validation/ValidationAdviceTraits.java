@@ -23,6 +23,14 @@ package com.ksoot.problem.spring.advice.validation;
  *      return methodValidationPostProcessor;
  *  }
  * </code></pre>
+ *
+ * @param <T> the request type
+ * @param <R> the response type
+ * @see ConstraintViolationAdviceTrait
+ * @see BindAdviceTrait
+ * @see MethodArgumentNotValidAdviceTrait
+ * @see MethodArgumentTypeMismatchAdviceTrait
+ * @see TypeMismatchAdviceTrait
  */
 public interface ValidationAdviceTraits<T, R>
     extends ConstraintViolationAdviceTrait<T, R>,

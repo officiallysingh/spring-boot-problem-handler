@@ -12,6 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import reactor.core.publisher.Mono;
 
+/**
+ * {@link ControllerAdvice} for handling general built-in exceptions in WebFlux applications.
+ *
+ * @see ProblemHandlingWebflux
+ */
 @AutoConfiguration
 @EnableConfigurationProperties(ProblemProperties.class)
 @ConditionalOnProperty(

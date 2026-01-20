@@ -16,12 +16,13 @@ import tools.jackson.databind.module.SimpleDeserializers;
 import tools.jackson.databind.module.SimpleSerializers;
 import tools.jackson.databind.ser.std.ToStringSerializer;
 
+/** Jackson module to serialize and deserialize Problem classes. */
 public final class ProblemModule extends JacksonModule {
 
   private final Map<Integer, HttpStatusCode> statuses;
 
   /**
-   * TODO document
+   * Default constructor that uses {@link HttpStatus} as the status type.
    *
    * @see HttpStatus
    */
@@ -30,7 +31,7 @@ public final class ProblemModule extends JacksonModule {
   }
 
   /**
-   * TODO document
+   * Constructs a new problem module with the given status types.
    *
    * @param <E> generic enum type
    * @param types status type enums
@@ -65,11 +66,13 @@ public final class ProblemModule extends JacksonModule {
     return Collections.unmodifiableMap(index);
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getModuleName() {
     return ProblemModule.class.getSimpleName();
   }
 
+  /** {@inheritDoc} */
   @Override
   public Version version() {
     return VersionUtil.versionFor(ProblemModule.class);
@@ -79,6 +82,7 @@ public final class ProblemModule extends JacksonModule {
     return ExceptionalMixin.class;
   }
 
+  /** {@inheritDoc} */
   @Override
   public void setupModule(final SetupContext context) {
     context.setMixIn(Exceptional.class, mixinClass());

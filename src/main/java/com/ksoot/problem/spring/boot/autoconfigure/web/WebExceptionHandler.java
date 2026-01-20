@@ -10,6 +10,12 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
+/**
+ * {@link ControllerAdvice} for handling general built-in exceptions in Servlet-based web
+ * applications.
+ *
+ * @see ProblemHandlingWeb
+ */
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(ProblemProperties.class)
 @ConditionalOnProperty(

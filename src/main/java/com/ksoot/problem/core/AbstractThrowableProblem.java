@@ -7,6 +7,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Base class for all {@link ThrowableProblem} implementations that provides basic property support.
+ */
 public abstract class AbstractThrowableProblem extends ThrowableProblem {
 
   @Serial private static final long serialVersionUID = 7657146691407810390L;
@@ -16,18 +19,40 @@ public abstract class AbstractThrowableProblem extends ThrowableProblem {
   private final String detail;
   private final Map<String, Object> parameters;
 
+  /** Constructs a new abstract throwable problem with no properties. */
   protected AbstractThrowableProblem() {
     this(null, null);
   }
 
+  /**
+   * Constructs a new abstract throwable problem with the given code and title.
+   *
+   * @param code the problem code
+   * @param title the problem title
+   */
   protected AbstractThrowableProblem(final String code, final String title) {
     this(code, title, null);
   }
 
+  /**
+   * Constructs a new abstract throwable problem with the given code, title, and detail.
+   *
+   * @param code the problem code
+   * @param title the problem title
+   * @param detail the problem detail
+   */
   protected AbstractThrowableProblem(final String code, final String title, final String detail) {
     this(code, title, detail, null);
   }
 
+  /**
+   * Constructs a new abstract throwable problem with the given code, title, detail, and cause.
+   *
+   * @param code the problem code
+   * @param title the problem title
+   * @param detail the problem detail
+   * @param cause the problem cause
+   */
   protected AbstractThrowableProblem(
       final String code,
       final String title,
@@ -36,6 +61,15 @@ public abstract class AbstractThrowableProblem extends ThrowableProblem {
     this(code, title, detail, cause, null);
   }
 
+  /**
+   * Constructs a new abstract throwable problem with the given properties.
+   *
+   * @param code the problem code
+   * @param title the problem title
+   * @param detail the problem detail
+   * @param cause the problem cause
+   * @param parameters additional parameters
+   */
   protected AbstractThrowableProblem(
       final String code,
       final String title,
@@ -49,21 +83,25 @@ public abstract class AbstractThrowableProblem extends ThrowableProblem {
     this.parameters = Optional.ofNullable(parameters).orElseGet(LinkedHashMap::new);
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getCode() {
     return this.code;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getTitle() {
     return this.title;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getDetail() {
     return this.detail;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Map<String, Object> getParameters() {
     return Collections.unmodifiableMap(this.parameters);

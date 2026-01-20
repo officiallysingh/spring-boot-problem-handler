@@ -16,11 +16,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
+ * Advice trait to handle {@link ConstraintViolationException}s.
+ *
+ * @param <T> the request type
+ * @param <R> the response type
  * @see ConstraintViolationException
  * @see BaseValidationAdviceTrait#defaultConstraintViolationStatus()
  */
 public interface ConstraintViolationAdviceTrait<T, R> extends BaseValidationAdviceTrait<T, R> {
 
+  /**
+   * Handles {@link ConstraintViolationException} and converts it into a response.
+   *
+   * @param exception the constraint violation exception
+   * @param request the request
+   * @return the error response
+   */
   @ExceptionHandler
   default R handleConstraintViolationException(
       final ConstraintViolationException exception, final T request) {
@@ -41,6 +52,13 @@ public interface ConstraintViolationAdviceTrait<T, R> extends BaseValidationAdvi
     return toResponse(exception, request, defaultConstraintViolationStatus(), problem);
   }
 
+  /**
+   * Handles a {@link ConstraintViolation} and converts it into a {@link ViolationVM}.
+   *
+   * @param violation the constraint violation
+   * @param exception the constraint violation exception
+   * @return the violation
+   */
   @SuppressWarnings("rawtypes")
   default ViolationVM handleConstraintViolation(
       final ConstraintViolation violation, final ConstraintViolationException exception) {

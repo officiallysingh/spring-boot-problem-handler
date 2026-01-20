@@ -11,16 +11,18 @@ import com.ksoot.problem.spring.advice.validation.ValidationAdviceTraits;
 import org.springframework.web.server.ServerWebExchange;
 
 /**
- * {@link ProblemHandlingWebflux} is a composite {@link AdviceTrait} that combines all built-in
- * advice traits into a single interface that makes it easier to use:
+ * {@link ProblemHandlingWebflux} is a composite {@link AdviceTrait} that combines all general
+ * built-in advice traits for WebFlux applications into a single interface that makes it easier to
+ * use:
  *
- * <pre><code>
- * {@literal @}ControllerAdvice
- *  public class ExceptionHandling implements ProblemHandlingWebflux
- * </code></pre>
+ * <pre>{@code
+ * @ControllerAdvice
+ * public class WebFluxExceptionHandler implements ProblemHandlingWebflux<Mono<ResponseEntity<ProblemDetail>>> {}
+ * }</pre>
  *
  * <strong>Note:</strong> Future versions of this class will be extended with additional traits.
  *
+ * @param <R> the response type
  * @see GeneralAdviceTraits
  * @see HttpAdviceTraits
  * @see IOAdviceTraits

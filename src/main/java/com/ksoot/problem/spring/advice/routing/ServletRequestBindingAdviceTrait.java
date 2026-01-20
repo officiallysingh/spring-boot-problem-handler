@@ -8,11 +8,22 @@ import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
+ * Advice trait to handle {@link ServletRequestBindingException}s.
+ *
+ * @param <T> the request type
+ * @param <R> the response type
  * @see ServletRequestBindingException
  * @see HttpStatus#BAD_REQUEST
  */
 public interface ServletRequestBindingAdviceTrait<T, R> extends AdviceTrait<T, R> {
 
+  /**
+   * Handles {@link ServletRequestBindingException} and converts it into a {@link Problem} response.
+   *
+   * @param exception the servlet request binding exception
+   * @param request the request
+   * @return the error response
+   */
   @ExceptionHandler
   default R handleServletRequestBinding(
       final ServletRequestBindingException exception, final T request) {

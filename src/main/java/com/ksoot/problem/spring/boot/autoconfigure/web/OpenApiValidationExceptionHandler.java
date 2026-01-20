@@ -23,6 +23,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.NativeWebRequest;
 
+/**
+ * {@link ControllerAdvice} for handling OpenAPI validation exceptions in Servlet-based web
+ * applications. It also provides beans for OpenAPI validation interceptor and filter.
+ */
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(value = {ProblemProperties.class})
 @ConditionalOnClass(ValidationReportHandler.class)
@@ -36,6 +40,12 @@ public class OpenApiValidationExceptionHandler
 
   private final ProblemProperties problemProperties;
 
+  /**
+   * Creates an {@link OpenApiValidationInterceptor} bean.
+   *
+   * @return the OpenAPI validation interceptor
+   * @throws ProblemConfigException if the OpenAPI specification path is invalid
+   */
   @Bean
   public OpenApiValidationInterceptor validationInterceptor() {
     if (StringUtils.isBlank(this.problemProperties.getOpenApi().getPath())) {
@@ -48,6 +58,12 @@ public class OpenApiValidationExceptionHandler
     return new OpenApiValidationInterceptor(validator);
   }
 
+  /**
+   * Creates an OpenAPI validation filter bean.
+   *
+   * @return the validation filter
+   * @see PathConfigurableOpenApiValidationFilter
+   */
   @Bean
   public Filter validationFilter() {
     return new PathConfigurableOpenApiValidationFilter(this.problemProperties.getOpenApi());

@@ -10,11 +10,24 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
- * The request was a valid request, but the server is refusing to respond to it. The user might be
- * logged in but does not have the necessary permissions for the resource.
+ * Advice trait to handle {@link AccessDeniedException}s. The request was a valid request, but the
+ * server is refusing to respond to it. The user might be logged in but does not have the necessary
+ * permissions for the resource.
+ *
+ * @param <T> the request type
+ * @param <R> the response type
+ * @see AccessDeniedException
+ * @see HttpStatus#FORBIDDEN
  */
 public interface AccessDeniedAdviceTrait<T, R> extends AdviceTrait<T, R> {
 
+  /**
+   * Handles {@link AccessDeniedException} and converts it into a {@link Problem} response.
+   *
+   * @param exception the access denied exception
+   * @param request the request
+   * @return the error response
+   */
   @ExceptionHandler
   default R handleAccessDeniedException(final AccessDeniedException exception, final T request) {
     Problem problem =

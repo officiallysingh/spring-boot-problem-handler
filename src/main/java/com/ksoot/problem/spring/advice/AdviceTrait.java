@@ -26,10 +26,23 @@ import org.springframework.context.MessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
+/**
+ * Base interface for all advice traits. Provides methods for resolving HTTP status, converting
+ * throwables to problems, and building responses.
+ *
+ * @param <T> the request type
+ * @param <R> the response type
+ */
 public interface AdviceTrait<T, R> {
 
   Logger logger = LoggerFactory.getLogger(AdviceTrait.class);
 
+  /**
+   * Resolves the {@link HttpStatus} for the given throwable.
+   *
+   * @param throwable the throwable
+   * @return the resolved status
+   */
   default HttpStatus resolveStatus(final Throwable throwable) {
     HttpStatus defaultStatus = HttpStatus.valueOf(ProblemUtils.resolveStatus(throwable).value());
     String errorKey = ClassUtils.getName(throwable);
@@ -47,6 +60,14 @@ public interface AdviceTrait<T, R> {
   }
 
   // ------ Create problem from exceptions ------
+  /**
+   * Converts a throwable to a {@link Problem}.
+   *
+   * @param throwable the throwable
+   * @param defaultErrorKey the default error key
+   * @param status the HTTP status
+   * @return the problem
+   */
   default Problem toProblem(
       final Throwable throwable, final String defaultErrorKey, final HttpStatus status) {
 
@@ -240,15 +261,39 @@ public interface AdviceTrait<T, R> {
   }
 
   // ------ Create Error response from Problems ------
+  /**
+   * Converts a throwable to Error response.
+   *
+   * @param throwable the throwable
+   * @param request the request
+   * @return the response
+   */
   default R toResponse(final Throwable throwable, final T request) {
     HttpStatus status = HttpStatus.valueOf(ProblemUtils.resolveStatus(throwable).value());
     return toResponse(throwable, request, status, toProblem(throwable));
   }
 
+  /**
+   * Converts a throwable to Error response with the given status.
+   *
+   * @param throwable the throwable
+   * @param request the request
+   * @param status the HTTP status
+   * @return the response
+   */
   default R toResponse(final Throwable throwable, final T request, final HttpStatus status) {
     return toResponse(throwable, request, status, new HttpHeaders());
   }
 
+  /**
+   * Converts a throwable to Error response with the given status and headers.
+   *
+   * @param throwable the throwable
+   * @param request the request
+   * @param status the HTTP status
+   * @param headers the HTTP headers
+   * @return the response
+   */
   default R toResponse(
       final Throwable throwable,
       final T request,
@@ -257,11 +302,30 @@ public interface AdviceTrait<T, R> {
     return buildResponse(throwable, request, status, headers, toProblem(throwable, status));
   }
 
+  /**
+   * Converts a throwable to Error response with the given status and problem.
+   *
+   * @param throwable the throwable
+   * @param request the request
+   * @param status the HTTP status
+   * @param problem the problem
+   * @return the response
+   */
   default R toResponse(
       final Throwable throwable, final T request, final HttpStatus status, final Problem problem) {
     return buildResponse(throwable, request, status, new HttpHeaders(), problem);
   }
 
+  /**
+   * Builds the final Error response.
+   *
+   * @param throwable the throwable
+   * @param request the request
+   * @param status the HTTP status
+   * @param headers the HTTP headers
+   * @param problem the problem
+   * @return the response
+   */
   default R buildResponse(
       final Throwable throwable,
       final T request,
@@ -272,6 +336,12 @@ public interface AdviceTrait<T, R> {
     return errorResponseBuilder().buildResponse(throwable, request, status, headers, problem);
   }
 
+  /**
+   * Logs the throwable and status.
+   *
+   * @param throwable the throwable
+   * @param status the HTTP status
+   */
   default void log(final Throwable throwable, final HttpStatus status) {
     logger.error(status.getReasonPhrase(), throwable);
     // throwable.printStackTrace();
@@ -288,7 +358,13 @@ public interface AdviceTrait<T, R> {
   // ErrorResponseBuilder can have different implementations as per consumer needs, So
   // can be overridden.
   // Would be different for Web or Webflux applications
+  /**
+   * Returns the {@link ErrorResponseBuilder}.
+   *
+   * @return the error response builder
+   */
+  @SuppressWarnings("unchecked")
   default ErrorResponseBuilder<T, R> errorResponseBuilder() {
-    return ProblemBeanRegistry.errorResponseBuilder();
+    return (ErrorResponseBuilder<T, R>) ProblemBeanRegistry.errorResponseBuilder();
   }
 }

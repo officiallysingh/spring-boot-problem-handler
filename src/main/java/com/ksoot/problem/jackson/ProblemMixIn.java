@@ -11,6 +11,7 @@ import com.ksoot.problem.core.DefaultProblem;
 import com.ksoot.problem.core.Problem;
 import java.util.Map;
 
+/** Jackson MixIn for {@link Problem} to configure JSON serialization. */
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
     include = JsonTypeInfo.As.EXISTING_PROPERTY,
@@ -21,18 +22,22 @@ import java.util.Map;
 @JsonPropertyOrder({"code", "title", "details"})
 interface ProblemMixIn extends Problem {
 
+  /** {@inheritDoc} */
   @JsonProperty("code")
   @Override
   String getCode();
 
+  /** {@inheritDoc} */
   @JsonProperty("title")
   @Override
   String getTitle();
 
+  /** {@inheritDoc} */
   @JsonProperty("detail")
   @Override
   String getDetail();
 
+  /** {@inheritDoc} */
   @JsonAnyGetter
   @Override
   Map<String, Object> getParameters();

@@ -21,6 +21,11 @@ import org.springframework.util.Assert;
  */
 public interface Problem {
 
+  /**
+   * Returns the problem code.
+   *
+   * @return the problem code
+   */
   String getCode();
 
   /**
@@ -32,12 +37,17 @@ public interface Problem {
   String getTitle();
 
   /**
-   * A human readable explanation specific to this occurrence of the problem.
+   * A human-readable explanation specific to this occurrence of the problem.
    *
-   * @return A human readable explanation of this problem
+   * @return A human-readable explanation of this problem
    */
   String getDetail();
 
+  /**
+   * Returns the cause of the problem.
+   *
+   * @return the cause of the problem, or {@code null} if unknown or not applicable
+   */
   ThrowableProblem getCause();
 
   /**
@@ -50,6 +60,12 @@ public interface Problem {
     return Collections.emptyMap();
   }
 
+  /**
+   * Returns a string representation of the given problem.
+   *
+   * @param problem the problem to represent
+   * @return a string representation of the problem
+   */
   static String toString(final Problem problem) {
     final Stream<String> parts =
         Stream.concat(
@@ -61,23 +77,54 @@ public interface Problem {
   }
 
   // ------------- Builder ---------------
+
+  /** Part of the {@link Problem} builder for setting the detail. */
   interface DetailBuilder {
+    /**
+     * Sets the detail of the problem.
+     *
+     * @param detail the detail
+     * @return the next step in the builder
+     */
     CauseBuilder detail(final String detail);
   }
 
+  /** Part of the {@link Problem} builder for setting the cause. */
   interface CauseBuilder extends ParameterBuilder {
+    /**
+     * Sets the cause of the problem.
+     *
+     * @param cause the cause
+     * @return the next step in the builder
+     */
     ParameterBuilder cause(@Nullable Throwable cause);
   }
 
+  /** Part of the {@link Problem} builder for setting additional parameters. */
   interface ParameterBuilder extends ParametersBuilder {
+    /**
+     * Adds an additional parameter to the problem.
+     *
+     * @param key the parameter key
+     * @param value the parameter value
+     * @return this builder
+     */
     ParameterBuilder parameter(final String key, final Object value);
   }
 
+  /** Part of the {@link Problem} builder for setting multiple parameters at once. */
   interface ParametersBuilder extends org.apache.commons.lang3.builder.Builder<ThrowableProblem> {
+    /**
+     * Adds multiple additional parameters to the problem.
+     *
+     * @param parameters the parameters
+     * @return this builder
+     */
     org.apache.commons.lang3.builder.Builder<ThrowableProblem> parameters(
         @Nullable final Map<String, Object> parameters);
   }
 
+  /** Builder for {@link Problem} instances. */
   class ProblemBuilder implements DetailBuilder, CauseBuilder {
 
     private static final Set<String> RESERVED_PROPERTIES =
@@ -124,7 +171,7 @@ public interface Problem {
     public org.apache.commons.lang3.builder.Builder<ThrowableProblem> parameters(
         @Nullable final Map<String, Object> parameters) {
       if (MapUtils.isNotEmpty(parameters)) {
-        parameters.entrySet().forEach(entry -> parameter(entry.getKey(), entry.getValue()));
+        parameters.forEach((key, value) -> parameter(key, value));
       }
       return this;
     }

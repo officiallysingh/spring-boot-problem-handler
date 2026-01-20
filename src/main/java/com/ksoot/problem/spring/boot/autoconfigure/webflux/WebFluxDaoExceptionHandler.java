@@ -19,7 +19,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.server.ServerWebExchange;
 
 /**
+ * {@link ControllerAdvice} for handling DAO-related exceptions in WebFlux applications.
+ *
  * @author Rajveer Singh
+ * @see AbstractDaoExceptionHandler
  */
 @Configuration
 @EnableConfigurationProperties(ProblemProperties.class)
@@ -35,6 +38,12 @@ import org.springframework.web.server.ServerWebExchange;
 public class WebFluxDaoExceptionHandler
     extends AbstractDaoExceptionHandler<ServerWebExchange, ResponseEntity<ProblemDetail>> {
 
+  /**
+   * Constructs a new WebFlux DAO exception handler with the given resolvers and environment.
+   *
+   * @param constraintNameResolvers the list of constraint name resolvers
+   * @param env the application environment
+   */
   WebFluxDaoExceptionHandler(
       final List<ConstraintNameResolver> constraintNameResolvers, final Environment env) {
     super(constraintNameResolvers, env);

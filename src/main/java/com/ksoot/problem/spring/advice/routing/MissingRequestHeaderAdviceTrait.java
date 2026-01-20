@@ -7,15 +7,25 @@ import com.ksoot.problem.spring.advice.validation.BaseValidationAdviceTrait;
 import com.ksoot.problem.spring.config.ProblemMessageSourceResolver;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MissingRequestHeaderException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
- * @see MissingServletRequestParameterException
+ * Advice trait to handle {@link MissingRequestHeaderException}s.
+ *
+ * @param <T> the request type
+ * @param <R> the response type
+ * @see MissingRequestHeaderException
  * @see HttpStatus#BAD_REQUEST
  */
 public interface MissingRequestHeaderAdviceTrait<T, R> extends BaseValidationAdviceTrait<T, R> {
 
+  /**
+   * Handles {@link MissingRequestHeaderException} and converts it into a {@link Problem} response.
+   *
+   * @param exception the missing request header exception
+   * @param request the request
+   * @return the error response
+   */
   @ExceptionHandler
   default R handleMissingServletRequestParameter(
       final MissingRequestHeaderException exception, final T request) {

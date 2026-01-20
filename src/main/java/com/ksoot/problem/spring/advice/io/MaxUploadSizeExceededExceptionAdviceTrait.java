@@ -13,8 +13,23 @@ import org.springframework.util.unit.DataSize;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
+/**
+ * Advice trait to handle {@link MaxUploadSizeExceededException}s.
+ *
+ * @param <T> the request type
+ * @param <R> the response type
+ * @see MaxUploadSizeExceededException
+ * @see HttpStatus#BAD_REQUEST
+ */
 public interface MaxUploadSizeExceededExceptionAdviceTrait<T, R> extends AdviceTrait<T, R> {
 
+  /**
+   * Handles {@link MaxUploadSizeExceededException} and converts it into a response.
+   *
+   * @param exception the max upload size exceeded exception
+   * @param request the request
+   * @return the error response
+   */
   @ExceptionHandler
   default R handleMaxUploadSizeExceededException(
       final MaxUploadSizeExceededException exception, final T request) {

@@ -15,8 +15,23 @@ import java.util.Map;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.support.WebExchangeBindException;
 
-interface WebExchangeBindAdviceTrait<T, R> extends BaseBindingResultHandlingAdviceTrait<T, R> {
+/**
+ * Advice trait to handle {@link WebExchangeBindException}s.
+ *
+ * @param <T> the request type
+ * @param <R> the response type
+ * @see WebExchangeBindException
+ */
+public interface WebExchangeBindAdviceTrait<T, R>
+    extends BaseBindingResultHandlingAdviceTrait<T, R> {
 
+  /**
+   * Handles {@link WebExchangeBindException} and converts it into a response.
+   *
+   * @param exception the web exchange bind exception
+   * @param request the request
+   * @return the error response
+   */
   @ExceptionHandler
   default R handleWebExchangeBindException(
       final WebExchangeBindException exception, final T request) {

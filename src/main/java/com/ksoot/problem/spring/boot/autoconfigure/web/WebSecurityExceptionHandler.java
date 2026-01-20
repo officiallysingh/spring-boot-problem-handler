@@ -25,6 +25,12 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
+/**
+ * {@link ControllerAdvice} for handling security-related exceptions in Servlet-based web
+ * applications. It also provides beans for authentication entry point and access denied handler.
+ *
+ * @see SecurityAdviceTraits
+ */
 @Configuration
 @EnableConfigurationProperties({ProblemProperties.class})
 @Conditional(SecurityAdviceEnabled.class)
@@ -36,6 +42,12 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 public class WebSecurityExceptionHandler
     implements SecurityAdviceTraits<NativeWebRequest, ResponseEntity<ProblemDetail>> {
 
+  /**
+   * Creates a {@link ProblemAuthenticationEntryPoint} bean.
+   *
+   * @param resolver the handler exception resolver
+   * @return the authentication entry point
+   */
   @ConditionalOnMissingBean
   @Bean
   AuthenticationEntryPoint authenticationEntryPoint(
@@ -43,6 +55,12 @@ public class WebSecurityExceptionHandler
     return new ProblemAuthenticationEntryPoint(resolver);
   }
 
+  /**
+   * Creates a {@link ProblemAccessDeniedHandler} bean.
+   *
+   * @param resolver the handler exception resolver
+   * @return the access denied handler
+   */
   @ConditionalOnMissingBean
   @Bean
   AccessDeniedHandler accessDeniedHandler(

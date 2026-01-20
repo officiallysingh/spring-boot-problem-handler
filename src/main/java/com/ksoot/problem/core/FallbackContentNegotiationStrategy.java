@@ -19,10 +19,16 @@ final class FallbackContentNegotiationStrategy implements ContentNegotiationStra
   private final List<MediaType> all = Collections.singletonList(MediaType.ALL);
   private final ContentNegotiationStrategy delegate;
 
+  /**
+   * Constructs a new fallback content negotiation strategy with the given delegate.
+   *
+   * @param delegate the delegate strategy
+   */
   FallbackContentNegotiationStrategy(final ContentNegotiationStrategy delegate) {
     this.delegate = delegate;
   }
 
+  /** {@inheritDoc} */
   @Override
   @Nonnull
   public List<MediaType> resolveMediaTypes(final @NonNull NativeWebRequest request)

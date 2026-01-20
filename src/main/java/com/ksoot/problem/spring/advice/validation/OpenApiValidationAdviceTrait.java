@@ -27,8 +27,21 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+/**
+ * Advice trait to handle OpenAPI validation exceptions.
+ *
+ * @param <T> the request type
+ * @param <R> the response type
+ */
 public interface OpenApiValidationAdviceTrait<T, R> extends BaseValidationAdviceTrait<T, R> {
 
+  /**
+   * Handles {@link InvalidRequestException} and converts it into a response.
+   *
+   * @param exception the invalid request exception
+   * @param request the request
+   * @return the error response
+   */
   @ExceptionHandler(InvalidRequestException.class)
   default R handleInvalidRequest(final InvalidRequestException exception, final T request) {
     final List<ViolationVM> violations =
@@ -46,6 +59,13 @@ public interface OpenApiValidationAdviceTrait<T, R> extends BaseValidationAdvice
     return toResponse(exception, request, defaultConstraintViolationStatus(), problem);
   }
 
+  /**
+   * Handles {@link InvalidResponseException} and converts it into a response.
+   *
+   * @param exception the invalid response exception
+   * @param request the request
+   * @return the error response
+   */
   @ExceptionHandler
   default R handleInvalidResponse(final InvalidResponseException exception, final T request) {
     final List<ViolationVM> violations =
@@ -63,6 +83,13 @@ public interface OpenApiValidationAdviceTrait<T, R> extends BaseValidationAdvice
     return toResponse(exception, request, defaultConstraintViolationStatus(), problem);
   }
 
+  /**
+   * Handles a {@link ValidationReport} and converts it into a list of {@link ViolationVM}s.
+   *
+   * @param validationReport the validation report
+   * @param exception the exception
+   * @return the list of violations
+   */
   default List<ViolationVM> handleValidationReport(
       final ValidationReport validationReport, final Throwable exception) {
     return validationReport.getMessages().stream()
@@ -71,6 +98,13 @@ public interface OpenApiValidationAdviceTrait<T, R> extends BaseValidationAdvice
         .toList();
   }
 
+  /**
+   * Handles a {@link ValidationReport.Message} and converts it into a list of {@link ViolationVM}s.
+   *
+   * @param message the validation message
+   * @param exception the exception
+   * @return the list of violations
+   */
   default List<ViolationVM> handleValidationReportMessage(
       final Message message, final Throwable exception) {
 
@@ -110,6 +144,12 @@ public interface OpenApiValidationAdviceTrait<T, R> extends BaseValidationAdvice
         .toList();
   }
 
+  /**
+   * Returns the object path for an OpenAPI violation message.
+   *
+   * @param message the validation message
+   * @return the object path
+   */
   default String getOpenApiViolationObjectPath(final Message message) {
     return message
         .getContext()
@@ -139,6 +179,12 @@ public interface OpenApiValidationAdviceTrait<T, R> extends BaseValidationAdvice
             });
   }
 
+  /**
+   * Derives OpenAPI validation error keys from a message.
+   *
+   * @param message the validation message
+   * @return the list of error keys
+   */
   default List<String[]> deriveOpenApiValidationErrorKeys(final Message message) {
     String propertyKey = getOpenApiViolationObjectPath(message);
     Method requestMethod =
@@ -193,14 +239,13 @@ public interface OpenApiValidationAdviceTrait<T, R> extends BaseValidationAdvice
             return errorKeys;
           }
           List<String> properties =
-              Arrays.asList(
+              Arrays.stream(
                       messageText
                           .substring(i1 + 1, j1)
                           .replaceAll("\"", "")
                           .replace("[", "")
                           .replace("]", "")
                           .split(","))
-                  .stream()
                   .toList();
           String objectPathPart =
               StringUtils.isNotBlank(objectPath)

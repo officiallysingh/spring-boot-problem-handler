@@ -9,10 +9,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
- * @see HttpStatus#INTERNAL_SERVER_ERROR
+ * Advice trait to handle {@link DuplicateKeyException}s.
+ *
+ * @param <T> the request type
+ * @param <R> the response type
+ * @see DuplicateKeyException
+ * @see BaseDataIntegrityAdvice
  */
 public interface DuplicateKeyExceptionAdviceTrait<T, R> extends BaseDataIntegrityAdvice<T, R> {
 
+  /**
+   * Handles {@link DuplicateKeyException} and converts it into a {@link Problem} response.
+   *
+   * @param exception the duplicate key exception
+   * @param request the request
+   * @return the error response
+   */
   @ExceptionHandler
   default R handleDuplicateKeyException(final DuplicateKeyException exception, final T request) {
 

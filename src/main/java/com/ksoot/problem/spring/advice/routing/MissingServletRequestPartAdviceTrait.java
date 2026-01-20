@@ -10,12 +10,24 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 /**
+ * Advice trait to handle {@link MissingServletRequestPartException}s.
+ *
+ * @param <T> the request type
+ * @param <R> the response type
  * @see MissingServletRequestPartException
  * @see HttpStatus#BAD_REQUEST
  */
 public interface MissingServletRequestPartAdviceTrait<T, R>
     extends BaseValidationAdviceTrait<T, R> {
 
+  /**
+   * Handles {@link MissingServletRequestPartException} and converts it into a {@link Problem}
+   * response.
+   *
+   * @param exception the missing servlet request part exception
+   * @param request the request
+   * @return the error response
+   */
   @ExceptionHandler
   default R handleMissingServletRequestPart(
       final MissingServletRequestPartException exception, final T request) {

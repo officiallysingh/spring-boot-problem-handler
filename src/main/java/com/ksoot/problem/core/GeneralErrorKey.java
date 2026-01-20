@@ -1,5 +1,6 @@
 package com.ksoot.problem.core;
 
+/** Constants for general error keys. */
 public class GeneralErrorKey {
 
   public static final String INTERNAL_SERVER_ERROR = "internal.server.error";

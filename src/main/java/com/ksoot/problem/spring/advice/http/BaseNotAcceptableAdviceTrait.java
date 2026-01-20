@@ -12,8 +12,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.MimeTypeUtils;
 
+/**
+ * Base advice trait for handling "Not Acceptable" and "Unsupported Media Type" errors.
+ *
+ * @param <T> the request type
+ * @param <R> the response type
+ */
 public interface BaseNotAcceptableAdviceTrait<T, R> extends AdviceTrait<T, R> {
 
+  /**
+   * Processes a media type not supported exception and builds a response.
+   *
+   * @param supportedMediaTypes the list of supported media types
+   * @param causeMediaType the media type that caused the exception
+   * @param exception the exception
+   * @param request the request
+   * @return the error response
+   */
   default R processMediaTypeNotSupportedException(
       final List<MediaType> supportedMediaTypes,
       final MediaType causeMediaType,

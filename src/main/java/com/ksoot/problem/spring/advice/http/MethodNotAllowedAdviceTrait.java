@@ -17,8 +17,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.server.MethodNotAllowedException;
 
+/**
+ * Advice trait to handle {@link MethodNotAllowedException}s.
+ *
+ * @param <T> the request type
+ * @param <R> the response type
+ * @see MethodNotAllowedException
+ * @see HttpStatus#METHOD_NOT_ALLOWED
+ */
 public interface MethodNotAllowedAdviceTrait<T, R> extends AdviceTrait<T, R> {
 
+  /**
+   * Handles {@link MethodNotAllowedException} and converts it into a response.
+   *
+   * @param exception the exception
+   * @param request the request
+   * @return the error response
+   */
   @ExceptionHandler
   default R handleMethodNotAllowedException(
       final MethodNotAllowedException exception, final T request) {

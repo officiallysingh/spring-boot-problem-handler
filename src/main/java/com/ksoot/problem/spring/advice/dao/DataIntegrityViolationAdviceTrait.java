@@ -9,10 +9,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
- * @see HttpStatus#INTERNAL_SERVER_ERROR
+ * Advice trait to handle {@link DataIntegrityViolationException}s.
+ *
+ * @param <T> the request type
+ * @param <R> the response type
+ * @see DataIntegrityViolationException
+ * @see BaseDataIntegrityAdvice
  */
 public interface DataIntegrityViolationAdviceTrait<T, R> extends BaseDataIntegrityAdvice<T, R> {
 
+  /**
+   * Handles {@link DataIntegrityViolationException} and converts it into a {@link Problem}
+   * response.
+   *
+   * @param exception the data integrity violation exception
+   * @param request the request
+   * @return the error response
+   */
   @ExceptionHandler
   default R handleDataIntegrityViolationException(
       final DataIntegrityViolationException exception, final T request) {

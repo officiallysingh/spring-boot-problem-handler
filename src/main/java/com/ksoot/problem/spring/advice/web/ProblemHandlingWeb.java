@@ -8,19 +8,22 @@ import com.ksoot.problem.spring.advice.io.IOAdviceTraits;
 import com.ksoot.problem.spring.advice.network.NetworkAdviceTraits;
 import com.ksoot.problem.spring.advice.routing.RoutingAdviceTraits;
 import com.ksoot.problem.spring.advice.validation.ValidationAdviceTraits;
+import com.ksoot.problem.spring.boot.autoconfigure.web.WebExceptionHandler;
 import org.springframework.web.context.request.NativeWebRequest;
 
 /**
  * {@link ProblemHandlingWeb} is a composite {@link AdviceTrait} that combines all general built-in
- * advice traits into a single interface that makes it easier to use:
+ * advice traits for Servlet web applications into a single interface that makes it easier to use:
  *
- * <pre><code>
- * {@literal @}ControllerAdvice
- *  public class ExceptionHandling implements ProblemHandlingWeb
- * </code></pre>
+ * <pre>{@code
+ * @ControllerAdvice
+ * public class WebExceptionHandler implements ProblemHandlingWeb<ResponseEntity<ProblemDetail>> {}
+ * }</pre>
  *
  * <strong>Note:</strong> Future versions of this class will be extended with additional traits.
  *
+ * @param <R> the response type
+ * @see WebExceptionHandler
  * @see GeneralAdviceTraits
  * @see HttpAdviceTraits
  * @see IOAdviceTraits

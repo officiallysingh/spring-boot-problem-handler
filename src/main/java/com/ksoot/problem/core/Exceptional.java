@@ -17,12 +17,31 @@ package com.ksoot.problem.core;
  */
 public interface Exceptional extends Problem {
 
+  /**
+   * Returns the cause of the problem.
+   *
+   * @return the cause
+   */
   ThrowableProblem getCause();
 
+  /**
+   * Propagates the problem as a checked exception.
+   *
+   * @return never returns normally
+   * @throws Exception the exception itself
+   */
   default Exception propagate() throws Exception {
     throw propagateAs(Exception.class);
   }
 
+  /**
+   * Propagates the problem as a specific exception type.
+   *
+   * @param type the exception type
+   * @param <X> the exception type
+   * @return never returns normally
+   * @throws X the exception itself
+   */
   default <X extends Throwable> X propagateAs(final Class<X> type) throws X {
     throw type.cast(this);
   }

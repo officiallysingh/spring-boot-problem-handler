@@ -7,6 +7,10 @@ import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.util.AntPathMatcher;
 
+/**
+ * An {@link OpenApiValidationFilter} that allows configuring paths to exclude from OpenAPI
+ * validation.
+ */
 public class PathConfigurableOpenApiValidationFilter extends OpenApiValidationFilter {
 
   private final AntPathMatcher pathMatcher;
@@ -15,6 +19,11 @@ public class PathConfigurableOpenApiValidationFilter extends OpenApiValidationFi
 
   private final List<String> excludePatterns;
 
+  /**
+   * Constructs a new path configurable OpenAPI validation filter with the given properties.
+   *
+   * @param openApiProperties the OpenAPI properties
+   */
   public PathConfigurableOpenApiValidationFilter(
       final ProblemProperties.OpenApi openApiProperties) {
     super(openApiProperties.isReqValidationEnabled(), openApiProperties.isResValidationEnabled());
@@ -23,6 +32,7 @@ public class PathConfigurableOpenApiValidationFilter extends OpenApiValidationFi
     this.excludePatterns = openApiProperties.getExcludePatterns();
   }
 
+  /** {@inheritDoc} */
   @Override
   protected boolean shouldNotFilter(final HttpServletRequest request) {
     String requestPath = request.getRequestURI();

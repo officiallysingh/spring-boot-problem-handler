@@ -21,15 +21,16 @@ Requires Java 17+, Spring boot 4+ and Jakarta EE 10. Use version `1.9.3` for Spr
 8. [Error response characteristics](#error-response)
 9. [Message resolvers to externalize error response in `properties` files](#message-resolvers)
 10. [Message internationalization or i18n](#message-internationalization)
-11. [Creating and throwing exceptions in your applications](#creating-and-throwing-exceptions)
-12. [Stack trace embedded in error response](#stack-traces)
-13. [Cause chains embedded in error response](#cause-chains)
-14. [Customizations of default behaviour](#customizations)
+11. [Tracing](#tracing)
+12. [Creating and throwing exceptions in your applications](#creating-and-throwing-exceptions)
+13. [Stack trace embedded in error response](#stack-traces)
+14. [Cause chains embedded in error response](#cause-chains)
+15. [Customizations of default behaviour](#customizations)
     - [Customize error response](#customize-error-response)
     - [Customize or Override advices](#customize-or-override-advices)
-15. [Define new advices](#define-new-advices)
-16. [Testing support](#testing-support)
-17. [Example error responses in different scenarios](#example-error-responses)
+16. [Define new advices](#define-new-advices)
+17. [Testing support](#testing-support)
+18. [Example error responses in different scenarios](#example-error-responses)
 
 ## Introduction
 
@@ -585,6 +586,29 @@ ProblemMessageProvider problemMessageProvider(final MessageSource messageSource)
     return new YourReactiveProblemMessageProvider(messageSource);
 }
 ```
+
+## Tracing
+[**`ProblemMicrometerTraceProvider`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/ProblemMicrometerTraceProvider.java) 
+is the default implementation of [**`TraceProvider`**](src/main/java/com/ksoot/problem/core/TraceProvider.java) that uses Micrometer Tracing.
+It is enabled if 
+- `io.micrometer.tracing.Tracer` class is available in the classpath.
+- `io.micrometer.tracing.Tracer` bean is available in the application context.
+- In case above two conditions are not met and tracing is still enabled, trace-id would be set as `null`
+- `problem.tracing.enabled` is set to true
+
+If required, you can provide your own implementation of [**`TraceProvider`**](src/main/java/com/ksoot/problem/core/TraceProvider.java) 
+in cases where you want to customize the Trace Id generation or retrieval process or using some other library than `micrometer-tracing`.
+
+### Trace Id as Body Attribute in error response attribute
+Set the following configuration in `application.properties` or `application.yml` file
+```properties
+problem.tracing.enabled=true
+problem.tracing.trace-id=traceId  // Or any other name of attribute, as you wish
+problem.tracing.strategy=BODY
+```
+### Trace Id as Header in error response
+[ProblemTracingWebFilter](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/web/ProblemTracingWebFilter.java) sets the Trace Id in Header for Servlet Web application 
+and [ProblemTracingWebFluxFilter](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/webflux/ProblemTracingWebFluxFilter.java) do the same for WebFlux application.
 
 ## Creating and throwing exceptions
 

@@ -6,6 +6,10 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
 
+/**
+ * A {@link RuntimeException} that implements {@link ProblemSupport}. Used to throw problems that
+ * should be handled by the problem handler.
+ */
 @Getter
 public final class ApplicationProblem extends RuntimeException implements ProblemSupport {
 
@@ -39,6 +43,17 @@ public final class ApplicationProblem extends RuntimeException implements Proble
     this.parameters = parameters;
   }
 
+  /**
+   * Creates an {@link ApplicationProblem} with the given status and error details.
+   *
+   * @param status the HTTP status
+   * @param errorKey the error key
+   * @param defaultDetail the default detail message
+   * @param detailArgs the detail message arguments
+   * @param cause the cause
+   * @param parameters additional parameters
+   * @return a new application problem
+   */
   public static ApplicationProblem of(
       final HttpStatus status,
       final String errorKey,
@@ -58,6 +73,13 @@ public final class ApplicationProblem extends RuntimeException implements Proble
         parameters);
   }
 
+  /**
+   * Creates an {@link ApplicationProblem} with the given status and error key.
+   *
+   * @param status the HTTP status
+   * @param errorKey the error key
+   * @return a new application problem
+   */
   public static ApplicationProblem of(final HttpStatus status, final String errorKey) {
     Assert.hasText(errorKey, "'errorKey' must not be null or empty");
     return new ApplicationProblem(
@@ -71,6 +93,13 @@ public final class ApplicationProblem extends RuntimeException implements Proble
         null);
   }
 
+  /**
+   * Creates an {@link ApplicationProblem} from an existing {@link Problem}.
+   *
+   * @param status the HTTP status
+   * @param problem the problem
+   * @return a new application problem
+   */
   public static ApplicationProblem of(final HttpStatus status, final Problem problem) {
     Assert.notNull(problem, "'problem' must not be null");
     return new ApplicationProblem(
