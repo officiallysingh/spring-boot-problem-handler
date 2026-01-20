@@ -47,7 +47,7 @@ public final class ApplicationException extends Exception implements ProblemSupp
       @Nullable final Map<String, Object> parameters) {
     Assert.hasText(errorKey, "'errorKey' must not be null or empty");
     return new ApplicationException(
-        ProblemUtils.toMessage(errorKey, defaultDetail, null, cause),
+        ProblemUtils.toMessage(errorKey, defaultDetail, detailArgs, null, cause),
         status,
         null,
         errorKey,
@@ -60,7 +60,7 @@ public final class ApplicationException extends Exception implements ProblemSupp
   public static ApplicationException of(final HttpStatus status, final Problem problem) {
     Assert.notNull(problem, "'problem' must not be null");
     return new ApplicationException(
-        ProblemUtils.toMessage(null, null, problem, null),
+        ProblemUtils.toMessage(null, null, null, problem, null),
         status,
         problem,
         null,
