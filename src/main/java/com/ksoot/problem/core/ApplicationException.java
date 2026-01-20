@@ -23,6 +23,18 @@ public final class ApplicationException extends Exception implements ProblemSupp
 
   private final Problem problem;
 
+  /**
+   * Constructs a new application exception.
+   *
+   * @param message the message
+   * @param status the HTTP status
+   * @param problem the problem
+   * @param errorKey the error key
+   * @param defaultDetail the default detail
+   * @param detailArgs the detail arguments
+   * @param cause the cause problem
+   * @param parameters additional parameters
+   */
   private ApplicationException(
       final String message,
       final HttpStatus status,

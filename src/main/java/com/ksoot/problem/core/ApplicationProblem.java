@@ -23,6 +23,18 @@ public final class ApplicationProblem extends RuntimeException implements Proble
 
   private final Problem problem;
 
+  /**
+   * Constructs a new application problem.
+   *
+   * @param message the message
+   * @param status the HTTP status
+   * @param problem the problem
+   * @param errorKey the error key
+   * @param defaultDetail the default detail
+   * @param detailArgs the detail arguments
+   * @param cause the cause problem
+   * @param parameters additional parameters
+   */
   private ApplicationProblem(
       final String message,
       final HttpStatus status,

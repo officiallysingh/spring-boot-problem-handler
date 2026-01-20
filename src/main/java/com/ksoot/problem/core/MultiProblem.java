@@ -16,6 +16,12 @@ public class MultiProblem extends RuntimeException {
 
   private final List<Object> errors;
 
+  /**
+   * Constructs a new multi-problem with the given status and problems.
+   *
+   * @param status the HTTP status
+   * @param problems the list of problems
+   */
   private MultiProblem(final HttpStatus status, final List<Problem> problems) {
     super(status.getReasonPhrase());
     Assert.isTrue(CollectionUtils.isNotEmpty(problems), "'problems' must not be null or empty");
@@ -24,6 +30,12 @@ public class MultiProblem extends RuntimeException {
     this.errors = new ArrayList<>(problems);
   }
 
+  /**
+   * Constructs a new multi-problem with the given exceptions and status.
+   *
+   * @param exceptions the list of exceptions
+   * @param status the HTTP status
+   */
   private MultiProblem(final List<Throwable> exceptions, final HttpStatus status) {
     super(status.getReasonPhrase());
     Assert.isTrue(CollectionUtils.isNotEmpty(exceptions), "'exceptions' must not be null or empty");

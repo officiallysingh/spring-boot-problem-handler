@@ -134,6 +134,7 @@ public class ProblemUtils {
    *
    * @param errorKey the error key
    * @param defaultDetail the default detail
+   * @param detailArgs the detail arguments
    * @param problem the problem
    * @param cause the cause problem
    * @return the message string
