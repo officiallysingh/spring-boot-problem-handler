@@ -5,6 +5,7 @@ import static java.util.stream.Collectors.joining;
 import static org.springframework.core.annotation.AnnotatedElementUtils.findMergedAnnotation;
 
 import com.ksoot.problem.spring.config.ProblemBeanRegistry;
+import com.ksoot.problem.spring.config.ProblemMessageProvider;
 import jakarta.annotation.Nullable;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
@@ -140,12 +141,13 @@ public class ProblemUtils {
   public static String toMessage(
       @Nullable final String errorKey,
       @Nullable final String defaultDetail,
+      @Nullable final Object[] detailArgs,
       @Nullable final Problem problem,
       @Nullable final Problem cause) {
     final Stream<String> parts =
         Stream.of(
                 errorKey,
-                defaultDetail,
+                ProblemMessageProvider.getMessage(errorKey, defaultDetail, detailArgs),
                 Objects.nonNull(problem) ? Problem.toString(problem) : null,
                 Objects.nonNull(cause) ? Problem.toString(cause) : null)
             .filter(Objects::nonNull);
