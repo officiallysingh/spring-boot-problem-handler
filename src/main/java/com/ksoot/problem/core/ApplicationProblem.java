@@ -48,7 +48,7 @@ public final class ApplicationProblem extends RuntimeException implements Proble
       @Nullable final Map<String, Object> parameters) {
     Assert.hasText(errorKey, "'errorKey' must not be null or empty");
     return new ApplicationProblem(
-        ProblemUtils.toMessage(errorKey, defaultDetail, null, cause),
+        ProblemUtils.toMessage(errorKey, defaultDetail, detailArgs, null, cause),
         status,
         null,
         errorKey,
@@ -61,7 +61,7 @@ public final class ApplicationProblem extends RuntimeException implements Proble
   public static ApplicationProblem of(final HttpStatus status, final String errorKey) {
     Assert.hasText(errorKey, "'errorKey' must not be null or empty");
     return new ApplicationProblem(
-        ProblemUtils.toMessage(errorKey, null, null, null),
+        ProblemUtils.toMessage(errorKey, null, null, null, null),
         status,
         null,
         errorKey,
@@ -74,7 +74,7 @@ public final class ApplicationProblem extends RuntimeException implements Proble
   public static ApplicationProblem of(final HttpStatus status, final Problem problem) {
     Assert.notNull(problem, "'problem' must not be null");
     return new ApplicationProblem(
-        ProblemUtils.toMessage(null, null, problem, null),
+        ProblemUtils.toMessage(null, null, null, problem, null),
         status,
         problem,
         null,
