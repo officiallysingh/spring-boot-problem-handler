@@ -1,5 +1,6 @@
 package com.ksoot.problem.core;
 
+/** Constants for problem handling. */
 public class ProblemConstant {
 
   public static final String CODE_KEY = "code";

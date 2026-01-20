@@ -9,12 +9,22 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+/** Utility class for writing problem responses in WebFlux applications. */
 public final class SpringWebfluxProblemResponseUtils {
 
   private SpringWebfluxProblemResponseUtils() {
     throw new IllegalStateException("Just a utility class, not supposed to be instantiated");
   }
 
+  /**
+   * Writes the given response entity to the exchange's response.
+   *
+   * @param <T> the body type
+   * @param entity the response entity
+   * @param exchange the server web exchange
+   * @param mapper the object mapper
+   * @return a {@link Mono} that completes when the response is written
+   */
   public static <T> Mono<Void> writeResponse(
       final ResponseEntity<T> entity, final ServerWebExchange exchange, final ObjectMapper mapper) {
     final ServerHttpResponse response = exchange.getResponse();

@@ -12,9 +12,24 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+/**
+ * Advice trait to handle {@link MethodArgumentTypeMismatchException}s.
+ *
+ * @param <T> the request type
+ * @param <R> the response type
+ * @see MethodArgumentTypeMismatchException
+ * @see BaseValidationAdviceTrait#defaultConstraintViolationStatus()
+ */
 public interface MethodArgumentTypeMismatchAdviceTrait<T, R>
     extends BaseValidationAdviceTrait<T, R> {
 
+  /**
+   * Handles {@link MethodArgumentTypeMismatchException} and converts it into a response.
+   *
+   * @param exception the method argument type mismatch exception
+   * @param request the request
+   * @return the error response
+   */
   @ExceptionHandler
   default R handleMethodArgumentTypeMismatch(
       final MethodArgumentTypeMismatchException exception, final T request) {

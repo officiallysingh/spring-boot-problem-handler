@@ -9,16 +9,24 @@ import jakarta.validation.constraints.NotEmpty;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.jspecify.annotations.NonNull;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+/**
+ * A {@link jakarta.servlet.Filter} for Servlet web applications that adds trace ID to the response
+ * headers.
+ *
+ * @see TraceProvider
+ */
 @RequiredArgsConstructor
 public class ProblemTracingWebFilter extends OncePerRequestFilter {
 
   private final TraceProvider traceProvider;
 
+  /** {@inheritDoc} */
   @Override
   protected void doFilterInternal(
-      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      @NonNull HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
     ImmutablePair<@NotEmpty String, String> trace = this.traceProvider.getTraceId();
     response.setHeader(trace.getKey(), trace.getValue());

@@ -13,11 +13,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
+ * Advice trait to handle {@link TypeMismatchException}s.
+ *
+ * @param <T> the request type
+ * @param <R> the response type
  * @see TypeMismatchException
- * @see HttpStatus#BAD_REQUEST
+ * @see BaseValidationAdviceTrait#defaultConstraintViolationStatus()
  */
 public interface TypeMismatchAdviceTrait<T, R> extends BaseValidationAdviceTrait<T, R> {
 
+  /**
+   * Handles {@link TypeMismatchException} and converts it into a response.
+   *
+   * @param exception the type mismatch exception
+   * @param request the request
+   * @return the error response
+   */
   @ExceptionHandler
   default R handleTypeMismatch(final TypeMismatchException exception, final T request) {
 

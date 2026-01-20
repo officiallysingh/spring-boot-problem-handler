@@ -10,12 +10,30 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.env.Environment;
 
+/**
+ * Base class for Data Access Object (DAO) exception handlers. Provides common logic for resolving
+ * constraint names across different databases.
+ *
+ * @param <T> the request type
+ * @param <R> the response type
+ * @see DaoAdviceTraits
+ * @see ConstraintNameResolver
+ */
 public abstract class AbstractDaoExceptionHandler<T, R> implements DaoAdviceTraits<T, R> {
 
+  /** Map of {@link ConstraintNameResolver}s indexed by {@link DBType}. */
   protected final Map<DBType, ConstraintNameResolver> constraintNameResolvers;
 
+  /** The current {@link Database} type. */
   protected final Database database;
 
+  /**
+   * Constructs a new abstract DAO exception handler.
+   *
+   * @param constraintNameResolvers list of available constraint name resolvers
+   * @param env the application environment
+   * @throws ProblemConfigException if the "spring.jpa.database" property is missing when needed
+   */
   protected AbstractDaoExceptionHandler(
       final List<ConstraintNameResolver> constraintNameResolvers, final Environment env) {
     if (CollectionUtils.isNotEmpty(constraintNameResolvers)) {
@@ -42,6 +60,7 @@ public abstract class AbstractDaoExceptionHandler<T, R> implements DaoAdviceTrai
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public String resolveConstraintName(final String exceptionMessage) {
     if (exceptionMessage.contains("WriteError")) { // MongoDB constraint violation

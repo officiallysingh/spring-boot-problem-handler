@@ -3,17 +3,13 @@ package com.ksoot.problem.spring.advice.dao;
 import com.ksoot.problem.core.ProblemConstant;
 
 /**
+ * {@link ConstraintNameResolver} implementation for MongoDB.
+ *
  * @author Rajveer Singh
  */
 public class MongoConstraintNameResolver implements ConstraintNameResolver {
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.ksoot.framework.common.spring.config.error.dbconstraint.
-   * ConstraintNameResolver# resolveConstraintName(org.springframework.dao.
-   * DataIntegrityViolationException)
-   */
+  /** {@inheritDoc} */
   @Override
   public String resolveConstraintName(final String exceptionMessage) {
     String exMessage = exceptionMessage.trim();
@@ -29,6 +25,7 @@ public class MongoConstraintNameResolver implements ConstraintNameResolver {
     return "mongo.duplicate.key";
   }
 
+  /** {@inheritDoc} */
   @Override
   public DBType dbType() {
     return DBType.MONGO_DB;

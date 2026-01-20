@@ -17,11 +17,22 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
+ * Advice trait to handle {@link HttpMessageNotReadableException}s.
+ *
+ * @param <T> the request type
+ * @param <R> the response type
  * @see HttpMessageNotReadableException
  * @see HttpStatus#BAD_REQUEST
  */
 public interface MessageNotReadableAdviceTrait<T, R> extends AdviceTrait<T, R> {
 
+  /**
+   * Handles {@link HttpMessageNotReadableException} and converts it into a response.
+   *
+   * @param exception the message not readable exception
+   * @param request the request
+   * @return the error response
+   */
   @ExceptionHandler
   default R handleMessageNotReadableException(
       final HttpMessageNotReadableException exception, final T request) {
@@ -31,6 +42,13 @@ public interface MessageNotReadableAdviceTrait<T, R> extends AdviceTrait<T, R> {
     return toResponse(exception, request, HttpStatus.BAD_REQUEST);
   }
 
+  /**
+   * Handles {@link InvalidFormatException} and converts it into a response.
+   *
+   * @param invalidFormatException the invalid format exception
+   * @param request the request
+   * @return the error response
+   */
   default R handleInvalidFormatException(
       final InvalidFormatException invalidFormatException, final T request) {
 

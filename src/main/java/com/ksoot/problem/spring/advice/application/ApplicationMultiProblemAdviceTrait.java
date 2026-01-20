@@ -24,10 +24,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
+ * Advice trait to handle {@link MultiProblem}s.
+ *
+ * @param <T> the request type
+ * @param <R> the response type
+ * @see MultiProblem
  * @see AdviceTrait
  */
 public interface ApplicationMultiProblemAdviceTrait<T, R> extends AdviceTrait<T, R> {
 
+  /**
+   * Handles {@link MultiProblem} and converts it into a {@link Problem} response containing
+   * multiple errors.
+   *
+   * @param exception the multi-problem exception
+   * @param request the request
+   * @return the error response
+   */
   @ExceptionHandler
   default R handleMultiProblem(final MultiProblem exception, final T request) {
     List<Problem> problems = Lists.newArrayList();

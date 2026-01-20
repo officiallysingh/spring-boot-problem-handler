@@ -6,12 +6,15 @@ import tools.jackson.core.JsonGenerator;
 import tools.jackson.databind.SerializationContext;
 import tools.jackson.databind.ser.std.StdSerializer;
 
+/** Jackson serializer for {@link HttpStatusCode}. */
 final class HttpStatusSerializer extends StdSerializer<HttpStatusCode> {
 
+  /** Constructs a new {@link HttpStatusCode} serializer. */
   HttpStatusSerializer() {
     super(HttpStatusCode.class);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void serialize(HttpStatusCode status, JsonGenerator json, SerializationContext provider)
       throws JacksonException {

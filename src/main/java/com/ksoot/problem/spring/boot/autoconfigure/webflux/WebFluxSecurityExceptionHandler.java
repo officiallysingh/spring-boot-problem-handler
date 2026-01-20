@@ -25,6 +25,12 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+/**
+ * {@link ControllerAdvice} for handling security-related exceptions in WebFlux applications. It
+ * also provides beans for authentication entry point and access denied handler.
+ *
+ * @see SecurityAdviceTraits
+ */
 @AutoConfiguration
 @EnableConfigurationProperties({ProblemProperties.class})
 @Conditional(SecurityAdviceEnabled.class)
@@ -36,6 +42,13 @@ import reactor.core.publisher.Mono;
 public class WebFluxSecurityExceptionHandler
     implements SecurityAdviceTraits<ServerWebExchange, Mono<ResponseEntity<ProblemDetail>>> {
 
+  /**
+   * Creates a {@link ProblemServerAuthenticationEntryPoint} bean.
+   *
+   * @param advice the security advice trait
+   * @param objectMapper the object mapper
+   * @return the authentication entry point
+   */
   @ConditionalOnMissingBean
   @Bean
   ServerAuthenticationEntryPoint authenticationEntryPoint(
@@ -44,6 +57,13 @@ public class WebFluxSecurityExceptionHandler
     return new ProblemServerAuthenticationEntryPoint(advice, objectMapper);
   }
 
+  /**
+   * Creates a {@link ProblemServerAccessDeniedHandler} bean.
+   *
+   * @param advice the security advice trait
+   * @param objectMapper the object mapper
+   * @return the access denied handler
+   */
   @ConditionalOnMissingBean
   @Bean
   ServerAccessDeniedHandler accessDeniedHandler(

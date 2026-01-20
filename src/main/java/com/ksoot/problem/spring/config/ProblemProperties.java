@@ -12,6 +12,8 @@ import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
+ * Configuration properties for problem handling.
+ *
  * @author Rajveer Singh
  */
 @Getter
@@ -21,37 +23,40 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "problem")
 public class ProblemProperties {
 
-  /** Default: true, Whether or not to enable Problem handling. */
+  /** Whether to enable Problem handling. Default: {@code true}. */
   private boolean enabled = true;
 
-  /** Default: http://localhost:8080/problems/help.html, Help page base url. */
+  /** Help page base URL. Default: {@code http://localhost:8080/problems/help.html}. */
   private String typeUrl = "http://localhost:8080/problems/help.html";
 
   /**
-   * Default: false, Whether or not to include debug-info such as message codes etc. in error
-   * response messages.
+   * Whether to include debug-info such as message codes etc. in error response messages. Default:
+   * {@code false}.
    */
   private boolean debugEnabled = false;
 
-  /** Default: false, Whether or not to include stacktrace in error response messages. */
+  /** Whether to include stacktrace in error response messages. Default: {@code false}. */
   private boolean stacktraceEnabled = false;
 
-  /** Default: false, Whether or not to include exception cause in error response messages. */
+  /** Whether to include exception cause in error response messages. Default: {@code false}. */
   private boolean causeChainsEnabled = false;
 
-  /** Default: true, Whether or not to Enable Jackson Problem module. */
+  /** Whether to enable Jackson Problem module. Default: {@code true}. */
   private boolean jacksonModuleEnabled = true;
 
-  /** Default: true, Whether or not to Enable DAO exception handling advices. */
+  /** Whether to enable DAO exception handling advices. Default: {@code true}. */
   private boolean daoAdviceEnabled = true;
 
-  /** Default: true, Whether or not to Enable Security exception handling advices. */
+  /** Whether to enable Security exception handling advices. Default: {@code true}. */
   private boolean securityAdviceEnabled = true;
 
+  /** OpenAPI validation properties. */
   private OpenApi openApi = new OpenApi();
 
+  /** Tracing properties. */
   private Tracing tracing = new Tracing();
 
+  /** Configuration properties for OpenAPI validation. */
   @Getter
   @Setter
   @NoArgsConstructor
@@ -59,28 +64,28 @@ public class ProblemProperties {
   @Valid
   public static class OpenApi {
 
-    /** Default: /oas/api.json, Path of API Specification json file. */
+    /** Path of API Specification JSON file. Default: {@code /oas/api.json}. */
     private String path = "/oas/api.json";
 
     /**
-     * Default: None. List of path patterns in ant-pattern format to exclude from OpenAPI
-     * Specification validation.
+     * List of path patterns in ant-pattern format to exclude from OpenAPI Specification validation.
      */
     private List<String> excludePatterns = new ArrayList<>();
 
     /**
-     * Default: true, Whether or not to enable Open API request validation.</br>While enabling make
-     * sure Problem is also enabled.
+     * Whether to enable OpenAPI request validation. While enabling, ensure Problem is also enabled.
+     * Default: {@code false}.
      */
     private boolean reqValidationEnabled = false;
 
     /**
-     * Default: false, Whether or not to enable Open API response validation.</br>While enabling
-     * make sure Problem is also enabled.
+     * Whether to enable OpenAPI response validation. While enabling, ensure Problem is also
+     * enabled. Default: {@code false}.
      */
     private boolean resValidationEnabled = false;
   }
 
+  /** Configuration properties for tracing support in error responses. */
   @Getter
   @Setter
   @NoArgsConstructor
@@ -88,23 +93,42 @@ public class ProblemProperties {
   @Valid
   public static class Tracing {
 
-    /** Default: false, Whether to enable Tracing support. */
+    /** Whether to enable tracing support. Default: {@code false}. */
     private boolean enabled;
 
-    /** Default: traceparent, Attribute name in error response body or Header name for Trace Id. */
+    /**
+     * Attribute name in error response body or header name for Trace Id. Default: {@code
+     * X-trace-id}.
+     */
     @NotEmpty private String traceId = "X-trace-id";
 
-    /** Default: HEADER, Whether to add Trace Id in header or body of error response. */
+    /**
+     * Whether to add Trace Id in header or body of error response. Default: {@link
+     * Strategy#HEADER}.
+     */
     @NotNull private Strategy strategy = Strategy.HEADER;
 
+    /** Strategy for including Trace Id in the response. */
     public enum Strategy {
+      /** Include Trace Id in the response header. */
       HEADER,
+      /** Include Trace Id in the response body. */
       BODY;
 
+      /**
+       * Checks if the strategy is {@link #HEADER}.
+       *
+       * @return {@code true} if header strategy
+       */
       public boolean isHeader() {
         return this == HEADER;
       }
 
+      /**
+       * Checks if the strategy is {@link #BODY}.
+       *
+       * @return {@code true} if body strategy
+       */
       public boolean isBody() {
         return this == BODY;
       }

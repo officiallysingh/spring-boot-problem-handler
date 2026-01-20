@@ -11,10 +11,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
+ * Advice trait to handle {@link ApplicationProblem}s.
+ *
+ * @param <T> the request type
+ * @param <R> the response type
+ * @see ApplicationProblem
  * @see AdviceTrait
  */
 public interface ApplicationProblemAdviceTrait<T, R> extends AdviceTrait<T, R> {
 
+  /**
+   * Handles {@link ApplicationProblem} and converts it into a {@link Problem} response.
+   *
+   * @param exception the application problem exception
+   * @param request the request
+   * @return the error response
+   */
   @ExceptionHandler
   default R handleApplicationProblem(final ApplicationProblem exception, final T request) {
     HttpStatus status = exception.getStatus();

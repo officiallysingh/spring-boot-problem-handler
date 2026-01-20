@@ -14,12 +14,23 @@ import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
+ * Advice trait to handle {@link BindException}s.
+ *
+ * @param <T> the request type
+ * @param <R> the response type
  * @see BindException
  * @see ViolationVM
  * @see BaseValidationAdviceTrait#defaultConstraintViolationStatus()
  */
 public interface BindAdviceTrait<T, R> extends BaseBindingResultHandlingAdviceTrait<T, R> {
 
+  /**
+   * Handles {@link BindException} and converts it into a response.
+   *
+   * @param exception the bind exception
+   * @param request the request
+   * @return the error response
+   */
   @ExceptionHandler
   default R handleBindException(final BindException exception, final T request) {
     List<ViolationVM> violations = handleBindingResult(exception.getBindingResult(), exception);

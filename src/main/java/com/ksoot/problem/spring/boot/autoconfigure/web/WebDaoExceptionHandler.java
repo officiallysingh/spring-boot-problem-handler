@@ -19,7 +19,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.NativeWebRequest;
 
 /**
+ * {@link ControllerAdvice} for handling DAO-related exceptions in Servlet-based web applications.
+ *
  * @author Rajveer Singh
+ * @see AbstractDaoExceptionHandler
  */
 @Configuration
 @EnableConfigurationProperties(ProblemProperties.class)
@@ -30,6 +33,12 @@ import org.springframework.web.context.request.NativeWebRequest;
 public class WebDaoExceptionHandler
     extends AbstractDaoExceptionHandler<NativeWebRequest, ResponseEntity<ProblemDetail>> {
 
+  /**
+   * Constructs a new web DAO exception handler with the given resolvers and environment.
+   *
+   * @param constraintNameResolvers the list of constraint name resolvers
+   * @param env the application environment
+   */
   WebDaoExceptionHandler(
       final List<ConstraintNameResolver> constraintNameResolvers, final Environment env) {
     super(constraintNameResolvers, env);

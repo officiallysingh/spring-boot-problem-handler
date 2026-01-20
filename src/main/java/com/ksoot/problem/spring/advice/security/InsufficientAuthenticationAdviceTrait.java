@@ -9,8 +9,24 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+/**
+ * Advice trait to handle {@link InsufficientAuthenticationException}s.
+ *
+ * @param <T> the request type
+ * @param <R> the response type
+ * @see InsufficientAuthenticationException
+ * @see HttpStatus#UNAUTHORIZED
+ */
 public interface InsufficientAuthenticationAdviceTrait<T, R> extends AdviceTrait<T, R> {
 
+  /**
+   * Handles {@link InsufficientAuthenticationException} and converts it into a {@link Problem}
+   * response.
+   *
+   * @param exception the insufficient authentication exception
+   * @param request the request
+   * @return the error response
+   */
   @ExceptionHandler
   default R handleInsufficientAuthenticationException(
       final InsufficientAuthenticationException exception, final T request) {

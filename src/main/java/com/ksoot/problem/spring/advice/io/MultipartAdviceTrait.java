@@ -7,9 +7,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MultipartException;
 
-// TODO find a better name
+/**
+ * Advice trait to handle {@link MultipartException}s.
+ *
+ * @param <T> the request type
+ * @param <R> the response type
+ * @see MultipartException
+ * @see HttpStatus#BAD_REQUEST
+ */
 public interface MultipartAdviceTrait<T, R> extends AdviceTrait<T, R> {
 
+  /**
+   * Handles {@link MultipartException} and converts it into a response.
+   *
+   * @param exception the multipart exception
+   * @param request the request
+   * @return the error response
+   */
   @ExceptionHandler
   default R handleMultipart(final MultipartException exception, final T request) {
     HttpStatus status = HttpStatus.BAD_REQUEST;

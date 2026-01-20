@@ -1,16 +1,13 @@
 package com.ksoot.problem.spring.advice.dao;
 
 /**
+ * {@link ConstraintNameResolver} implementation for SQL Server.
+ *
  * @author Rajveer Singh
  */
 public class SQLServerConstraintNameResolver implements ConstraintNameResolver {
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.ksoot.framework.common.spring.config.error.DBConstraintNameResolver#
-   * resolveConstraintName(org.springframework.dao. DataIntegrityViolationException)
-   */
+  /** {@inheritDoc} */
   @Override
   public String resolveConstraintName(final String exceptionMessage) {
     try {
@@ -22,6 +19,7 @@ public class SQLServerConstraintNameResolver implements ConstraintNameResolver {
     return "sqlserver.duplicate.key";
   }
 
+  /** {@inheritDoc} */
   @Override
   public DBType dbType() {
     return DBType.SQL_SERVER;

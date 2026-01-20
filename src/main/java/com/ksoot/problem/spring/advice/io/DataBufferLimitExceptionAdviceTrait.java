@@ -12,11 +12,26 @@ import org.springframework.http.HttpStatus;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+/**
+ * Advice trait to handle {@link DataBufferLimitException}s.
+ *
+ * @param <T> the request type
+ * @param <R> the response type
+ * @see DataBufferLimitException
+ * @see HttpStatus#BAD_REQUEST
+ */
 public interface DataBufferLimitExceptionAdviceTrait<T, R> extends AdviceTrait<T, R> {
 
   //  org.springframework.core.io.buffer.DataBufferLimitException: Part exceeded the disk usage
   // limit of 1024 bytes
 
+  /**
+   * Handles {@link DataBufferLimitException} and converts it into a response.
+   *
+   * @param exception the data buffer limit exception
+   * @param request the request
+   * @return the error response
+   */
   @ExceptionHandler
   default R handleDataBufferLimitException(
       final DataBufferLimitException exception, final T request) {

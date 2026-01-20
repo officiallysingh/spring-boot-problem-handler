@@ -10,14 +10,22 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 /**
- * Transforms {@link NoHandlerFoundException NoHandlerFoundExceptions} into {@link
- * HttpStatus#NOT_FOUND not-found} {@link Problem problems}.
+ * Advice trait to handle {@link NoHandlerFoundException}s.
  *
+ * @param <T> the request type
+ * @param <R> the response type
  * @see NoHandlerFoundException
  * @see HttpStatus#NOT_FOUND
  */
 public interface NoHandlerFoundAdviceTrait<T, R> extends AdviceTrait<T, R> {
 
+  /**
+   * Handles {@link NoHandlerFoundException} and converts it into a {@link Problem} response.
+   *
+   * @param exception the no handler found exception
+   * @param request the request
+   * @return the error response
+   */
   @ExceptionHandler
   default R handleNoHandlerFound(final NoHandlerFoundException exception, final T request) {
     Problem problem =
