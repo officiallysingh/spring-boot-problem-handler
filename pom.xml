@@ -285,6 +285,7 @@
                             <publishingServerId>central</publishingServerId>
                             <autoPublish>true</autoPublish>
                             <waitUntil>published</waitUntil>
+                            <waitForPublishCompletion>true</waitForPublishCompletion>
                         </configuration>
                     </plugin>
                 </plugins>
