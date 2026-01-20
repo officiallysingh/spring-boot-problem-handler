@@ -10,6 +10,7 @@ import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
@@ -18,10 +19,19 @@ import org.springframework.web.filter.OncePerRequestFilter;
  *
  * @see TraceProvider
  */
-@RequiredArgsConstructor
 public class ProblemTracingWebFilter extends OncePerRequestFilter {
 
   private final TraceProvider traceProvider;
+
+  /**
+   * Constructs a new {@code ProblemTracingWebFilter} with the provided {@link TraceProvider}.
+   *
+   * @param traceProvider the {@link TraceProvider} to use for obtaining trace information, may be
+   *     {@code null}
+   */
+  ProblemTracingWebFilter(@Nullable TraceProvider traceProvider) {
+    this.traceProvider = traceProvider;
+  }
 
   /** {@inheritDoc} */
   @Override
