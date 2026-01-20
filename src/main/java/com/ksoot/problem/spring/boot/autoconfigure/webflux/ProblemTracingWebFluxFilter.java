@@ -2,6 +2,7 @@ package com.ksoot.problem.spring.boot.autoconfigure.webflux;
 
 import com.ksoot.problem.spring.boot.autoconfigure.TraceProvider;
 import jakarta.validation.constraints.NotEmpty;
+import java.util.Objects;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -9,8 +10,6 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
-
-import java.util.Objects;
 
 /**
  * A {@link org.springframework.web.server.WebFilter} for WebFlux applications that adds trace ID to
@@ -34,8 +33,9 @@ public class ProblemTracingWebFluxFilter implements WebFilter {
 
   /** {@inheritDoc} */
   @Override
-  public @NonNull Mono<Void> filter(@NonNull ServerWebExchange exchange, @NonNull WebFilterChain chain) {
-    if(Objects.nonNull(this.traceProvider)) {
+  public @NonNull Mono<Void> filter(
+      @NonNull ServerWebExchange exchange, @NonNull WebFilterChain chain) {
+    if (Objects.nonNull(this.traceProvider)) {
       ImmutablePair<@NotEmpty String, String> trace = this.traceProvider.getTraceId();
       exchange.getResponse().getHeaders().add(trace.getKey(), trace.getValue());
     }

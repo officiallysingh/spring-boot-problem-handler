@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotEmpty;
 import java.io.IOException;
-import lombok.RequiredArgsConstructor;
+import java.util.Objects;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -36,10 +36,12 @@ public class ProblemTracingWebFilter extends OncePerRequestFilter {
   /** {@inheritDoc} */
   @Override
   protected void doFilterInternal(
-      @NonNull HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+          @NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
       throws ServletException, IOException {
-    ImmutablePair<@NotEmpty String, String> trace = this.traceProvider.getTraceId();
-    response.setHeader(trace.getKey(), trace.getValue());
+    if (Objects.nonNull(this.traceProvider)) {
+      ImmutablePair<@NotEmpty String, String> trace = this.traceProvider.getTraceId();
+      response.setHeader(trace.getKey(), trace.getValue());
+    }
     filterChain.doFilter(request, response);
   }
 }
