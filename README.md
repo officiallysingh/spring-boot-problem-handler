@@ -51,7 +51,7 @@ all can be done with zero custom code but by specifying error details in `proper
 
 ## Installation
 
-> **Current version: 1.10.4** Refer to [Release notes](https://github.com/officiallysingh/spring-boot-problem-handler/releases) while upgrading
+> **Current version: 1.10.5** Refer to [Release notes](https://github.com/officiallysingh/spring-boot-problem-handler/releases) while upgrading
 
 Add the `spring-boot-problem-handler` jar to application dependencies. That is all it takes to get a default working 
 exception handling mechanism in a Spring boot application.
