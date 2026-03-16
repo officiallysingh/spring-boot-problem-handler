@@ -5,11 +5,13 @@ package com.ksoot.problem.spring.advice.security;
  *
  * @param <T> the request type
  * @param <R> the response type
- * @see AuthenticationAdviceTrait
+ * @see AuthenticationExceptionAdviceTrait
  * @see InsufficientAuthenticationAdviceTrait
- * @see AccessDeniedAdviceTrait
+ * @see AccessDeniedExceptionAdviceTrait
  */
 public interface SecurityAdviceTraits<T, R>
-    extends AuthenticationAdviceTrait<T, R>,
+    extends UsernameNotFoundAdviceTrait<T, R>,
+        BadCredentialsExceptionAdviceTrait<T, R>,
+        AuthenticationExceptionAdviceTrait<T, R>,
         InsufficientAuthenticationAdviceTrait<T, R>,
-        AccessDeniedAdviceTrait<T, R> {}
+        AccessDeniedExceptionAdviceTrait<T, R> {}

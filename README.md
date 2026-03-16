@@ -179,9 +179,11 @@ when database constraint violation exceptions are thrown.
 | Security Advice Traits                                                                                                                                | Produces                                        | Error Key              |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|------------------------|
 | [**`SecurityAdviceTraits`**](src/main/java/com/ksoot/problem/spring/advice/security/SecurityAdviceTraits.java)                                        |                                                 |                        |
-| `├──`[**`AuthenticationAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/security/AuthenticationAdviceTrait.java)                         | [`401 Unauthorized`](https://httpstatus.es/401) | security.unauthorized  |
+| `├──`[**`AuthenticationExceptionAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/security/AuthenticationExceptionAdviceTrait.java)                         | [`401 Unauthorized`](https://httpstatus.es/401) | security.unauthorized  |
 | `├──`[**`InsufficientAuthenticationAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/security/InsufficientAuthenticationAdviceTrait.java) | [`401 Unauthorized`](https://httpstatus.es/401) | security.unauthorized  |
-| `└──`[**`AccessDeniedAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/security/AccessDeniedAdviceTrait.java)                             | [`403 Forbidden`](https://httpstatus.es/403)    | security.access.denied |
+| `└──`[**`AccessDeniedExceptionAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/security/AccessDeniedExceptionAdviceTrait.java)                             | [`403 Forbidden`](https://httpstatus.es/403)    | security.access.denied |
+| `└──`[**`BadCredentialsExceptionAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/security/BadCredentialsExceptionAdviceTrait.java)                             | [`403 Forbidden`](https://httpstatus.es/403)    | security.access.denied |
+| `└──`[**`UsernameNotFoundAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/security/UsernameNotFoundAdviceTrait.java)                             | [`403 Forbidden`](https://httpstatus.es/403)    | security.access.denied |
 
 These advices are autoconfigured as a bean `SecurityExceptionHandler` if following conditions are true
 * `spring-security-config` jar is detected in classpath

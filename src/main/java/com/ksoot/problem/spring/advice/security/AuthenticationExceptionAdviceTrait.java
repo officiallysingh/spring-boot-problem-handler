@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  * @see AuthenticationException
  * @see HttpStatus#UNAUTHORIZED
  */
-public interface AuthenticationAdviceTrait<T, R> extends AdviceTrait<T, R> {
+public interface AuthenticationExceptionAdviceTrait<T, R> extends AdviceTrait<T, R> {
 
   /**
    * Handles {@link AuthenticationException} and converts it into a {@link Problem} response.

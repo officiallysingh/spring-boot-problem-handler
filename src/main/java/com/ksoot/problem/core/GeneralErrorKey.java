@@ -35,6 +35,10 @@ public class GeneralErrorKey {
 
   public static final String SECURITY_UNAUTHORIZED = "security.unauthorized";
 
+  public static final String SECURITY_INVALID_CREDENTIALS = "security.invalid.credentials";
+
+  public static final String SECURITY_USERNAME_NOT_FOUND = "security.username.not.found";
+
   public static final String SECURITY_ACCESS_DENIED = "security.access.denied";
 
   public static final String MULTIPLE_ERRORS = "multiple.errors";

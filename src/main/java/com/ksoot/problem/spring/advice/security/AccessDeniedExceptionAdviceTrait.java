@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  * @see AccessDeniedException
  * @see HttpStatus#FORBIDDEN
  */
-public interface AccessDeniedAdviceTrait<T, R> extends AdviceTrait<T, R> {
+public interface AccessDeniedExceptionAdviceTrait<T, R> extends AdviceTrait<T, R> {
 
   /**
    * Handles {@link AccessDeniedException} and converts it into a {@link Problem} response.
