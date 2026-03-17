@@ -34,13 +34,13 @@ public interface UsernameNotFoundAdviceTrait<T, R> extends AdviceTrait<T, R> {
         toProblem(
             exception,
             ProblemMessageSourceResolver.of(
-                ProblemConstant.CODE_CODE_PREFIX + GeneralErrorKey.SECURITY_INVALID_CREDENTIALS,
+                ProblemConstant.CODE_CODE_PREFIX + GeneralErrorKey.SECURITY_USERNAME_NOT_FOUND,
                 HttpStatus.NOT_FOUND.value()),
             ProblemMessageSourceResolver.of(
-                ProblemConstant.TITLE_CODE_PREFIX + GeneralErrorKey.SECURITY_INVALID_CREDENTIALS,
+                ProblemConstant.TITLE_CODE_PREFIX + GeneralErrorKey.SECURITY_USERNAME_NOT_FOUND,
                 HttpStatus.NOT_FOUND.getReasonPhrase()),
             ProblemMessageSourceResolver.of(
-                ProblemConstant.DETAIL_CODE_PREFIX + GeneralErrorKey.SECURITY_INVALID_CREDENTIALS,
+                ProblemConstant.DETAIL_CODE_PREFIX + GeneralErrorKey.SECURITY_USERNAME_NOT_FOUND,
                 exception.getMessage()));
     return toResponse(exception, request, HttpStatus.NOT_FOUND, problem);
   }

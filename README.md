@@ -182,8 +182,8 @@ when database constraint violation exceptions are thrown.
 | `├──`[**`AuthenticationExceptionAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/security/AuthenticationExceptionAdviceTrait.java)                         | [`401 Unauthorized`](https://httpstatus.es/401) | security.unauthorized  |
 | `├──`[**`InsufficientAuthenticationAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/security/InsufficientAuthenticationAdviceTrait.java) | [`401 Unauthorized`](https://httpstatus.es/401) | security.unauthorized  |
 | `└──`[**`AccessDeniedExceptionAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/security/AccessDeniedExceptionAdviceTrait.java)                             | [`403 Forbidden`](https://httpstatus.es/403)    | security.access.denied |
-| `└──`[**`BadCredentialsExceptionAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/security/BadCredentialsExceptionAdviceTrait.java)                             | [`403 Forbidden`](https://httpstatus.es/403)    | security.access.denied |
-| `└──`[**`UsernameNotFoundAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/security/UsernameNotFoundAdviceTrait.java)                             | [`403 Forbidden`](https://httpstatus.es/403)    | security.access.denied |
+| `└──`[**`BadCredentialsExceptionAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/security/BadCredentialsExceptionAdviceTrait.java)                             | [`403 Forbidden`](https://httpstatus.es/403)    | security.invalid.credentials |
+| `└──`[**`UsernameNotFoundAdviceTrait`**](src/main/java/com/ksoot/problem/spring/advice/security/UsernameNotFoundAdviceTrait.java)                             | [`403 Forbidden`](https://httpstatus.es/403)    | security.username.not.found |
 
 These advices are autoconfigured as a bean `SecurityExceptionHandler` if following conditions are true
 * `spring-security-config` jar is detected in classpath
