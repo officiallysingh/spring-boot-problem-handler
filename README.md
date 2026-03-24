@@ -560,7 +560,7 @@ returns following error message in French language as specified in
 
 For demo purpose, defining the following bean serves the purpose, but not recommended in production.
 ```java
-  @Bean
+@Bean
 public HttpHandler httpHandler(ApplicationContext applicationContext) {
     LocaleContextHolder.getLocaleContext().getLocale();
     HttpHandler delegate = WebHttpHandlerBuilder
@@ -591,14 +591,14 @@ ProblemMessageProvider problemMessageProvider(final MessageSource messageSource)
 
 ## Tracing
 [**`ProblemMicrometerTraceProvider`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/ProblemMicrometerTraceProvider.java) 
-is the default implementation of [**`TraceProvider`**](src/main/java/com/ksoot/problem/core/TraceProvider.java) that uses Micrometer Tracing.
+is the default implementation of [**`TraceProvider`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/TraceProvider.java) that uses Micrometer Tracing.
 It is enabled if 
 - `io.micrometer.tracing.Tracer` class is available in the classpath.
 - `io.micrometer.tracing.Tracer` bean is available in the application context.
 - In case above two conditions are not met and tracing is still enabled, trace-id would be set as `null`
 - `problem.tracing.enabled` is set to true
 
-If required, you can provide your own implementation of [**`TraceProvider`**](src/main/java/com/ksoot/problem/core/TraceProvider.java) 
+If required, you can provide your own implementation of [**`TraceProvider`**](src/main/java/com/ksoot/problem/spring/boot/autoconfigure/TraceProvider.java) 
 in cases where you want to customize the Trace Id generation or retrieval process or using some other library than `micrometer-tracing`.
 
 ### Trace Id as Body Attribute in error response attribute
